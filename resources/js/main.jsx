@@ -1,6 +1,9 @@
+import React from "react";
 import NavBar from "./components/NavBar";
 import "../css/component/main.css";
 import SideBar from "./components/SideBar";
+import { Outlet } from "react-router";
+
 
 function Main() {
     return (
@@ -11,8 +14,8 @@ function Main() {
             <section id="sidebar" className="hide px-0">
                 <SideBar />
             </section>
-            <main className="px-md-5" id="content">
-                <section ></section>
+            <main className="px-md-4 px-sm-2" id="content">
+               <Outlet />
             </main>
             <footer id="footer"></footer>
         </>

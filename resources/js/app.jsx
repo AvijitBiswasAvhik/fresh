@@ -4,10 +4,10 @@
  * building robust, powerful web applications using React + Laravel.
  */
 import React from "react";
-import ReactDOM from "react-dom/client";
-
-import './bootstrap';
-
+import ReactDOM from "react-dom/client"
+import { RouterProvider } from "react-router-dom";
+import router from "./Router";
+import './bootstrap'
 /**
  * Next, we will create a fresh React component instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -20,7 +20,7 @@ if (document.getElementById("react-app")) {
 
     Index.render(
         <React.StrictMode>
-            <Main />
+            <RouterProvider router={router}/>
         </React.StrictMode>
     );
 }
