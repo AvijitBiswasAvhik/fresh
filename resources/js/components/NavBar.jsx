@@ -46,7 +46,7 @@ export default function NavBar() {
     };
 
     return (
-        <nav className="nav px-lg-5 px-md-3 px-1 py-1" id="nav">
+        <nav className="nav px-lg-4 px-md-4 px-1 py-1" id="nav">
             <div className="nav-item item">
                 <div className="brandImage">
                     <a

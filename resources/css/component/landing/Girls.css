@@ -1,0 +1,11 @@
+@font-face {
+    font-family: 'open-sans';
+    src: url('\fonts\Open_Sans\static\OpenSans-ExtraBold.ttf');
+}
+
+#girls-main-title{
+    font-weight: bold;
+    font-family: open-sans;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 1px grey;
+}

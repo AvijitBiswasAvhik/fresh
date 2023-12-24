@@ -39,9 +39,11 @@
     transition: 5s;
     display: none;
 }
-#content {
-    background-color: rgb(235, 235, 235);
-    height: 500px;
+#content {    
+ height: 600px;
+}
+#react-app{
+    background-image: url('/site-image/bg.jpg');
 }
 #footer {
     height: 200px;

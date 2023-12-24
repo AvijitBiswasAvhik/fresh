@@ -1,0 +1,24 @@
+.fit-image{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.make-image-black{
+    filter: brightness(60%);
+
+}
+.slider-card-column{
+    position: relative;
+}
+.slider-card-content{
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    color: aliceblue;
+}
+.text-decorate{
+    backdrop-filter: blur(2px);
+    text-shadow: 1px 1px 1px grey;
+}

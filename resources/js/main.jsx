@@ -14,7 +14,7 @@ function Main() {
             <section id="sidebar" className="hide px-0">
                 <SideBar />
             </section>
-            <main className="px-md-4 px-sm-2" id="content">
+            <main className="px-md-4 px-2 py-2" id="content">
                <Outlet />
             </main>
             <footer id="footer"></footer>
