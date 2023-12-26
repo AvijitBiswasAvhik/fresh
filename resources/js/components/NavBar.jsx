@@ -10,6 +10,7 @@ export default function NavBar() {
                 }
             }
         });
+        
         let favorite = document.getElementById("favorite");
     }, []);
 
@@ -24,6 +25,7 @@ export default function NavBar() {
         sideBar.classList.remove("hide");
         sideBar.style.left = e.clientX - 15 + "px";
         sideBar.style.top = e.clientY + 30 + "px";
+   
 
     };
     let showCart = (e) => {
