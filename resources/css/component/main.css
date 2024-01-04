@@ -69,3 +69,14 @@
     height: 200px;
     background-color: rgb(99, 67, 27);
 }
+/* for make all fit any page*/
+.fit-image{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.make-image-black{
+    filter: brightness(60%);
+
+}

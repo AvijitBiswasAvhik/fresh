@@ -1,0 +1,41 @@
+
+
+#login-page-content {
+    position: relative;
+    margin-top: 100px;
+    width: 380px;
+    background-color: white;
+    border-radius: 4px;
+    border: none; /* Enable scrolling for the login content */
+}
+#login-close-btn{
+    position: absolute;
+    top: 0;
+    right: -50px;
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    border: none;
+    background-color: transparent;
+    color: aliceblue;
+    transition: .3s ease-in-out;
+    
+}
+#login-close-btn:hover{
+    transition: .3s ease-in-out;
+    background-color: rgba(240, 248, 255, 0.274);
+}
+@media screen and (max-width: 600px){
+    #login-close-btn{
+        top: -50px;
+        right: 0;
+    }
+}
+
+.loging-page-divider{
+    border-top: 1px solid rgba(0, 0, 0, 0.253);
+    width: 50%;
+    height: 1px;
+    box-shadow: 0 0 1px grey;
+}
+

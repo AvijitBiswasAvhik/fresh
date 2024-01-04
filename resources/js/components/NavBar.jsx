@@ -10,7 +10,7 @@ export default function NavBar() {
                 }
             }
         });
-        
+
         let favorite = document.getElementById("favorite");
     }, []);
 
@@ -25,8 +25,6 @@ export default function NavBar() {
         sideBar.classList.remove("hide");
         sideBar.style.left = e.clientX - 15 + "px";
         sideBar.style.top = e.clientY + 30 + "px";
-   
-
     };
     let showCart = (e) => {
         e.stopPropagation();
@@ -46,7 +44,11 @@ export default function NavBar() {
         let popCart = document.getElementById("pop-up-cart-content");
         popCart.classList.remove("expand");
     };
-
+    let showHideAuth = () => {
+        let login = document.getElementById("login-form");
+        login.classList.add('show');
+        document.body.style = 'overflow: hidden';
+    };
     return (
         <nav className="nav px-lg-4 px-md-4 px-1 py-1" id="nav">
             <div className="nav-item item">
@@ -122,6 +124,11 @@ export default function NavBar() {
                         <button
                             type="button"
                             className="btn sign-button fw-bold"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#auth-page"
+                            aria-expanded="false"
+                            aria-controls="auth-page"
+                            onClick={showHideAuth}
                         >
                             Sign in
                         </button>

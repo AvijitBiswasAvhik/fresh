@@ -1,0 +1,22 @@
+body.collapse:not(.show) {
+    overflow: hidden;
+}
+
+
+#auth-page {
+    width: 100%;
+    z-index: 1000;
+    position: fixed;
+    top: 0;
+    overflow-y: auto; /* Set to hidden to prevent body scrolling */
+    overscroll-behavior: contain;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.521);
+    backdrop-filter: blur(4px);
+}
+#login-form:not(.show){
+    display: none;
+}
+#register-form:not(.show){
+    display: none;
+}

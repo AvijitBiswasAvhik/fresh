@@ -1,13 +1,4 @@
-.fit-image{
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-}
 
-.make-image-black{
-    filter: brightness(60%);
-
-}
 .slider-card-column{
     position: relative;
 }
