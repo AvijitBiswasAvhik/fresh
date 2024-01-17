@@ -1,0 +1,28 @@
+@font-face {
+    font-family: 'roboto-medium';
+    src: url('../font/Roboto-Regular.ttf');
+    
+}
+@font-face {
+    font-family: 'roboto-light';
+    src: url('../font/Roboto-Light.ttf');
+}
+
+.dashboard-menu-list > li{
+    font-size: 16px;
+    font-family: 'roboto-medium';
+    color: rgb(80, 80, 80);
+}
+.active > a{
+    background-color: rgba(173, 168, 147, 0.452);
+    color: rgb(0, 0, 0);
+    padding: 2px;
+    
+}
+.dashboard-sidebar-menu-collapse{
+    font-family: 'roboto-medium';
+    font-size: 14px;
+}
+ .dashboard-sidebar-menu-collapse > li{
+    cursor: pointer;
+ }

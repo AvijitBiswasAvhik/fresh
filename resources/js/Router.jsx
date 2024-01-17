@@ -5,11 +5,15 @@ import Main from "./main";
 import Login from "./components/auth/Login";
 import SingleProduct from "./components/product/SingleProduct";
 import Products from "./components/product/Products";
-Main;
+import Checkout from "./components/Checkout";
+import DashBoard from "./components/admin/DashBoard";
+import ProductAdd from "./components/admin/product/ProductAdd";
+import ProductList from "./components/admin/product/ProductList";
 const router = createBrowserRouter([
     {
         path: "/",
         element: <Main />,
+
         children: [
             {
                 path: "/",
@@ -20,13 +24,35 @@ const router = createBrowserRouter([
                 element: <Login />,
             },
             {
-                path: '/product-view',
+                path: "/product-view",
                 element: <SingleProduct />,
             },
             {
-                path: '/products',
+                path: "/products",
                 element: <Products />,
             },
+            {
+                path: "/products/:category",
+                element: <Products />,
+            },
+            {
+                path: "/checkout",
+                element: <Checkout />,
+            },
+        ],
+    },
+    {
+        path: "/admin",
+        element: <DashBoard />,
+        children: [
+            {
+                path: "/admin/product-add",
+                element: <ProductAdd />,
+            },
+            {
+                path: "/admin/product-list",
+                element: <ProductList />,
+            }
         ],
     },
 ]);

@@ -30,6 +30,7 @@
     /* Use the transition property to animate height changes */
     transition: 0.5s ease 3s;
     max-height: 0;
+    z-index: 1;
 }
 
 .product-filter-box.show {
@@ -54,6 +55,17 @@
 }
 
 /*Degine products show section */
-#prosucts-show-section > div{
+#product-show-section{
+    z-index: -1;
+}
+#prosucts-show-section > #products-show-sidebar{
+    border: 1px solid black;
+}
+.products-product-show-section-products-heart{
+    display: none;
+}
+.products-product-show-section-products:hover .products-product-show-section-products-heart{
+    background-color: blueviolet;
+    display: flex;
 }
 /*end product show section*/

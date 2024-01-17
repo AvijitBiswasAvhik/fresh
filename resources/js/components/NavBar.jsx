@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { Link, NavLink } from "react-router-dom";
 import "../../css/component/navbar.css";
 export default function NavBar() {
     useEffect(() => {
@@ -249,14 +250,14 @@ export default function NavBar() {
             <div className="nav-item item w-100 d-none d-lg-block p-2">
                 <ul className="d-flex gap-5 h-100 list-inline align-items-center justify-content-center">
                     <li className="list-group-item">
-                        <a className="btn rounded rounded-3 nav-categorise-link">
+                        <Link to={'/products/shoe'} className="btn rounded rounded-3 nav-categorise-link">
                             Shoe
-                        </a>
+                        </Link>
                     </li>
                     <li className="list-group-item">
-                        <a className="btn rounded rounded-3 nav-categorise-link">
+                        <Link to={'/products/glass'} className="btn rounded rounded-3 nav-categorise-link">
                             Glass
-                        </a>
+                        </Link>
                     </li>
                     <li className="list-group-item">
                         <a className="btn rounded rounded-3 nav-categorise-link">
