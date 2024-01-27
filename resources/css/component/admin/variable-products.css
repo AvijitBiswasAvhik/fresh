@@ -1,0 +1,23 @@
+/* Add your own custom styles here */
+#colorPickerContainer {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  #colorPicker {
+    margin-bottom: 20px;
+  }
+  
+  /* Customize the appearance of the swatches */
+  .pickr button.pickr swatch {
+    border: 1px solid #fff;
+    box-shadow: none;
+  }
+  
+  .pickr button.pickr swatch:hover {
+    border: 1px solid #ccc;
+  }
+  #showColor{
+    height: 30px;
+    width: 30px;
+  }

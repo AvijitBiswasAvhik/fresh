@@ -28,11 +28,11 @@ const Dashboard = () => {
                     <Navbar />
                 </div>
                 <div
-                    className="col-lg-2 col-md-3 d-md-block  d-none p-0"
+                    className="col-lg-2 col-md-3 d-md-block  d-none p-0 position-relative"
                     id="admin-dashboard-sidebar"
                 >
                     <ul
-                        className="dashboard-menu-list bg-white p-1 shadow rounded-1 w-100"
+                        className="dashboard-menu-list bg-white p-1 shadow rounded-1 w-100 position-sticky top-0"
                         style={{ listStyleType: "none" }}
                     >
                         <li></li>
