@@ -6,8 +6,10 @@ import { Outlet } from "react-router";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import United from "./components/auth/United";
+import { useStateContext } from "./ContextProvider";
 
 function Main() {
+    let {manageLogin} = useStateContext();
     useEffect(() => {
         window.addEventListener("scroll", (e) => {
             // if (window.scrollY > 200) {
@@ -19,6 +21,7 @@ function Main() {
             // }
         });
     }, []);
+    console.log(manageLogin)
     return (
         <>
             <header id="header" className="">
@@ -32,7 +35,7 @@ function Main() {
             </main>
             <footer id="footer"></footer>
             <section className="" id="auth-section">
-                <United />
+            {manageLogin && <United />}
             </section>
         </>
     );

@@ -48,13 +48,13 @@ export default function VariablesProduct({ data }) {
                 setVariations((oldEl) => {
                     return {
                         ...oldEl,
-                        color: { ...variations.color, type: selectedColor },
+                        color: { ...oldEl.color, type: selectedColor },
                     };
                 });
             });
         }
     }, [variations]);
-    console.log(variations);
+    console.log(data.validationError)
     return (
         <div className="col-6 p-2" id="ddd">
             <div className="shadow p-2 border border-2 rounded-2">
@@ -258,7 +258,10 @@ export default function VariablesProduct({ data }) {
                                     ></div>
                                 </div>
 
-                                {/* Example button to trigger color picker rendering */}
+                                <small className="form-text text-danger">
+                                    {data.validationError &&
+                                    data.validationError.type}
+                                </small>
                             </div>
                             <div className="mb-3">
                                 <label
@@ -282,6 +285,10 @@ export default function VariablesProduct({ data }) {
                                         });
                                     }}
                                 />
+                                <small className="form-text text-danger">
+                                    {data.validationError &&
+                                    data.validationError.name}
+                                </small>
                             </div>
                         </div>
                     </fieldset>
@@ -313,13 +320,19 @@ export default function VariablesProduct({ data }) {
                                 }
                                 placeholder="price"
                             />
+                            <small className="form-text text-danger">
+                                    {data.validationError &&
+                                    data.validationError.price}
+                                </small>
                         </div>
                         <div className="col-6">
                             <label
-                                htmlFor={`add-discount-product-price` + data.key}
+                                htmlFor={
+                                    `add-discount-product-price` + data.key
+                                }
                                 className="form-label"
                             >
-                               Discount Price
+                                Discount Price
                             </label>
                             <input
                                 type="number"
@@ -339,6 +352,10 @@ export default function VariablesProduct({ data }) {
                                         : ""
                                 }
                             />
+                             <small className="form-text text-danger">
+                                    {data.validationError &&
+                                    data.validationError.discountPrice}
+                                </small>
                         </div>
                     </div>
                 </div>

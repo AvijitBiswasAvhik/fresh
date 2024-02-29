@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, cloneElement } from "react";
 import VariablesProduct from "./VariablesProduct";
 import "../../../../css/component/admin/add-product.css";
+import axios from "axios";
 
 export default function ProductAdd() {
     let [product, setProduct] = useState({
@@ -8,13 +9,19 @@ export default function ProductAdd() {
         shortDescription: "",
         description: { feature: {}, descriptionLong: "" },
         firstCategory: "",
+        subCategory: "",
+        tag: [],
         price: "",
         sku: "",
         quantity: "",
         variations: [],
         variablesLength: 0,
         galleryImage: [],
+        image: "",
     });
+    let [productError, setProductError] = useState();
+    let [variationsError, setVariationsError] = useState();
+    let [tagValue, setTagValue] = useState("");
     let [variations, setVariations] = useState();
     const firstRender = useRef(true);
     const [feature, setFeature] = useState([]);
@@ -41,8 +48,48 @@ export default function ProductAdd() {
         };
 
         ///////////////////////////////////////
-        /////////////////create a color picker/////
+        /////////////////validate vartions/////
     }, [product.galleryImage]);
+    useEffect(() => {
+       Array.isArray(variationsError) && 
+            setVariations((prevVariations) => {
+                const randomNumber = Math.floor(Math.random() * 19000) + 1000;
+                console.log(JSON.parse(variationsError));
+                let newElements =
+                    prevVariations &&
+                    prevVariations.map((el, i) => {
+                        let errorData = JSON.parse(variationsError);
+                        let errors = errorData.filter((eel, i) => {
+                            if (eel[el.key] && eel != null) {
+                                return { ...eel };
+                            }
+                            //console.log(eel[el.key]);
+                        });
+                        console.log(errors);
+
+                        return (
+                            <VariablesProduct
+                                key={el.key}
+                                data={{
+                                    key: el.key,
+                                    deleteVariations: deleteVariations,
+                                    saveVartions: saveVartions,
+                                    index: i,
+                                    validationError:
+                                        errors.length > 0
+                                            ? { ...errors[0][el.key] }
+                                            : {},
+                                }}
+                            />
+                        );
+                    });
+                if (prevVariations) {
+                    console.log("hello");
+                    return [...newElements];
+                }
+            });
+    }, [variationsError]);
+
     let createProduct = (e) => {
         setProduct({
             ...product,
@@ -82,7 +129,7 @@ export default function ProductAdd() {
         });
     };
 
-    let addVariation = () => {
+    let addVariation = (ty, validationError) => {
         setVariations((preEl) => {
             const randomNumber = Math.floor(Math.random() * 19000) + 1000;
             let nEl = (
@@ -91,10 +138,14 @@ export default function ProductAdd() {
                     data={{
                         key: randomNumber,
                         deleteVariations: deleteVariations,
+
                         saveVartions: saveVartions,
+                        index: variations && variations.length,
+                        validationError: {},
                     }}
                 />
             );
+
             if (preEl != null) {
                 return [...variations, nEl];
             } else {
@@ -124,6 +175,14 @@ export default function ProductAdd() {
 
         // Assuming you are working with a file input for dropping images
         let file = e.target.files[0];
+        axios
+            .post("http://127.0.0.1:8000/api/admin/get-res", { file: file })
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                // Handle errors here
+            });
 
         if (file) {
             let imgSrc = URL.createObjectURL(file); // Create a temporary URL for the dropped image
@@ -159,6 +218,7 @@ export default function ProductAdd() {
 
                 reader.onload = function (event) {
                     const binaryData = event.target.result.split(",")[1];
+                    console.log(binaryData);
                 };
                 reader.readAsDataURL(file);
                 // Now you can use 'myImage' as the image object
@@ -196,21 +256,20 @@ export default function ProductAdd() {
         setProduct((prevProduct) => {
             let newDescription = {};
             if (Object.keys(prevProduct.description.feature).length > 0) {
-                newDescription = Object.keys(prevProduct.description.feature).reduce(
-                    (acc, current) => {
-                        if (key != current) {
-                            acc[current] = prevProduct.description.feature[current];
-                        }
-                        return acc;
-                    },
-                    {}
-                );
+                newDescription = Object.keys(
+                    prevProduct.description.feature
+                ).reduce((acc, current) => {
+                    if (key != current) {
+                        acc[current] = prevProduct.description.feature[current];
+                    }
+                    return acc;
+                }, {});
             }
             return {
                 ...prevProduct,
                 description: {
                     ...prevProduct.description,
-                    feature:{...newDescription}
+                    feature: { ...newDescription },
                 },
             };
         });
@@ -350,9 +409,40 @@ export default function ProductAdd() {
             return [...preEl, featureEl];
         });
     };
-    console.log(product.description);
+    console.log(product);
+    let handleSubmit = (e) => {
+        e.preventDefault();
+        axios
+            .post("http://127.0.0.1:8000/api/admin/get-res", product)
+            .then((response) => {
+                console.log(response.data);
+                setProductError({});
+                setVariationsError(null);
+            })
+            .catch((error) => {
+                console.log("Fetch error:", error.response.data.errors);
+                let errors = error.response.data.errors;
+                setProductError(errors);
+                // Check if variations exist and is an array
+                //console.log(errors)
+                if (
+                    Array.isArray(errors.variations) &&
+                    errors.variations["0"].length !=
+                        "The variations field is required.".length
+                ) {
+                    setVariationsError(errors.variations);
+                }else{
+                    setVariationsError({});
+                }
+            });
+    };
+
     return (
-        <form>
+        <form
+            onSubmit={(e) => {
+                handleSubmit(e);
+            }}
+        >
             <div className="mb-3">
                 <label htmlFor="crate-prodct-title" className="form-label">
                     Product Title
@@ -367,6 +457,9 @@ export default function ProductAdd() {
                     }}
                     value={product.title}
                 />
+                <small className="form-text text-danger">
+                    {productError && productError.title}
+                </small>
             </div>
             <div className="mb-3">
                 <label
@@ -390,6 +483,9 @@ export default function ProductAdd() {
                     }}
                     value={product.shortDescription}
                 ></textarea>
+                <small className="form-text text-danger">
+                    {productError && productError.shortDescription}
+                </small>
             </div>
             <div className="mb-3">
                 <div
@@ -475,6 +571,10 @@ export default function ProductAdd() {
                                 }}
                                 value={product.description.descriptionLong}
                             ></textarea>
+                            <small className="form-text text-danger">
+                                {productError &&
+                                    productError["description.descriptionLong"]}
+                            </small>
                         </div>
                         <div
                             className="collapse mb-3 shadow p-1"
@@ -516,6 +616,12 @@ export default function ProductAdd() {
 
                                 <tbody>{feature}</tbody>
                             </table>
+                            <div className="mb-3">
+                                <small className="form-text text-danger">
+                                    {productError &&
+                                        productError["description.feature"]}
+                                </small>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -552,6 +658,42 @@ export default function ProductAdd() {
                                     Beauty and Personal Care
                                 </option>
                             </select>
+                            <small className="form-text text-danger">
+                                {productError && productError.firstCategory}
+                            </small>
+                        </div>
+                        <div className="mb-3">
+                            <label
+                                htmlFor="create-product-sub-category"
+                                className="form-label"
+                            >
+                                Sub Category
+                            </label>
+                            <select
+                                className="form-select"
+                                aria-label="Default select example"
+                                id="create-product-sub-category"
+                                onChange={(e) => {
+                                    console.log(e.target.value);
+                                    setProduct({
+                                        ...product,
+                                        subCategory: e.target.value,
+                                    });
+                                }}
+                                value={product.subCategory}
+                            >
+                                <option>Open this select menu</option>
+                                <option value="electronics">Electronics</option>
+                                <option value="cloth&fashion">
+                                    Clothing and Fashion
+                                </option>
+                                <option value="beauty&personal">
+                                    Beauty and Personal Care
+                                </option>
+                            </select>
+                            <small className="form-text text-danger">
+                                {productError && productError.subCategory}
+                            </small>
                         </div>
                         <div className="mb-3">
                             <label
@@ -573,6 +715,9 @@ export default function ProductAdd() {
                                 }}
                                 value={product.sku}
                             />
+                            <small className="form-text text-danger">
+                                {productError && productError.sku}
+                            </small>
                         </div>
                     </div>
                 </div>
@@ -598,6 +743,9 @@ export default function ProductAdd() {
                                 }}
                                 value={product.price}
                             />
+                            <small className="form-text text-danger">
+                                {productError && productError.price}
+                            </small>
                         </div>
                         <div className="mb-3">
                             <label
@@ -619,6 +767,68 @@ export default function ProductAdd() {
                                 }}
                                 value={product.quantity}
                             />
+                            <small className="form-text text-danger">
+                                {productError && productError.quantity}
+                            </small>
+                        </div>
+                        <div className="mb-3">
+                            <label
+                                htmlFor="create-product-tag"
+                                className="form-label"
+                            >
+                                Tag Name
+                            </label>
+                            <div className="d-flex gap-1 align-items-center">
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="create-product-tag"
+                                    placeholder="product tag"
+                                    onChange={(e) => {
+                                        setTagValue(e.target.value);
+                                    }}
+                                    value={tagValue}
+                                />
+
+                                <div
+                                    className="btn btn-outline-secondary py-0 rounded-4"
+                                    onClick={(e) => {
+                                        let tagInput =
+                                            document.getElementById(
+                                                "create-product-tag"
+                                            );
+
+                                        setProduct((prevEl) => {
+                                            return {
+                                                ...product,
+                                                tag: [
+                                                    ...product.tag,
+                                                    "#" + tagInput.value,
+                                                ],
+                                            };
+                                        });
+                                        setTagValue("");
+                                    }}
+                                >
+                                    Create
+                                </div>
+                                <small className="form-text text-danger">
+                                    {productError && productError.tag}
+                                </small>
+                            </div>
+                            <div className="d-flex flex-wrap gap-2 mt-2">
+                                {product.tag.length > 0 &&
+                                    product.tag.map((el, i) => {
+                                        return (
+                                            <span
+                                                className="text-primary fw-bold"
+                                                key={"key" + i}
+                                            >
+                                                {el}
+                                            </span>
+                                        );
+                                    })}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -756,13 +966,33 @@ export default function ProductAdd() {
             >
                 Create Variable Product +
             </button>
+            <small className="form-text text-danger d-block">
+                {productError &&
+                    productError.variations &&
+                    productError.variations[0].length < 35 &&
+                    productError.variations}
+            </small>
+
             <div className="" id="collapseExample">
                 <div
                     className="row position-relative"
                     id="varition-product-create-forms"
                 >
-                    {variations}
+                    {variations &&
+                        variations.map((element, i) => {
+                            //console.log(element);
+                            return element;
+                        })}
                 </div>
+            </div>
+            <div className="mb-3 d-flex justify-content-end"></div>
+            <div className="mb-3 p-2 d-flex justify-content-end">
+                <button
+                    className="btn btn-primary rounded-5 mt-2 text-white p-1 px-2 fs-5 mt-4end-0"
+                    style={{ FontFace: "Roboto" }}
+                >
+                    Create Product
+                </button>
             </div>
         </form>
     );

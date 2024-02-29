@@ -1,7 +1,10 @@
 import React, { useEffect, useRef } from "react";
 import { Link, NavLink } from "react-router-dom";
 import "../../css/component/navbar.css";
+import { useStateContext } from "../ContextProvider";
+
 export default function NavBar() {
+    let {manageLogin, setManageLogin} = useStateContext();
     useEffect(() => {
         window.addEventListener("click", (e) => {
             if (e.target.id != "sidebar") {
@@ -45,11 +48,12 @@ export default function NavBar() {
         let popCart = document.getElementById("pop-up-cart-content");
         popCart.classList.remove("expand");
     };
-    let showHideAuth = () => {
-        let login = document.getElementById("login-form");
-        login.classList.add('show');
-        document.body.style = 'overflow: hidden';
+    let showHideAuth = (e) => {
+        e.preventDefault();
+        setManageLogin(true)
+    
     };
+    
     return (
         <nav className="nav px-lg-4 px-md-4 px-1 py-1" id="nav">
             <div className="nav-item item">
@@ -125,11 +129,11 @@ export default function NavBar() {
                         <button
                             type="button"
                             className="btn sign-button fw-bold"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#auth-page"
+                            // data-bs-toggle="collapse"
+                            // data-bs-target="#auth-page"
                             aria-expanded="false"
                             aria-controls="auth-page"
-                            onClick={showHideAuth}
+                            onClick={(e)=>showHideAuth(e)}
                         >
                             Sign in
                         </button>

@@ -2,15 +2,19 @@ import React,{useState} from "react";
 import "../../../css/component/auth/auth.css";
 import Login from "./Login";
 import Register from "./Register";
+import { useStateContext } from "../../ContextProvider";
 
 export default function United() {
     let [load, setLoad] = useState(true);
+    let {manageLogin, setManageLogin} = useStateContext();
     let closeLogin = (e) => {
         e.stopPropagation();
-        let loginPage = document.getElementById("auth-page");
-        console.log(loginPage.classList);
-        loginPage.classList.remove("show");
-        document.body.style = "overflow: auto";
+        setManageLogin(false)
+        // let loginPage = document.getElementById("auth-page");
+        // loginPage.classList.remove("show");
+        // document.body.style = "overflow: auto";
+        // let registerForm = document.getElementById("register-form");
+        // registerForm.classList.remove('show')
     };
     let loadRegister = (e) => {
         e.stopPropagation();
@@ -21,10 +25,10 @@ export default function United() {
 
     };
     return (
-        <div id="auth-page" className="collapse" style={{}}>
+        <div id="auth-page" className="collaps" style={{}}>
             <div id="login-page-content" className="mx-auto px-4">
-                <Login load={loadRegister} />
-                <Register />
+            <Login load={loadRegister} />
+                <Register close={closeLogin}/>
                 <div className="d-flex justify-content-center mt-4 align-items-center">
                     <div className="loging-page-divider"></div>
                     or

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,3 +23,4 @@ Route::get('/checkout',[App\Http\Controllers\HomeController::class, 'index'])->n
 Route::get('/admin',[App\Http\Controllers\HomeController::class, 'index'])->name('admin');
 Route::get('/admin/product-add',[App\Http\Controllers\HomeController::class, 'index'])->name('product-add');
 Route::get('/admin/product-list',[App\Http\Controllers\HomeController::class, 'index'])->name('product-list');
+Route::post('user/create', [HomeController::class, 'createUser']);
