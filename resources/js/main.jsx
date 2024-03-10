@@ -21,7 +21,6 @@ function Main() {
             // }
         });
     }, []);
-    console.log(manageLogin)
     return (
         <>
             <header id="header" className="">
@@ -35,7 +34,7 @@ function Main() {
             </main>
             <footer id="footer"></footer>
             <section className="" id="auth-section">
-            {manageLogin && <United />}
+            {manageLogin.united && <United />}
             </section>
         </>
     );

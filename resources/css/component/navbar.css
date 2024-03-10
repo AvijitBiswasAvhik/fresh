@@ -162,3 +162,24 @@
 .pop-up-cart-content-header{
     background-color: #faa200;
 }
+#nav-profile-container{
+    /* display: flex;
+    align-items: center;
+    gap: 4px; */
+}
+#nav-profile-photo{
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    border-color: black;
+    border: 2px solid black;
+    overflow: hidden;
+
+    
+}
+#nav-profile-photo img{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    
+}

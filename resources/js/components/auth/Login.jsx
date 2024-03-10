@@ -1,8 +1,44 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "../../../css/component/auth/login.css";
+import { useStateContext } from "../../ContextProvider";
+import axios from "axios";
 
 export default function Login(props) {
-    let loadRegister = props.load;
+    let { manageLogin, setManageLogin, setAuthToken } = useStateContext();
+    let [loginData, setLoginData] = useState({ email: "", password: "" });
+    let [loginErrors, setLoginErrors] = useState({ email: "", password: "" });
+    //let loadRegister = props.load;
+    let loadRegister = (e) => {
+        e.preventDefault();
+        setManageLogin({ ...manageLogin, register: true, login: false });
+    };
+
+    let makeLogin = (e) => {
+        e.preventDefault();
+        axios
+            .post("/api/user/login", loginData)
+            .then((response) => {
+                var expirationDate = new Date();
+                let exDate = new Date(
+                    expirationDate.setDate(expirationDate.getDate() + 1)
+                ).toUTCString();
+                document.cookie =
+                    "auth_token=" +
+                    response.data.plainTextToken +
+                    "; expires=" +
+                    exDate +
+                    "; path=/";
+
+                //setManageLogin({...manageLogin, authToken: response.data});
+               // setAuthToken(false, true, false);
+
+                //setManageLogin({...makeLogin, loginData: response.data})
+                setLoginErrors({ email: "", password: "" });
+            })
+            .catch((error) => {
+                setLoginErrors(error.response.data.errors);
+            });
+    };
     return (
         <div id="login-form">
             <div
@@ -12,13 +48,12 @@ export default function Login(props) {
                 <h4>Sign in </h4>
                 <button
                     className="btn btn-outline-dark rounded rounded-5"
-                    onClick={loadRegister}
+                    onClick={(e) => loadRegister(e)}
                 >
                     Register
                 </button>
             </div>
-            <form className="">
-
+            <form className="" onSubmit={(e) => makeLogin(e)}>
                 <div className="mb-3 mt-1">
                     <label htmlFor="login-email-input" className="form-label">
                         Email address
@@ -28,7 +63,17 @@ export default function Login(props) {
                         className="form-control"
                         id="login-email-input"
                         placeholder="name@gmail.com"
+                        value={loginData.email}
+                        onChange={(e) =>
+                            setLoginData({
+                                ...loginData,
+                                email: e.target.value,
+                            })
+                        }
                     />
+                    <small className="form-text text-danger">
+                        {loginErrors && loginErrors.email}
+                    </small>
                 </div>
                 <div className="mb-3">
                     <label
@@ -41,7 +86,17 @@ export default function Login(props) {
                         type="password"
                         className="form-control"
                         id="login-email-password"
+                        value={loginData.password}
+                        onChange={(e) =>
+                            setLoginData({
+                                ...loginData,
+                                password: e.target.value,
+                            })
+                        }
                     />
+                    <small className="form-text text-danger">
+                        {loginErrors && loginErrors.password}
+                    </small>
                 </div>
                 <div className="mb-3 d-flex justify-content-between">
                     <div className="form-check">

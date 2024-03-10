@@ -9,6 +9,7 @@ use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Http\Requests\login;
 
 class HomeController extends Controller
 {
@@ -30,7 +31,7 @@ class HomeController extends Controller
     public function res(StoreProductControllerRequest $request)
     {
         // Validation rules
-        
+
 
         // If validation passes, continue with your logic
         // For example, you can access validated data using $request->title
@@ -59,9 +60,16 @@ class HomeController extends Controller
         return view('home', ['hello' => $hello]);
     }
 
-    public function login()
+    public function login(login $login)
     {
-        return view('home');
+        $arr = $login->validated();
+        if(Auth::attempt($arr)){
+            $user = Auth::user();
+            $token = $user->createToken('user');
+            return(response($token));
+        }
+        
+         
     }
     public function productView()
     {
@@ -70,11 +78,19 @@ class HomeController extends Controller
     public function createUser(UserRequest $request)
     {
         $data = $request->validated();
-        $data['name'] = ucfirst($request->firstName).' '.ucfirst($request->lastName);
-        User::create($data);
-        if ($data) {
-            return response('hello world');
+        $data['name'] = ucfirst($request->firstName) . ' ' . ucfirst($request->lastName);
+        $user = User::create($data);
+        if ($user) {
+            $token = $user->createToken('AppName');
+
+            return response()->json(['token' => $token], 201);
         }
-        
     }
+    public function isLogin(Request $request)
+    {
+        $user = auth()->user();
+        return response(json_encode($user));
+    }
+
+
 }

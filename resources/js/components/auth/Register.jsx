@@ -1,7 +1,8 @@
-import React, { useState, useHistory } from "react";
+import React, { useState, useHistory, useEffect } from "react";
 import axiosClient from "../../Axios";
+import axios from "axios";
 import { redirect, useNavigate } from "react-router-dom";
-
+import { useStateContext } from "../../ContextProvider";
 
 export default function Register(props) {
     let [registerData, setRegisterData] = useState({
@@ -11,14 +12,20 @@ export default function Register(props) {
         lastName: "",
     });
     let [registerError, setRegisterError] = useState({});
-   
+    let { manageLogin, setManageLogin, setAuthToken } = useStateContext();
+
     let navigate = useNavigate();
+    useEffect(() => {}, []);
+
     let createUser = (e) => {
         e.preventDefault();
-        axiosClient
+        axios
             .post("user/create", registerData)
             .then((response) => {
-                console.log(response.data);
+                document.cookie =
+                    "auth_token" + "=" + response.data.token.plainTextToken;
+
+                setAuthToken(false, true, false);
                 setRegisterError({});
                 props.close; // Assuming closeLogin is a function passed as prop
             })
@@ -26,6 +33,9 @@ export default function Register(props) {
                 setRegisterError(error.response.data.errors);
             });
     };
+
+    // console.log()
+
     return (
         <div className="register-section py-2" id="register-form">
             <h3>Create your account</h3>

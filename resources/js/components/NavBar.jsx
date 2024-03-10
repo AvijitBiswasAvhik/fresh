@@ -4,7 +4,7 @@ import "../../css/component/navbar.css";
 import { useStateContext } from "../ContextProvider";
 
 export default function NavBar() {
-    let {manageLogin, setManageLogin} = useStateContext();
+    let { manageLogin, setManageLogin } = useStateContext();
     useEffect(() => {
         window.addEventListener("click", (e) => {
             if (e.target.id != "sidebar") {
@@ -50,10 +50,11 @@ export default function NavBar() {
     };
     let showHideAuth = (e) => {
         e.preventDefault();
-        setManageLogin(true)
-    
+        let body = document.querySelector("body");
+        body.classList.add("overflow-hidden");
+        setManageLogin({ ...manageLogin, united: true });
     };
-    
+
     return (
         <nav className="nav px-lg-4 px-md-4 px-1 py-1" id="nav">
             <div className="nav-item item">
@@ -133,9 +134,30 @@ export default function NavBar() {
                             // data-bs-target="#auth-page"
                             aria-expanded="false"
                             aria-controls="auth-page"
-                            onClick={(e)=>showHideAuth(e)}
+                            onClick={(e) => showHideAuth(e)}
                         >
-                            Sign in
+                            {manageLogin.loginNow ? (
+                                <div id="nav-profile-container" className="d-flex align-items-center gap-2">
+                                    <div id="nav-profile-photo">
+                                        <img
+                                            src="https://i.etsystatic.com/iusa/2123df/105539236/iusa_400x400.105539236_n6er.jpg?version=0"
+                                            alt=""
+                                        />
+                                    </div>
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="16"
+                                        height="16"
+                                        fill="currentColor"
+                                        className="bi bi-caret-down-fill"
+                                        viewBox="0 0 16 16"
+                                    >
+                                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+                                    </svg>
+                                </div>
+                            ) : (
+                                "Sign in"
+                            )}
                         </button>
                     </div>
                     <div className="favorite cart-menu-item" id="favo">
@@ -254,12 +276,18 @@ export default function NavBar() {
             <div className="nav-item item w-100 d-none d-lg-block p-2">
                 <ul className="d-flex gap-5 h-100 list-inline align-items-center justify-content-center">
                     <li className="list-group-item">
-                        <Link to={'/products/shoe'} className="btn rounded rounded-3 nav-categorise-link">
+                        <Link
+                            to={"/products/shoe"}
+                            className="btn rounded rounded-3 nav-categorise-link"
+                        >
                             Shoe
                         </Link>
                     </li>
                     <li className="list-group-item">
-                        <Link to={'/products/glass'} className="btn rounded rounded-3 nav-categorise-link">
+                        <Link
+                            to={"/products/glass"}
+                            className="btn rounded rounded-3 nav-categorise-link"
+                        >
                             Glass
                         </Link>
                     </li>

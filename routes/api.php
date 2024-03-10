@@ -21,3 +21,5 @@ use App\Http\Controllers\HomeController;
 
 Route::post('admin/get-res', [HomeController::class, 'res']);
 Route::post('user/create', [HomeController::class, 'createUser']);
+Route::middleware('auth:sanctum')->post('user/is-login', [HomeController::class, 'isLogin']);
+Route::post('user/login', [HomeController::class, 'login']);

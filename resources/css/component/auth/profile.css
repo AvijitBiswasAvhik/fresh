@@ -1,0 +1,14 @@
+#user-profile{
+    overscroll-behavior:contain;
+    overflow-y: auto;
+    height: 200vh;
+}
+#user-profile-image{
+    height: 80px;
+    width: 80px;
+    overflow: hidden;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid black;
+
+}
