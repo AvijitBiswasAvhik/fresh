@@ -33,7 +33,7 @@ export default function United() {
     };
     return (
         <div id="auth-page" className="collaps" style={{}}>
-            <div id="login-page-content" className="mx-auto px-4">
+            <div id="login-page-content" className="mx-auto">
                 {manageLogin.loginNow ? (
                     <>
                         <Profile />
@@ -62,7 +62,7 @@ export default function United() {
                         </div>
                     </>
                 ) : (
-                    <>
+                    <div className="px-2">
                         {manageLogin.login && <Login load={loadRegister} />}
                         {manageLogin.register && (
                             <Register close={closeLogin} />
@@ -117,7 +117,7 @@ export default function United() {
                                 </svg>
                             </button>
                         </div>
-                    </>
+                    </div>
                 )}
             </div>
         </div>

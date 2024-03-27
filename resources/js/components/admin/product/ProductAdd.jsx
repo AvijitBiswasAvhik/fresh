@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, cloneElement } from "react";
 import VariablesProduct from "./VariablesProduct";
 import "../../../../css/component/admin/add-product.css";
 import axios from "axios";
+import axiosClient from '../../../Axios';
 
 export default function ProductAdd() {
     let [product, setProduct] = useState({
@@ -412,8 +413,8 @@ export default function ProductAdd() {
     console.log(product);
     let handleSubmit = (e) => {
         e.preventDefault();
-        axios
-            .post("http://127.0.0.1:8000/api/admin/get-res", product)
+        axiosClient
+            .post("admin/get-res", product)
             .then((response) => {
                 console.log(response.data);
                 setProductError({});

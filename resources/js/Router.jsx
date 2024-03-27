@@ -9,6 +9,7 @@ import Checkout from "./components/Checkout";
 import DashBoard from "./components/admin/DashBoard";
 import ProductAdd from "./components/admin/product/ProductAdd";
 import ProductList from "./components/admin/product/ProductList";
+import Account from "./components/auth/Account&Security";
 const router = createBrowserRouter([
     {
         path: "/",
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
             {
                 path: "/checkout",
                 element: <Checkout />,
+            },
+            {
+                path: "/account&security",
+                element: <Account />,
             },
         ],
     },

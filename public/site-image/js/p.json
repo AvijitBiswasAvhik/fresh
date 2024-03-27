@@ -1,0 +1,50 @@
+[
+    {
+        "village": "Baro Amian",
+        "ward": 3,
+        "lattitudeS": 384586,
+        "lattitudeN": 393209,
+        "LongituteW": 262495,
+        "LongituteE": 264323
+    },
+    {
+        "village": "Piprul",
+        "ward": 3,
+        "lattitudeS": 380103,
+        "lattitudeN": 382944,
+        "LongituteW": 246873,
+        "LongituteE": 260936
+    },
+    {
+        "village": "Dhopa Baisha",
+        "ward": 3,
+        "lattitudeS": 385480,
+        "lattitudeN": 396101,
+        "LongituteW": 255613,
+        "LongituteE": 257017
+    },
+    {
+        "village": "Sani Arpara",
+        "ward": 8,
+        "lattitudeS": 438885,
+        "lattitudeN": 441748,
+        "LongituteW": 287877,
+        "LongituteE": 294503
+    },
+    {
+        "village": "Khilgati",
+        "ward": 8,
+        "lattitudeS": 435646,
+        "lattitudeN": 436507,
+        "LongituteW": 302823,
+        "LongituteE": 311159
+    },
+    {
+        "village": "Shorbosangdha",
+        "ward": 9,
+        "lattitudeS": 416677,
+        "lattitudeN": 425971,
+        "LongituteW": 324786,
+        "LongituteE": 325548
+    }
+]

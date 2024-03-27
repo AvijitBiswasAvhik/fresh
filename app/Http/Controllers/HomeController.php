@@ -10,6 +10,12 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Http\Requests\login;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Carbon;
+use App\Http\Requests\StoreAddressRequest;
+use App\Models\Address;
+
+use function PHPSTORM_META\map;
 
 class HomeController extends Controller
 {
@@ -62,14 +68,31 @@ class HomeController extends Controller
 
     public function login(login $login)
     {
+
+
         $arr = $login->validated();
-        if(Auth::attempt($arr)){
+        if (Auth::attempt($arr)) {
             $user = Auth::user();
             $token = $user->createToken('user');
-            return(response($token));
+            if($token){
+                $nUser = User::find($user->id);
+                if ($nUser) {
+                    $nUser->token = $token->plainTextToken;
+                    $nUser->save();
+                    return response($token);
+                }
+            
+            }
+        } else {
+            return response()->json(["errors" => ['loginFailed' => 'The Email or Password does not match our records']], 401);
         }
-        
-         
+    }
+    public function logout()
+    {
+        $user = Auth::user();
+        $user->tokens()->delete();
+
+        return response('Youre logged out', 200);
     }
     public function productView()
     {
@@ -82,15 +105,45 @@ class HomeController extends Controller
         $user = User::create($data);
         if ($user) {
             $token = $user->createToken('AppName');
-
+            if($token){
+                $nUser = User::find($user->id);
+                if ($nUser) {
+                    $nUser->token = $token->plainTextToken;
+                    $nUser->save();
+                }
+            
+            }
             return response()->json(['token' => $token], 201);
         }
     }
+    public function setAdress(StoreAddressRequest $request)
+    {
+        $requestData = $request->validated();
+        $data = [];
+        $data['region'] = $requestData['region'];
+        $data['street_number'] = $requestData['streetNumber'];
+        $data['address_line1'] = $requestData['addressLine1'];
+        $data['address_line2'] = $requestData['addressLine2'];
+        $data['city'] = $requestData['city'];
+        $data['postal_code'] = $requestData['postalCode'];
+        $data['country_id'] = 123;
+        $data['user_id'] = Auth::user()->id;
+        $address = Address::create($data);
+        if ($address) {
+            return response('success',200);
+        }
+        //  $address = Address;
+        $user = User::find(Auth::user()->id);
+        return response(json_encode($user->address));
+    }
+
+
+
+
+
     public function isLogin(Request $request)
     {
         $user = auth()->user();
         return response(json_encode($user));
     }
-
-
 }

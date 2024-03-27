@@ -2,8 +2,11 @@ import React, { useEffect } from "react";
 import { Link, Outlet } from "react-router-dom";
 import "../../../css/component/admin/dashboard.css";
 import Navbar from "./Navbar";
+import { useStateContext } from "../../ContextProvider";
 
 const Dashboard = () => {
+    let {manageLogin} = useStateContext();
+   // console.log(manageLogin.authToken)
     useEffect(() => {
         let allMenu = document.querySelectorAll(".dashboard-sidebar-menu");
         allMenu.forEach((el, i) => {
@@ -55,7 +58,7 @@ const Dashboard = () => {
                             >
                                 <li>
                                     <Link
-                                        to={"/admin/product-add"}
+                                        to={`/admin/product-add?token=${manageLogin.authToken}`}
                                         className="click-able"
                                     >
                                         Product Add
@@ -63,7 +66,7 @@ const Dashboard = () => {
                                 </li>
                                 <li>
                                     <Link
-                                        to={"/admin/product-list"}
+                                        to={`/admin/product-list?token=${manageLogin.authToken}`}
                                         className="click-able"
                                     >
                                         Product List
@@ -91,7 +94,7 @@ const Dashboard = () => {
                                 <li>hello</li>
                                 <li>
                                     <Link
-                                        to={"/admin/product-list"}
+                                        to={`/admin/product-list?token=${manageLogin.authToken}`}
                                         className="click-able"
                                     >
                                         Product List

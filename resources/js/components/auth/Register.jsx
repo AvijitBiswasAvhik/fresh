@@ -19,7 +19,7 @@ export default function Register(props) {
 
     let createUser = (e) => {
         e.preventDefault();
-        axios
+        axiosClient
             .post("user/create", registerData)
             .then((response) => {
                 document.cookie =
@@ -37,7 +37,7 @@ export default function Register(props) {
     // console.log()
 
     return (
-        <div className="register-section py-2" id="register-form">
+        <div className="register-section py-2 px-2" id="register-form">
             <h3>Create your account</h3>
             <h6>Registration is easy.</h6>
             <form className="" onSubmit={(e) => createUser(e)}>

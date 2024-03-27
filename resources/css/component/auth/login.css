@@ -38,4 +38,7 @@
     height: 1px;
     box-shadow: 0 0 1px grey;
 }
-
+.login-password-input:hover{
+    background-color: rgb(185, 185, 185);
+    cursor: pointer;
+}

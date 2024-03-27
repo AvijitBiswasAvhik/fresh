@@ -1,0 +1,14 @@
+.account-security-btn.active{
+    border:0;
+    border-bottom: 2px solid black !important;
+    background-color: transparent !important;
+    
+}
+.account-security-btn{
+    font-size: 16px;
+    font-weight: 600;
+    color: black;}
+.account-security-btn:not(.active){
+    border:0 solid transparent;
+    color: black;
+}

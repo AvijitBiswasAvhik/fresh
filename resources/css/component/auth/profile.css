@@ -1,8 +1,4 @@
-#user-profile{
-    overscroll-behavior:contain;
-    overflow-y: auto;
-    height: 200vh;
-}
+
 #user-profile-image{
     height: 80px;
     width: 80px;
@@ -11,4 +7,9 @@
     border-radius: 50%;
     border: 2px solid black;
 
+}
+
+.profile-menu:hover{
+    background-color: rgb(202, 202, 202);
+    cursor: pointer;
 }

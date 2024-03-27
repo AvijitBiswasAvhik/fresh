@@ -7,6 +7,7 @@ import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import United from "./components/auth/United";
 import { useStateContext } from "./ContextProvider";
+import Address from "./components/auth/Address";
 
 function Main() {
     let {manageLogin} = useStateContext();
@@ -35,6 +36,7 @@ function Main() {
             <footer id="footer"></footer>
             <section className="" id="auth-section">
             {manageLogin.united && <United />}
+            
             </section>
         </>
     );
