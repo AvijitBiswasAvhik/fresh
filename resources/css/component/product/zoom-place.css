@@ -1,0 +1,8 @@
+#zoom-place {
+    object-fit: fill;
+    overflow: hidden;
+}
+#zoom-place img{
+    overflow: hidden;
+
+}

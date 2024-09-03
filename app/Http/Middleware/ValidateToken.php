@@ -30,7 +30,7 @@ class ValidateToken
             $request->admin = $admin;
             return $next($request);
         } else {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return redirect()->route('access.denied');
         }
     }
 }

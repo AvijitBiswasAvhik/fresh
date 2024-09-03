@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef, cloneElement } from "react";
 import VariablesProduct from "./VariablesProduct";
 import "../../../../css/component/admin/add-product.css";
 import axios from "axios";
-import axiosClient from '../../../Axios';
+import axiosClient from "../../../Axios";
+import { useStateContext } from "../../../ContextProvider";
 
 export default function ProductAdd() {
     let [product, setProduct] = useState({
@@ -19,6 +20,7 @@ export default function ProductAdd() {
         variablesLength: 0,
         galleryImage: [],
         image: "",
+        discountPrice: "",
     });
     let [productError, setProductError] = useState();
     let [variationsError, setVariationsError] = useState();
@@ -26,6 +28,18 @@ export default function ProductAdd() {
     let [variations, setVariations] = useState();
     const firstRender = useRef(true);
     const [feature, setFeature] = useState([]);
+    const [categories, setCategories] = useState([]);
+    let { manageLogin } = useStateContext();
+    useEffect(() => {
+        axiosClient
+            .get("product/categories")
+            .then((response) => {
+                setCategories(response.data);
+            })
+            .catch((error) => {
+                console.log(error.response.data);
+            });
+    }, []);
     useEffect(() => {
         let galleryContainers = document.querySelectorAll(
             ".product-gallery-image-container"
@@ -52,7 +66,7 @@ export default function ProductAdd() {
         /////////////////validate vartions/////
     }, [product.galleryImage]);
     useEffect(() => {
-       Array.isArray(variationsError) && 
+        Array.isArray(variationsError) &&
             setVariations((prevVariations) => {
                 const randomNumber = Math.floor(Math.random() * 19000) + 1000;
                 console.log(JSON.parse(variationsError));
@@ -173,18 +187,17 @@ export default function ProductAdd() {
     /////////////Handle drop events //////////
     let handleDrop = (e, el) => {
         var myImage = new Image();
-
         // Assuming you are working with a file input for dropping images
         let file = e.target.files[0];
-        axios
-            .post("http://127.0.0.1:8000/api/admin/get-res", { file: file })
-            .then((response) => {
-                console.log(response);
-            })
-            .catch((error) => {
-                // Handle errors here
-            });
-
+        setProduct((oldEl) => {
+            let formData = new FormData();
+            formData.append("image", file);
+            //  console.log(formData);
+            return {
+                ...oldEl,
+                image: file,
+            };
+        });
         if (file) {
             let imgSrc = URL.createObjectURL(file); // Create a temporary URL for the dropped image
             myImage.src = imgSrc;
@@ -202,9 +215,11 @@ export default function ProductAdd() {
                                 ...oldEl.galleryImage,
                                 {
                                     ["gallery-image" +
+                                    oldEl.galleryImage.length]: file,
+                                    ["gallery-image-src" +
                                     oldEl.galleryImage.length]: imgSrc,
                                     id:
-                                        "gallery-image" +
+                                        "gallery-image-src" +
                                         oldEl.galleryImage.length,
                                 },
                             ],
@@ -219,11 +234,11 @@ export default function ProductAdd() {
 
                 reader.onload = function (event) {
                     const binaryData = event.target.result.split(",")[1];
-                    console.log(binaryData);
                 };
                 reader.readAsDataURL(file);
                 // Now you can use 'myImage' as the image object
                 // Example: document.body.appendChild(myImage);
+                console.log(file);
             };
         }
     };
@@ -410,18 +425,35 @@ export default function ProductAdd() {
             return [...preEl, featureEl];
         });
     };
-    console.log(product);
-    let handleSubmit = (e) => {
+    //console.log(product);
+    let handleSubmit = async (e) => {
         e.preventDefault();
+        let data = new FormData();
+        for (let key in product) {
+            if (key === "description") {
+                // Convert the description object to a JSON string and append it
+                data.append(key, JSON.stringify(product[key]));
+            } else if (key === "galleryImage" && product[key].length > 0) {
+                product[key].forEach((el, i) => {
+                    let keys = Object.keys(el);
+                    data.append(keys[0], el[keys[0]]);
+                    console.log(el[keys[0]]);
+                });
+            } else {
+                // For other keys, append them normally
+                data.append(key, product[key]);
+            }
+        }
+
+        console.log(data);
         axiosClient
-            .post("admin/get-res", product)
+            .post(`admin/product-add`, data)
             .then((response) => {
-                console.log(response.data);
+                console.log("data", response);
                 setProductError({});
                 setVariationsError(null);
             })
             .catch((error) => {
-                console.log("Fetch error:", error.response.data.errors);
                 let errors = error.response.data.errors;
                 setProductError(errors);
                 // Check if variations exist and is an array
@@ -432,17 +464,18 @@ export default function ProductAdd() {
                         "The variations field is required.".length
                 ) {
                     setVariationsError(errors.variations);
-                }else{
+                } else {
                     setVariationsError({});
                 }
             });
     };
-
+    //console.log(manageLogin)
     return (
         <form
             onSubmit={(e) => {
                 handleSubmit(e);
             }}
+            className=""
         >
             <div className="mb-3">
                 <label htmlFor="crate-prodct-title" className="form-label">
@@ -488,6 +521,17 @@ export default function ProductAdd() {
                     {productError && productError.shortDescription}
                 </small>
             </div>
+            {product.shortDescription && (
+                <div className="mb-3">
+                    <p className="h6 fw-bold">Short Description live</p>
+                    <div
+                        className="border border-2 border-warning p-2 shadow rounded-3"
+                        dangerouslySetInnerHTML={{
+                            __html: product.shortDescription,
+                        }}
+                    ></div>
+                </div>
+            )}
             <div className="mb-3">
                 <div
                     className="btn btn-outline-secondary"
@@ -648,16 +692,19 @@ export default function ProductAdd() {
                                         firstCategory: e.target.value,
                                     });
                                 }}
-                                value={product.firstCategory}
                             >
                                 <option>Open this select menu</option>
-                                <option value="electronics">Electronics</option>
-                                <option value="cloth&fashion">
-                                    Clothing and Fashion
-                                </option>
-                                <option value="beauty&personal">
-                                    Beauty and Personal Care
-                                </option>
+                                {categories.length > 0 &&
+                                    categories.map((el, i) => {
+                                        return (
+                                            <option
+                                                value={el.id}
+                                                key={el.category}
+                                            >
+                                                {el.category}
+                                            </option>
+                                        );
+                                    })}
                             </select>
                             <small className="form-text text-danger">
                                 {productError && productError.firstCategory}
@@ -684,13 +731,17 @@ export default function ProductAdd() {
                                 value={product.subCategory}
                             >
                                 <option>Open this select menu</option>
-                                <option value="electronics">Electronics</option>
-                                <option value="cloth&fashion">
-                                    Clothing and Fashion
-                                </option>
-                                <option value="beauty&personal">
-                                    Beauty and Personal Care
-                                </option>
+                                {categories.length > 0 &&
+                                    categories.map((el, i) => {
+                                        return (
+                                            <option
+                                                value={el.id}
+                                                key={el.category + "" + i}
+                                            >
+                                                {el.category}
+                                            </option>
+                                        );
+                                    })}
                             </select>
                             <small className="form-text text-danger">
                                 {productError && productError.subCategory}
@@ -698,26 +749,26 @@ export default function ProductAdd() {
                         </div>
                         <div className="mb-3">
                             <label
-                                htmlFor="create-product-sku"
+                                htmlFor="create-product-discount-price"
                                 className="form-label"
                             >
-                                SKU (Stock Keeping Unit):
+                                Discount Price
                             </label>
                             <input
                                 type="number"
                                 className="form-control"
-                                id="create-product-sku"
-                                placeholder="product sku"
+                                id="create-product-discount-price"
+                                placeholder="discount product price"
                                 onChange={(e) => {
                                     setProduct({
                                         ...product,
-                                        sku: e.target.value,
+                                        discountPrice: e.target.value,
                                     });
                                 }}
-                                value={product.sku}
+                                value={product.discountPrice}
                             />
                             <small className="form-text text-danger">
-                                {productError && productError.sku}
+                                {productError && productError.discountPrice}
                             </small>
                         </div>
                     </div>
@@ -748,6 +799,7 @@ export default function ProductAdd() {
                                 {productError && productError.price}
                             </small>
                         </div>
+
                         <div className="mb-3">
                             <label
                                 htmlFor="create-product-quantity"
@@ -839,7 +891,7 @@ export default function ProductAdd() {
             <div className="row">
                 <div className="col-12 col-sm-6 position-relative">
                     <div
-                        className="shadow p-2 border rounded-2 d-flex align-items-center position-sticky top-0 justify-content-center"
+                        className="shadow p-2 mb-2 border rounded-2 d-flex align-items-center position-sticky top-0 justify-content-center"
                         id="uploaded-product-image-container"
                     >
                         <label
@@ -891,6 +943,9 @@ export default function ProductAdd() {
                             </div>
                         </label>
                     </div>
+                    <small className="form-text text-danger">
+                        {productError && productError.image}
+                    </small>
                 </div>
                 <div className="col-12 col-sm-6 position-relative">
                     <div className="position-sticky top-0">
@@ -954,6 +1009,9 @@ export default function ProductAdd() {
                                         );
                                     })}
                             </div>
+                            <small className="form-text text-danger">
+                                {productError && productError["gallery-image0"]}
+                            </small>
                         </div>
                     </div>
                 </div>

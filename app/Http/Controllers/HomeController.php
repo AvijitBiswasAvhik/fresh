@@ -13,7 +13,9 @@ use App\Http\Requests\login;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Carbon;
 use App\Http\Requests\StoreAddressRequest;
+use App\Http\Requests\StoreProfileImage;
 use App\Models\Address;
+use Illuminate\Support\Facades\Storage;
 
 use function PHPSTORM_META\map;
 
@@ -74,14 +76,13 @@ class HomeController extends Controller
         if (Auth::attempt($arr)) {
             $user = Auth::user();
             $token = $user->createToken('user');
-            if($token){
+            if ($token) {
                 $nUser = User::find($user->id);
                 if ($nUser) {
                     $nUser->token = $token->plainTextToken;
                     $nUser->save();
                     return response($token);
                 }
-            
             }
         } else {
             return response()->json(["errors" => ['loginFailed' => 'The Email or Password does not match our records']], 401);
@@ -105,13 +106,12 @@ class HomeController extends Controller
         $user = User::create($data);
         if ($user) {
             $token = $user->createToken('AppName');
-            if($token){
+            if ($token) {
                 $nUser = User::find($user->id);
                 if ($nUser) {
                     $nUser->token = $token->plainTextToken;
                     $nUser->save();
                 }
-            
             }
             return response()->json(['token' => $token], 201);
         }
@@ -130,7 +130,7 @@ class HomeController extends Controller
         $data['user_id'] = Auth::user()->id;
         $address = Address::create($data);
         if ($address) {
-            return response('success',200);
+            return response('success', 200);
         }
         //  $address = Address;
         $user = User::find(Auth::user()->id);
@@ -145,5 +145,21 @@ class HomeController extends Controller
     {
         $user = auth()->user();
         return response(json_encode($user));
+    }
+    public function setProfileImage(StoreProfileImage $request)
+    {
+        $imagePath = $request->file('image')->store('public/user/image');
+
+        // Get the URL of the stored image
+        $imageUrl = Storage::url($imagePath);
+        $user = auth()->user();
+        if ($user && $imageUrl) {
+            $user = User::find($user->id);
+            $user->image = $imageUrl;
+            $user->save();
+            return response($imageUrl);
+        }
+        
+        
     }
 }

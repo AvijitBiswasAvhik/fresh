@@ -10,6 +10,9 @@ const StateContext = createContext({
     setAuthToken: () => {},
     loginNow: {},
     loginData: {},
+    cart: {},
+    setCart: () => {},
+    addCart: () => {},
 });
 
 export function ContextProvider({ children }) {
@@ -25,11 +28,13 @@ export function ContextProvider({ children }) {
             email_verified_at: null,
             id: 0,
             name: "",
+            image: "",
             updated_at: "",
         },
         addressForm: false,
     });
     const [isLogined, setIsLogined] = useState({ login: false });
+    let [cart, setCart] = useState(null);
     useEffect(() => {
         if (manageLogin.loginNow == true && manageLogin.authToken) {
             let url = `${metaData.appUrl}api/user/is-login`;
@@ -46,7 +51,6 @@ export function ContextProvider({ children }) {
                     // Payload data as an object
                 )
                 .then((response) => {
-                    console.log(response.data);
                     setManageLogin({
                         ...manageLogin,
                         loginData: response.data,
@@ -58,18 +62,38 @@ export function ContextProvider({ children }) {
                 });
         }
     }, [manageLogin.loginNow]);
+    let addCart = (item) => {
+        console.log(item);
+        let exist = JSON.parse(localStorage.getItem("cart"));
+        let arr = [];
+        if (exist) {
+            for (let i = 0; i < exist.length; i++) {
+                arr.push(exist[i].sku);
+            }
+        }
+        if (arr.length > 0 && arr.includes(item)) {
+            return;
+        } else if (!arr.includes(item) && exist) {
+            localStorage.setItem(
+                "cart",
+                JSON.stringify([...exist, { sku: item }])
+            );
+        } else if (!arr.includes(item) && !exist) {
+            localStorage.setItem("cart", JSON.stringify([{ sku: item }]));
+        }
 
-  //  console.log(manageLogin);
+        setCart(JSON.parse(localStorage.getItem("cart")));
+    };
+    //  console.log(manageLogin);
     let setAuthToken = (register, login, united) => {
         let arr = document.cookie.split(";");
         for (var i = 0; i < arr.length; i++) {
             let nS = arr[i].trim().substring(0, "auth_token".length);
             if (nS.indexOf("auth_token") == 0 && nS == "auth_token") {
-                
                 let authToken = arr[i]
                     .trim()
                     .substring(nS.length + 1, arr[i].length);
-                    let url = `${metaData.appUrl}api/user/is-login`;
+                let url = `${metaData.appUrl}api/user/is-login`;
 
                 axios
                     .post(
@@ -101,7 +125,6 @@ export function ContextProvider({ children }) {
         }
     };
     useEffect(() => {
-        
         setAuthToken();
     }, []);
     //axiosClient.
@@ -111,7 +134,15 @@ export function ContextProvider({ children }) {
 
     return (
         <StateContext.Provider
-            value={{ manageLogin, setManageLogin, loginState, setAuthToken }}
+            value={{
+                manageLogin,
+                setManageLogin,
+                loginState,
+                setAuthToken,
+                cart,
+                setCart,
+                addCart,
+            }}
         >
             {children}
         </StateContext.Provider>

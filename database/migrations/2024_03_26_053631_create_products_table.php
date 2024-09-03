@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('categories_id');
+            $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('subcategory_id');
             // $table->unsignedBigInteger('description_long_id');
             // $table->unsignedBigInteger('feature_id');
@@ -21,9 +21,9 @@ return new class extends Migration
            // $table->string('short_description_id');
             $table->string('title',100);
             $table->string('product_image',100);
-            $table->string('description',150);
+            $table->string('description',250);
             $table->timestamps();
-            $table->foreign('categories_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->foreign('subcategory_id')->references('id')->on('categories')->onDelete('cascade');
             // $table->foreign('description_long_id')->references('id')->on('description_longs')->onDelete('cascade');
             // $table->foreign('feature_id')->references('id')->on('features')->onDelete('cascade');

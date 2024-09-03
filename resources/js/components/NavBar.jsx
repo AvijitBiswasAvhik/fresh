@@ -2,9 +2,10 @@ import React, { useEffect, useRef } from "react";
 import { Link, NavLink } from "react-router-dom";
 import "../../css/component/navbar.css";
 import { useStateContext } from "../ContextProvider";
+import Cart from "./product/Cart";
 
 export default function NavBar() {
-    let { manageLogin, setManageLogin } = useStateContext();
+    let { manageLogin, setManageLogin,cart } = useStateContext();
     useEffect(() => {
         window.addEventListener("click", (e) => {
             if (e.target.id != "sidebar") {
@@ -60,15 +61,24 @@ export default function NavBar() {
             <div className="nav-item item">
                 <div className="brandImage">
                     <a
-                        href=""
+                        href="/"
                         className="brand-image-link text-decoration-none"
                     >
-                        <img
-                            src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/8ab3bba3-5b59-43a1-9e2a-e1593d3ca64f/ddsn174-21df4ea8-9aeb-4c9b-aaa4-30852f0d7822.jpg/v1/fill/w_1121,h_713,q_70,strp/little_girl_hugging_lion_art_by_helpful111_ddsn174-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9ODE0IiwicGF0aCI6IlwvZlwvOGFiM2JiYTMtNWI1OS00M2ExLTllMmEtZTE1OTNkM2NhNjRmXC9kZHNuMTc0LTIxZGY0ZWE4LTlhZWItNGM5Yi1hYWE0LTMwODUyZjBkNzgyMi5qcGciLCJ3aWR0aCI6Ijw9MTI4MCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.eE5zoy3JXrdzMWLFe_bO-cdZHsEjZIwFigKkLC_Pt3Q"
-                            alt=""
-                            srcSet=""
-                            className="brand-image-element"
-                        />
+                        {manageLogin.loginData.image ? (
+                            <img
+                                className="card-img-top brand-image-element"
+                                src={manageLogin.loginData.image}
+                                alt="Card image cap"
+                                
+                            />
+                        ) : (
+                            <img
+                                className="card-img-top brand-image-element"
+                                src=""
+                                alt="Card image cap"
+                                
+                            />
+                        )}
                     </a>
                 </div>
             </div>
@@ -137,12 +147,26 @@ export default function NavBar() {
                             onClick={(e) => showHideAuth(e)}
                         >
                             {manageLogin.loginNow ? (
-                                <div id="nav-profile-container" className="d-flex align-items-center gap-2">
+                                <div
+                                    id="nav-profile-container"
+                                    className="d-flex align-items-center gap-2"
+                                >
                                     <div id="nav-profile-photo">
-                                        <img
-                                            src="https://i.etsystatic.com/iusa/2123df/105539236/iusa_400x400.105539236_n6er.jpg?version=0"
-                                            alt=""
-                                        />
+                                    {manageLogin.loginData.image ? (
+                            <img
+                                className="card-img-top brand-image-element"
+                                src={manageLogin.loginData.image}
+                                alt="Card image cap"
+                                
+                            />
+                        ) : (
+                            <img
+                                className="card-img-top brand-image-element"
+                                src=""
+                                alt="Card image cap"
+                                
+                            />
+                        )}
                                     </div>
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
@@ -188,7 +212,7 @@ export default function NavBar() {
                         >
                             <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5H3.14zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0" />
                         </svg>
-                        <span className="cart-count">9</span>
+                        <span className="cart-count">{cart && cart.length}</span>
                     </div>
                     <div
                         className="pop-up-cart-content rounded rounded-2 card "
@@ -196,80 +220,7 @@ export default function NavBar() {
                         onMouseEnter={(e) => middleMan(e)}
                         onMouseLeave={outCart}
                     >
-                        <div className="card">
-                            <div className="pop-up-cart-content-header p-1 card-header fw-bold">
-                                Cart(1 item)
-                            </div>
-                            <div
-                                className="card-body overflow-hidden"
-                                style={{ height: "150px" }}
-                            >
-                                <div className="row h-100 border border-1">
-                                    <div className="col border border-1 p-0">
-                                        <img
-                                            src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/8ab3bba3-5b59-43a1-9e2a-e1593d3ca64f/ddsn174-21df4ea8-9aeb-4c9b-aaa4-30852f0d7822.jpg/v1/fill/w_1121,h_713,q_70,strp/little_girl_hugging_lion_art_by_helpful111_ddsn174-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9ODE0IiwicGF0aCI6IlwvZlwvOGFiM2JiYTMtNWI1OS00M2ExLTllMmEtZTE1OTNkM2NhNjRmXC9kZHNuMTc0LTIxZGY0ZWE4LTlhZWItNGM5Yi1hYWE0LTMwODUyZjBkNzgyMi5qcGciLCJ3aWR0aCI6Ijw9MTI4MCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.eE5zoy3JXrdzMWLFe_bO-cdZHsEjZIwFigKkLC_Pt3Q"
-                                            alt=""
-                                            className="h-100 w-100"
-                                            style={{ objectFit: "cover" }}
-                                        />
-                                    </div>
-                                    <div className="col border border-1 lh-1">
-                                        <div className="card-title ">
-                                            <h5 className="fw-bold">Hello</h5>
-                                        </div>
-                                        <p
-                                            className="card-text font-monospaces"
-                                            style={{
-                                                marginTop: "-10px",
-                                                fontSize: "12px",
-                                            }}
-                                        >
-                                            Some quick example...
-                                        </p>
-                                        <p
-                                            className="d-flex justify-content-between fw-bold"
-                                            style={{ fontSize: "12px" }}
-                                        >
-                                            <span className="">USD</span>{" "}
-                                            <span>$100</span>
-                                        </p>
-                                        <p
-                                            className="d-flex justify-content-between fw-medium"
-                                            style={{
-                                                fontSize: "12px",
-                                                marginTop: "-10px",
-                                            }}
-                                        >
-                                            <span>qty</span> <span>3</span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="card-footer p-2">
-                                <div className="card-title fw-bold d-flex justify-content-between">
-                                    <h6 className="fw-bold">SubTotal</h6>
-                                    <h6 className="fw-bold">USD $100</h6>
-                                </div>
-                                <div
-                                    className="card-text text-muted text-center"
-                                    style={{
-                                        marginTop: "-15px",
-                                        fontSize: "12px",
-                                    }}
-                                >
-                                    exCluding(Shipping tax)
-                                </div>
-                                <div className="d-grid  mx-auto">
-                                    <button
-                                        className="btn w-100 btn-secondary rounded rounded-5 fw-bold"
-                                        type="button"
-                                        style={{ color: "#faa200" }}
-                                    >
-                                        View cart & check out
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                        <Cart />
                     </div>
                 </div>
             </div>

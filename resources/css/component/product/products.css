@@ -55,17 +55,27 @@
 }
 
 /*Degine products show section */
-#product-show-section{
+#product-show-section {
     z-index: -1;
 }
-#prosucts-show-section > #products-show-sidebar{
+#prosucts-show-section > #products-show-sidebar {
     border: 1px solid black;
 }
-.products-product-show-section-products-heart{
+.products-product-show-section-products-heart {
     display: none;
+    cursor: pointer;
 }
-.products-product-show-section-products:hover .products-product-show-section-products-heart{
+
+.products-product-show-section-products:hover
+    .products-product-show-section-products-heart {
     background-color: blueviolet;
     display: flex;
 }
 /*end product show section*/
+#products-show-sidebar-box {
+    
+}
+#products-show-sidebar{
+    position: sticky;
+    top: 0;
+}

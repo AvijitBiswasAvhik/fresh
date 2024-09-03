@@ -40,6 +40,25 @@ export default function Profile() {
         e.preventDefault();
         setManageLogin({ ...manageLogin, united: false });
     };
+    let setProfileImage = (e) => {
+        let image = new FormData();
+        if (e.target.files[0]) {
+            image.append("image", e.target.files[0]);
+        }
+        if (image) {
+            axiosClient
+                .post(`set-profile-image`, image)
+                .then((response) => {
+                    setManageLogin({...manageLogin,loginData:{
+                        ...manageLogin.loginData,
+                        image: response.data,
+                    }})
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+    };
     return (
         <div className="card p-2 border-0 shadow-lg">
             <div className="row">
@@ -49,11 +68,19 @@ export default function Profile() {
                             className="profile-image position-relative"
                             id="user-profile-image"
                         >
-                            <img
-                                className="card-img-top"
-                                src="https://i.etsystatic.com/iusa/2123df/105539236/iusa_400x400.105539236_n6er.jpg?version=0"
-                                alt="Card image cap"
-                            />
+                            {manageLogin.loginData.image ? (
+                                <img
+                                    className="card-img-top"
+                                    src={manageLogin.loginData.image}
+                                    alt="Card image cap"
+                                />
+                            ) : (
+                                <input
+                                    type="file"
+                                    className="h-100 w-100 opacity-0"
+                                    onChange={(e) => setProfileImage(e)}
+                                ></input>
+                            )}
                         </div>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -146,29 +173,31 @@ export default function Profile() {
                                 </svg>
                                 <div>Etsy registry</div>
                             </div>
-                           {manageLogin.loginData.user_type == 'admin' && <div
-                                className="d-flex align-items-center gap-2 profile-menu px-2 py-1 "
-                                style={{}}
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="16"
-                                    height="16"
-                                    fillRule="currentColor"
-                                    className="bi bi-person-fill"
-                                    viewBox="0 0 16 16"
+                            {manageLogin.loginData.user_type == "admin" && (
+                                <div
+                                    className="d-flex align-items-center gap-2 profile-menu px-2 py-1 "
+                                    style={{}}
                                 >
-                                    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
-                                </svg>
-                                <div>
-                                    <a
-                                        className="text-decoration-none text-dark"
-                                        href={`/admin?token=${manageLogin.authToken}`}
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="16"
+                                        height="16"
+                                        fillRule="currentColor"
+                                        className="bi bi-person-fill"
+                                        viewBox="0 0 16 16"
                                     >
-                                        Admin
-                                    </a>
+                                        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+                                    </svg>
+                                    <div>
+                                        <a
+                                            className="text-decoration-none text-dark"
+                                            href={`/admin?token=${manageLogin.authToken}`}
+                                        >
+                                            Admin
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>}
+                            )}
                             <div
                                 className="d-flex align-items-center gap-2 profile-menu px-2 py-1 "
                                 style={{}}

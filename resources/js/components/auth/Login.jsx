@@ -4,7 +4,7 @@ import { useStateContext } from "../../ContextProvider";
 import axios from "axios";
 import metaData from "../../MetaData";
 
-export default function Login(props) {
+export default function Login({closeLogin}) {
     let { manageLogin, setManageLogin, setAuthToken } = useStateContext();
     let [loginData, setLoginData] = useState({ email: "", password: "" });
     let [loginErrors, setLoginErrors] = useState({ email: "", password: "" });
@@ -31,22 +31,20 @@ export default function Login(props) {
                     "; expires=" +
                     exDate +
                     "; path=/";
-                console.log(response.data);
                 setManageLogin({
                     ...manageLogin,
                     authToken: response.data.plainTextToken,
                     loginNow: true,
                 });
                 setAuthToken(false, true, false);
-
                 setLoginErrors({ email: "", password: "" });
+                closeLogin(null);
             })
             .catch((error) => {
                 console.log(error);
                 setLoginErrors(error.response.data.errors);
             });
     };
-    console.log(loginErrors);
     return (
         <div id="login-form" className="px-2">
             <div

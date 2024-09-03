@@ -34,4 +34,7 @@ Route::middleware([ValidateToken::class])->group(function () {
     Route::get('/admin/product-add', [App\Http\Controllers\HomeController::class, 'index'])->name('product-add');
     Route::get('/admin/product-list', [App\Http\Controllers\HomeController::class, 'index'])->name('product-list');
 });
+Route::get('/accese-denied',function(){
+    return view('accese-denied');
+})->name('access.denied');
 Route::post('user/create', [HomeController::class, 'createUser']);

@@ -26,9 +26,11 @@ const Dashboard = () => {
         });
     }, []);
     return (
+        <div className="container p-0 w-100 overflow-hidden" id="admin-dashboard">
+            <Navbar />
             <div className="row px-md-3 px-lg-5" id="admin-dashboard">
                 <div className="col-12">
-                    <Navbar />
+                    
                 </div>
                 <div
                     className="col-lg-2 col-md-3 d-md-block  d-none p-0 position-relative"
@@ -114,6 +116,7 @@ const Dashboard = () => {
                 <div className="col-lg-10 col-md-9 col-12 pe-md-0" id="admin-dashboard-body">
                 <div className="shadow h-100 rounded-1 w-100 bg-white p-1 px-2"><Outlet /></div>
                 </div>
+            </div>
             </div>
     );
 };

@@ -9,9 +9,11 @@ export default function United() {
     let [load, setLoad] = useState(true);
     let { manageLogin, setManageLogin } = useStateContext();
     let closeLogin = (e) => {
-        e.stopPropagation();
+        if (e != null) {
+            e.stopPropagation();
+        }
         let body = document.querySelector("body");
-        body.classList.remove('overflow-hidden');
+        body.classList.remove("overflow-hidden");
         setManageLogin({
             ...manageLogin,
             united: false,
@@ -26,6 +28,7 @@ export default function United() {
     };
     let loadRegister = (e) => {
         e.stopPropagation();
+
         let loginForm = document.getElementById("login-form");
         loginForm.classList.remove("show");
         let registerForm = document.getElementById("register-form");
@@ -63,7 +66,12 @@ export default function United() {
                     </>
                 ) : (
                     <div className="px-2">
-                        {manageLogin.login && <Login load={loadRegister} />}
+                        {manageLogin.login && (
+                            <Login
+                                load={loadRegister}
+                                closeLogin={closeLogin}
+                            />
+                        )}
                         {manageLogin.register && (
                             <Register close={closeLogin} />
                         )}
