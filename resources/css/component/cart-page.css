@@ -1,0 +1,141 @@
+.cart-container {
+    width: 90%;
+    max-width: 1000px;
+    margin: auto;
+    font-family: Arial, sans-serif;
+  }
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    padding: 20px 0;
+    flex-wrap: wrap;
+  }
+  
+  .product-image {
+    width: 100px;
+    height: auto;
+  }
+  
+  .item-details {
+    flex: 2;
+    margin-left: 20px;
+    min-width: 150px;
+  }
+  
+  .item-details h4 {
+    margin: 0;
+  }
+  
+  .shipping-date {
+    color: orange;
+  }
+  
+  .price-quantity {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-width: 250px;
+  }
+  
+  .price, .total {
+    font-weight: bold;
+  }
+  
+  .quantity-control {
+    display: flex;
+    align-items: center;
+  }
+  
+  .quantity-btn {
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  .quantity-input {
+    width: 40px;
+    text-align: center;
+    margin: 0 10px;
+  }
+  
+  .delete-btn {
+    background-color: transparent;
+    border: none;
+    color: red;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  
+  .summary-section {
+    text-align: right;
+    margin-top: 30px;
+  }
+  
+  .summary-section p, .summary-section h3 {
+    margin: 5px 0;
+  }
+  
+  .checkout-btn {
+    background-color: #000;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .free-shipping {
+    color: green;
+  }
+  
+  /* Media Queries for Responsive Design */
+  @media (max-width: 768px) {
+    .cart-item {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .price-quantity {
+      flex-direction: column;
+      align-items: flex-start;
+      margin-top: 10px;
+    }
+  
+    .product-image {
+      width: 80px;
+    }
+  
+    .item-details {
+      margin: 10px 0;
+    }
+  
+    .summary-section {
+      text-align: left;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .cart-container {
+      width: 95%;
+    }
+  
+    .product-image {
+      width: 60px;
+    }
+  
+    .price-quantity {
+      width: 100%;
+    }
+  
+    .quantity-input {
+      width: 35px;
+    }
+  }
+  

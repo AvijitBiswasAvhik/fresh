@@ -1,45 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axiosClient from "../../Axios";
+import { Link } from 'react-router-dom'
 import { useStateContext } from "../../ContextProvider";
 
 export default function Cart() {
-    let { cart, setCart } = useStateContext();
-    let [newCart, setNewCart] = useState([]);
+    let { cartData, setCartData } = useStateContext();
+    let cartList = useRef(null);
+    
 
-    useEffect(() => {
-        setCart(JSON.parse(localStorage.getItem("cart")));
-    }, []);
-    useEffect(() => {
-        axiosClient
-            .post("cart-data", cart)
-            .then((response) => {
-                setNewCart(response.data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }, [cart]);
-    function checkCart() {
-        axiosClient
-            .post("add-to-cart", { user_id: 1, product_id: 3 })
-            .then((response) => {
-                console.log(response.data); // Logs the response data
-            })
-            .catch((error) => {
-                console.error(
-                    error.response ? error.response.data : error.message
-                ); // Handles and logs the error
-            });
-    }
+
+    
+
+   
 
     return (
-        <div className="card">
+        
+        <div className="card pop-up-cart-content" id="pop-up-cart-content" >
             <div className="pop-up-cart-content-header p-1 card-header fw-bold">
-                Cart({newCart && newCart.length} item)
+                Cart({cartData && cartData.length} item)
             </div>
             <div className="card-body" style={{}}>
-                {newCart &&
-                    newCart.map((el, i) => {
+                {cartData &&
+                    cartData.map((el, i) => {
                         return (
                             <div
                                 className="row h-100 border border-1"
@@ -56,8 +38,8 @@ export default function Cart() {
                                 <div className="col border border-1 lh-1">
                                     <div className="card-title ">
                                         <h6 className="fw-bold">
-                                            {newCart &&
-                                                newCart.length > 0 &&
+                                            {cartData &&
+                                                cartData.length > 0 &&
                                                 el.title.substr(0, 15)}
                                         </h6>
                                     </div>
@@ -77,8 +59,8 @@ export default function Cart() {
                                         <span className="">USD</span>{" "}
                                         <span>
                                             ${" "}
-                                            {newCart &&
-                                                newCart.length > 0 &&
+                                            {cartData &&
+                                                cartData.length > 0 &&
                                                 el.product_items[0]
                                                     .discount_price}
                                         </span>
@@ -92,8 +74,8 @@ export default function Cart() {
                                     >
                                         <span>qty</span>{" "}
                                         <span>
-                                            {newCart &&
-                                                newCart.length > 0 &&
+                                            {cartData &&
+                                                cartData.length > 0 &&
                                                 el.product_items[0].quantity}
                                         </span>
                                     </p>
@@ -102,14 +84,14 @@ export default function Cart() {
                         );
                     })}
             </div>
-            <div className="card-footer p-2">
+             <div className="card-footer p-2">
                 <div className="card-title fw-bold d-flex justify-content-between">
                     <h6 className="fw-bold">SubTotal</h6>
                     <h6 className="fw-bold">
                         USD $
-                        {newCart &&
-                            newCart.length > 0 &&
-                            newCart.reduce((total, current) => {
+                        {cartData &&
+                            cartData.length > 0 &&
+                            cartData.reduce((total, current) => {
                                 return (
                                     total +
                                     current.product_items[0].discount_price
@@ -130,14 +112,12 @@ export default function Cart() {
                         className="btn w-100 btn-secondary rounded rounded-5 fw-bold"
                         type="button"
                         style={{ color: "#faa200" }}
-                        onClick={() => {
-                            checkCart();
-                        }}
+                        
                     >
-                        View cart & check out
+                       <Link to={"/cart-view"} className="text-decoration-none link-warning"> View cart & check out</Link>
                     </button>
                 </div>
-            </div>
-        </div>
+            </div> 
+        </div> 
     );
 }

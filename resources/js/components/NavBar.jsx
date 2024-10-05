@@ -1,11 +1,13 @@
 import React, { useEffect, useRef } from "react";
 import { Link, NavLink } from "react-router-dom";
 import "../../css/component/navbar.css";
+import '../../css/component/cart.css'
 import { useStateContext } from "../ContextProvider";
 import Cart from "./product/Cart";
 
 export default function NavBar() {
-    let { manageLogin, setManageLogin,cart } = useStateContext();
+    let cartList = useRef();
+    let { manageLogin, setManageLogin, cartItems } = useStateContext();
     useEffect(() => {
         window.addEventListener("click", (e) => {
             if (e.target.id != "sidebar") {
@@ -32,15 +34,21 @@ export default function NavBar() {
         sideBar.style.top = e.clientY + 30 + "px";
     };
     let showCart = (e) => {
-        e.stopPropagation();
         let popCart = document.getElementById("pop-up-cart-content");
-        popCart.classList.add("expand");
-    };
-    let hideCart = (e) => {
+        popCart.classList.add("show");
+        let reactApp = document.getElementById("react-app");
+
         e.stopPropagation();
-        let popCart = document.getElementById("pop-up-cart-content");
-        popCart.classList.remove("expand");
+        document.body.addEventListener("click", (e) => {
+            e.stopPropagation();
+            let popCart = document.getElementById("pop-up-cart-content");
+
+            if (!popCart.contains(e.target)) {
+                popCart.classList.remove("show");
+            }
+        });
     };
+
     let middleMan = (e) => {
         let popCart = document.getElementById("pop-up-cart-content");
         popCart.classList.add("expand");
@@ -69,14 +77,12 @@ export default function NavBar() {
                                 className="card-img-top brand-image-element"
                                 src={manageLogin.loginData.image}
                                 alt="Card image cap"
-                                
                             />
                         ) : (
                             <img
                                 className="card-img-top brand-image-element"
                                 src=""
                                 alt="Card image cap"
-                                
                             />
                         )}
                     </a>
@@ -152,21 +158,21 @@ export default function NavBar() {
                                     className="d-flex align-items-center gap-2"
                                 >
                                     <div id="nav-profile-photo">
-                                    {manageLogin.loginData.image ? (
-                            <img
-                                className="card-img-top brand-image-element"
-                                src={manageLogin.loginData.image}
-                                alt="Card image cap"
-                                
-                            />
-                        ) : (
-                            <img
-                                className="card-img-top brand-image-element"
-                                src=""
-                                alt="Card image cap"
-                                
-                            />
-                        )}
+                                        {manageLogin.loginData.image ? (
+                                            <img
+                                                className="card-img-top brand-image-element"
+                                                src={
+                                                    manageLogin.loginData.image
+                                                }
+                                                alt="Card image cap"
+                                            />
+                                        ) : (
+                                            <img
+                                                className="card-img-top brand-image-element"
+                                                src=""
+                                                alt="Card image cap"
+                                            />
+                                        )}
                                     </div>
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
@@ -199,8 +205,7 @@ export default function NavBar() {
                     <div
                         className="cart cart-menu-item"
                         id="nav-cart-item"
-                        onMouseEnter={(e) => showCart(e)}
-                        onMouseLeave={(e) => hideCart(e)}
+                        onClick={(e) => showCart(e)}
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -212,16 +217,18 @@ export default function NavBar() {
                         >
                             <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5H3.14zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0" />
                         </svg>
-                        <span className="cart-count">{cart && cart.length}</span>
+                        <span className="cart-count">
+                            {cartItems && cartItems.cartData.length}
+                        </span>
                     </div>
-                    <div
-                        className="pop-up-cart-content rounded rounded-2 card "
-                        id="pop-up-cart-content"
-                        onMouseEnter={(e) => middleMan(e)}
-                        onMouseLeave={outCart}
-                    >
+                    {/* <div
+                        className="rounded rounded-2 card "
+                        id=""
+                        // onMouseEnter={(e) => middleMan(e)}
+                        // onMouseLeave={outCart}
+                    > */}
                         <Cart />
-                    </div>
+                    {/* </div> */}
                 </div>
             </div>
             <div className="nav-item item w-100 d-none d-lg-block p-2">

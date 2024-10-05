@@ -79,3 +79,15 @@
     position: sticky;
     top: 0;
 }
+.product-image-container{
+    max-height: 263px;
+    object-fit: cover;
+    overflow: hidden;
+}
+#filter-pop-up-box{
+    display: block !important;
+    border: 1px solid black;
+    position: absolute;
+    background-color: white;
+    
+}

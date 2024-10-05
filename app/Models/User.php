@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Address;
 use App\Models\UserPaymentMethod;
+use App\Models\UserCart;
 
 class User extends Authenticatable
 {
@@ -49,5 +50,8 @@ class User extends Authenticatable
     }
     public function paymentMethod(){
         return $this->hasMany(UserPaymentMethod::class);
+    }
+    public function userCart(){
+        return $this->hasMany(UserCart::class);
     }
 }

@@ -115,19 +115,45 @@ class ProductController extends Controller
      */
     public function show(Product $product, Request $request, Category $categories)
     {
-        $cat = $request->cat;
-        if ($cat) {
-            
-            $category = $categories->where('category',$cat)->first();
-           if ($category) {
-            $product = $category->products->load('productItems')->load('category')->load('galleryImages');
-            return response(json_encode($product));
-           }else {
-            return response(json_encode($product->with('productItems')->get()));
-           }
-            
-        }
-       
+        $offset = $request->input('offset', 0);  // Default to 0 if not provided
+        $categoryNames = $request->input('category', []);  // Categories array to filter (from the request)
+        $price_min = $request->input('price_min');  // Minimum price
+        $price_max = $request->input('price_max');  // Maximum price
+        $discount_price = $request->input('discount_price');  // Discount price
+
+        // Find categories by their names (or other identifier)
+        $categories = \App\Models\Category::whereIn('category', $categoryNames)->get();
+
+        // Check if any categories exist
+        $products = \App\Models\Product::when($categories && $categories->isNotEmpty(), function ($query) use ($categories) {
+            // Apply the category filter only if categories exist
+            return $query->whereIn('category_id', $categories->pluck('id'));
+        })->with(['productItems', 'category', 'galleryImages'])  // Load related data
+            ->whereHas('productItems', function ($query) use ($price_min, $price_max, $discount_price) {
+                // Apply conditions on productItems (price and discount_price)
+                if (!empty($price_min)) {
+                    $query->where('price', '>=', $price_min);
+                }
+                if (!empty($price_max)) {
+                    $query->where('price', '<=', $price_max);
+                }
+                if (!empty($discount_price)) {
+                    $query->where('discount_price', '>=', $discount_price);
+                }
+            })
+
+        // Apply the category filter only if categories exist
+
+
+
+
+        // Apply pagination and retrieve the products
+        ->limit(50)  // Limit the number of products
+            ->offset($offset)  // Apply pagination offset
+            ->get();
+
+        return response()->json($products);  // Return the products
+
     }
     /**show the single product */
     public function singleProduct(Product $product, Request $request)

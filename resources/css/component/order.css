@@ -1,0 +1,11 @@
+.order-image-container{
+    height: 200px;
+    object-fit: contain;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.order-image{
+    width: 100%;
+}

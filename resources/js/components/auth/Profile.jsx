@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../../../css/component/auth/profile.css";
 import { useStateContext } from "../../ContextProvider";
@@ -7,7 +7,7 @@ import axios from "axios";
 import metaData from "../../MetaData";
 
 export default function Profile() {
-    let { manageLogin, setManageLogin } = useStateContext();
+    let { manageLogin, setManageLogin,order } = useStateContext();
     let logout = (e) => {
         e.preventDefault();
         axios
@@ -49,16 +49,20 @@ export default function Profile() {
             axiosClient
                 .post(`set-profile-image`, image)
                 .then((response) => {
-                    setManageLogin({...manageLogin,loginData:{
-                        ...manageLogin.loginData,
-                        image: response.data,
-                    }})
+                    setManageLogin({
+                        ...manageLogin,
+                        loginData: {
+                            ...manageLogin.loginData,
+                            image: response.data,
+                        },
+                    });
                 })
                 .catch((err) => {
                     console.log(err);
                 });
         }
     };
+
     return (
         <div className="card p-2 border-0 shadow-lg">
             <div className="row">
@@ -156,6 +160,35 @@ export default function Profile() {
                                     <path d="M3 2.5a2.5 2.5 0 0 1 5 0 2.5 2.5 0 0 1 5 0v.006c0 .07 0 .27-.038.494H15a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h2.038A3 3 0 0 1 3 2.506zm1.068.5H7v-.5a1.5 1.5 0 1 0-3 0c0 .085.002.274.045.43zM9 3h2.932l.023-.07c.043-.156.045-.345.045-.43a1.5 1.5 0 0 0-3 0zm6 4v7.5a1.5 1.5 0 0 1-1.5 1.5H9V7zM2.5 16A1.5 1.5 0 0 1 1 14.5V7h6v9z" />
                                 </svg>
                                 <div>Special offer</div>
+                            </div>
+                            <div
+                                className="d-flex position-relative align-items-center gap-2 profile-menu px-2 py-1"
+                                style={{}}
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="16"
+                                    height="16"
+                                    fill="currentColor"
+                                    className="bi bi-list-stars"
+                                    viewBox="0 0 16 16"
+                                >
+                                    <path
+                                        fillRule="evenodd"
+                                        d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5"
+                                    />
+                                    <path d="M2.242 2.194a.27.27 0 0 1 .516 0l.162.53c.035.115.14.194.258.194h.551c.259 0 .37.333.164.493l-.468.363a.28.28 0 0 0-.094.3l.173.569c.078.256-.213.462-.423.3l-.417-.324a.27.27 0 0 0-.328 0l-.417.323c-.21.163-.5-.043-.423-.299l.173-.57a.28.28 0 0 0-.094-.299l-.468-.363c-.206-.16-.095-.493.164-.493h.55a.27.27 0 0 0 .259-.194zm0 4a.27.27 0 0 1 .516 0l.162.53c.035.115.14.194.258.194h.551c.259 0 .37.333.164.493l-.468.363a.28.28 0 0 0-.094.3l.173.569c.078.255-.213.462-.423.3l-.417-.324a.27.27 0 0 0-.328 0l-.417.323c-.21.163-.5-.043-.423-.299l.173-.57a.28.28 0 0 0-.094-.299l-.468-.363c-.206-.16-.095-.493.164-.493h.55a.27.27 0 0 0 .259-.194zm0 4a.27.27 0 0 1 .516 0l.162.53c.035.115.14.194.258.194h.551c.259 0 .37.333.164.493l-.468.363a.28.28 0 0 0-.094.3l.173.569c.078.255-.213.462-.423.3l-.417-.324a.27.27 0 0 0-.328 0l-.417.323c-.21.163-.5-.043-.423-.299l.173-.57a.28.28 0 0 0-.094-.299l-.468-.363c-.206-.16-.095-.493.164-.493h.55a.27.27 0 0 0 .259-.194z" />
+                                </svg>
+                                <div id="profile-order-menu">
+                                    <div id="profile-order-count">{order && order.length}</div>
+                                    <Link
+                                        className="text-decoration-none text-dark"
+                                        to={"/order"}
+                                        
+                                    >
+                                        Order
+                                    </Link>
+                                </div>
                             </div>
                             <div
                                 className="d-flex align-items-center gap-2 profile-menu px-2 py-1 "

@@ -10,6 +10,8 @@ import DashBoard from "./components/admin/DashBoard";
 import ProductAdd from "./components/admin/product/ProductAdd";
 import ProductList from "./components/admin/product/ProductList";
 import Account from "./components/auth/Account&Security";
+import CartPage from "./components/CartPage";
+import Order from "./components/Order";
 const router = createBrowserRouter([
     {
         path: "/",
@@ -43,6 +45,14 @@ const router = createBrowserRouter([
             {
                 path: "/account&security",
                 element: <Account />,
+            },
+            {
+                path: "/cart-view",
+                element: <CartPage />,
+            },
+            {
+                path: "/order",
+                element: <Order />,
             },
         ],
     },

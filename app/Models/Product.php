@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\ProductItem;
 use App\Models\Category;
 use App\Models\GalleryImage;
+use App\Models\UserCart;
 
 class Product extends Model
 {
@@ -20,12 +21,15 @@ class Product extends Model
     ];
 
     public function productItems(){
-        return $this->hasMany(ProductItem::class);
+        return $this->hasMany(ProductItem::class,'product_id');
     }
     public function category(){
         return $this->belongsTo(Category::class);
     }
     public function galleryImages(){
         return $this->hasMany(GalleryImage::class);
+    }
+    public function userCarts(){
+        return $this->hasMany(UserCart::class);
     }
 }

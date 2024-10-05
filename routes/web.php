@@ -7,6 +7,8 @@ use App\Http\Middleware\ValidateToken;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\data;
+use App\Http\Controllers\PayPal;
+use App\Http\Controllers\PayPalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,8 +27,9 @@ Route::get('/login', [App\Http\Controllers\HomeController::class, 'login'])->nam
 Route::get('/product-view', [App\Http\Controllers\HomeController::class, 'productView'])->name('product-view');
 Route::get('/products', [App\Http\Controllers\HomeController::class, 'index'])->name('products');
 Route::get('/products/{category}', [App\Http\Controllers\HomeController::class, 'index'])->name('products-category');
-Route::get('/checkout', [App\Http\Controllers\HomeController::class, 'index'])->name('checkout');
-Route::get('/account&security', [App\Http\Controllers\HomeController::class, 'index'])->name('checkout');
+Route::get('/checkout', [App\Http\Controllers\HomeController::class, 'index']);
+Route::get('/account&security', [App\Http\Controllers\HomeController::class, 'index']);
+Route::get('/cart-view', [App\Http\Controllers\HomeController::class, 'index'])->name('checkout');
 //Auth::routes();
 //Route::middleware(['auth:sanctum'])->get('/admin', [App\Http\Controllers\AdminController::class, 'hello'])->name('admin');
 Route::middleware([ValidateToken::class])->group(function () {
@@ -38,3 +41,7 @@ Route::get('/accese-denied',function(){
     return view('accese-denied');
 })->name('access.denied');
 Route::post('user/create', [HomeController::class, 'createUser']);
+Route::get('paypal/success', [PayPalController::class, 'executePayment'])->name('paypal.success');
+Route::get('paypal/cancel', [PayPalController::class, 'cancelPayment'])->name('paypal.cancel');
+
+Route::get('/order', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

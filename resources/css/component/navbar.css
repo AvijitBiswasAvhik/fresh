@@ -3,7 +3,7 @@
     display: grid;
     grid-template-columns: 1fr, 1fr, 1fr; /* Three columns */
 }
-#nav{
+#nav {
     top: 0;
     z-index: 3;
     width: 100%;
@@ -44,10 +44,10 @@
         flex-grow: 1;
     }
 }
-.nav-item:nth-child(4){
-  height: 30px;
-  font-size: small;
-  font-weight: bold;
+.nav-item:nth-child(4) {
+    height: 30px;
+    font-size: small;
+    font-weight: bold;
 }
 /*end layout nabvar*/
 
@@ -92,7 +92,7 @@
     color: rgb(0, 0, 0);
 }
 
-.cart-count{
+.cart-count {
     position: relative;
     display: flex;
     align-items: center;
@@ -120,66 +120,114 @@
 .nav-item button:hover {
     background-color: #aaaaaa3f;
 }
-.nav-categorise-link{
+.nav-categorise-link {
     display: flex;
     align-items: center;
     height: 20px;
     font-size: 14px;
     font-weight: bold;
 }
-.nav-categorise-link:hover{
+.nav-categorise-link:hover {
     background-color: rgba(128, 128, 128, 0.438);
 }
+@keyframes pop-up-cart-content {
+    0% {
+        transform: translateY(100vh); /*Start from bottom of the viewport */
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
 
-.pop-up-cart-content{
+#pop-up-cart-content {
     position: absolute;
-    top: 60px;
     width: 200px;
     z-index: 2;
-    box-shadow: 0px 0px 2px grey;
+    background-color: aliceblue;
     border: none;
-    max-height: 0;
-    transition: max-height 1s ease-out;
-    overflow: hidden;
+    transform: translateY(100vh); /* Initial state, off-screen at the bottom */
+    transition: opacity 0.5s ease-out; /* Optional: smooth transition for opacity */
+    overflow: visible;
+    opacity: 0; /* Initially hidden */
 }
 
-.pop-up-cart-content::before{
+#pop-up-cart-content.show {
+    animation: pop-up-cart-content 1s ease-in-out forwards;
+    opacity: 1; /* Fade in during animation */
+    top: 60px;
+}
+@keyframes makeDirection {
+    0% {
+        height: 20px;
+        width: 20px;
+        top: 0;
+        right: 0;
+        transform: rotate(45deg);
+    }
+    10% {
+        height: 20px;
+        width: 20px;
+    }
+    50% {
+        height: 20px;
+        width: 20px;
+        top: -10px;
+        right: 20px;
+        transform: rotate(45deg);
+    }
+    60% {
+        transform: rotate(0360deg);
+    }
+    70% {
+        transform: rotate(0360deg);
+    }
+    80% {
+        transform: rotate(0360deg);
+    }
+    90% {
+        transform: rotate(0360deg);
+    }
+    100% {
+        height: 20px;
+        width: 20px;
+        top: -10px;
+        right: 20px;
+        transform: rotate(45deg);
+    }
+}
+
+#pop-up-cart-content.show::before {
     content: "";
+    background-color: #faa200;
     position: absolute;
-    z-index: 3;
-    height: 20px;
-    width: 20px;
-    top: -10px;
+    /* Initial properties for before element */
+    /* height: 30px;
+    width: 30px;
+    top: 0px;
     right: 20px;
-    background-color: #faa200;
-    transform: rotate(41deg);
-    box-shadow: -2px -2px 3px grey;
+    transform: rotate(45deg); */
+    /* Apply the animation */
+    animation: makeDirection .5s ease-in 1s forwards;
 }
-.expand{
-    max-height: 100vh;
-    transition: max-height 1s ease-out;
-}
-.pop-up-cart-content-header{
+
+.pop-up-cart-content-header {
     background-color: #faa200;
 }
-#nav-profile-container{
-    /* display: flex;
+#nav-profile-container {
+    display: flex;
     align-items: center;
-    gap: 4px; */
+    gap: 4px;
 }
-#nav-profile-photo{
+#nav-profile-photo {
     height: 40px;
     width: 40px;
     border-radius: 50%;
     border-color: black;
     border: 2px solid black;
     overflow: hidden;
-
-    
 }
-#nav-profile-photo img{
+#nav-profile-photo img {
     height: 100%;
     width: 100%;
     object-fit: cover;
-    
 }

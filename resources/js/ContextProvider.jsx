@@ -13,6 +13,17 @@ const StateContext = createContext({
     cart: {},
     setCart: () => {},
     addCart: () => {},
+    cartData: {},
+    setCartData: () => {},
+    cartItems: {
+        cartData: [],
+        extraData: { subtotal: 0 },
+    },
+    setCartItems: () => {},
+    hideCart: () => {},
+    order: {},
+    setOrder: () => {},
+    setOr:()=> {},
 });
 
 export function ContextProvider({ children }) {
@@ -34,7 +45,26 @@ export function ContextProvider({ children }) {
         addressForm: false,
     });
     const [isLogined, setIsLogined] = useState({ login: false });
-    let [cart, setCart] = useState(null);
+    let [cartItems, setCartItems] = useState({
+        cartData: [],
+        extraData: { subtotal: 0 },
+    });
+    let [cartData, setCartData] = useState([]);
+    let [newCart, setNewcart] = useState(1);
+    let [order, setOrder] = useState(false);
+    useEffect(() => {
+        axiosClient.get("order?offset=0").then((response) => {
+            setOrder((pre) => {
+                return response.data ;
+            });
+        }).catch((response) => {
+            console.log(response);
+        });
+    }, [manageLogin.loginNow]);
+    let setOr = (offset)=>{
+        
+    }
+    
     useEffect(() => {
         if (manageLogin.loginNow == true && manageLogin.authToken) {
             let url = `${metaData.appUrl}api/user/is-login`;
@@ -62,28 +92,65 @@ export function ContextProvider({ children }) {
                 });
         }
     }, [manageLogin.loginNow]);
-    let addCart = (item) => {
-        console.log(item);
-        let exist = JSON.parse(localStorage.getItem("cart"));
-        let arr = [];
-        if (exist) {
-            for (let i = 0; i < exist.length; i++) {
-                arr.push(exist[i].sku);
-            }
-        }
-        if (arr.length > 0 && arr.includes(item)) {
-            return;
-        } else if (!arr.includes(item) && exist) {
-            localStorage.setItem(
-                "cart",
-                JSON.stringify([...exist, { sku: item }])
-            );
-        } else if (!arr.includes(item) && !exist) {
-            localStorage.setItem("cart", JSON.stringify([{ sku: item }]));
-        }
+    let hideCart = () => {
+        //e.stopPropagation();
 
-        setCart(JSON.parse(localStorage.getItem("cart")));
+        let reactApp = document.getElementById("react-app");
+        reactApp.addEventListener("click", (e) => {
+            e.stopPropagation();
+            // let showCart = (e) => {
+            //     e.preventDefault();
+            //     console.log("gg")
+            //     let popCart = document.getElementById("pop-up-cart-content");
+            //     popCart.classList.add("expand");
+            // };
+
+            let popCart = document.getElementById("pop-up-cart-content");
+
+            console.log(popCart.classList.contains("expand"));
+            if (popCart.classList.contains("expand") && e.target != popCart) {
+                popCart.classList.remove("expand");
+            }
+        });
     };
+    //hideCart();
+    useEffect(() => {
+        axiosClient
+            .get("cart-data")
+            .then((response) => {
+                setCartData(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, [newCart, manageLogin]);
+    useEffect(() => {
+        axiosClient
+            .get("cart-items")
+            .then((response) => {
+                setCartItems(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, [newCart, manageLogin]);
+    function addCart(productId) {
+        if (manageLogin.loginData.id != 0) {
+            ~axiosClient
+                .post("add-to-cart", { product_id: productId })
+                .then((response) => {
+                    setNewcart((old) => {
+                        return old + 1;
+                    });
+                    console.log(newCart); // Logs the response data
+                })
+                .catch((error) => {
+                    console.error(
+                        error.response ? error.response.data : error.message
+                    ); // Handles and logs the error
+                });
+        }
+    }
     //  console.log(manageLogin);
     let setAuthToken = (register, login, united) => {
         let arr = document.cookie.split(";");
@@ -139,9 +206,15 @@ export function ContextProvider({ children }) {
                 setManageLogin,
                 loginState,
                 setAuthToken,
-                cart,
-                setCart,
+                cartItems,
+                setCartItems,
+                cartData,
+                setCartData,
                 addCart,
+                hideCart,
+                order,
+                setOrder,
+                setOr,
             }}
         >
             {children}

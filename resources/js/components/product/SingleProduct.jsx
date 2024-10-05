@@ -102,7 +102,7 @@ export default function SingleProduct() {
                     200,
                     0,
                     0,
-                   400,
+                    400,
                     400
                 );
 
@@ -271,11 +271,13 @@ export default function SingleProduct() {
                                 </span>
                                 <span id="discount-percent">
                                     (
-                                    {(products.product_items[0].price * 100 -
-                                        products.product_items[0]
-                                            .discount_price *
+                                    {Math.floor(
+                                        ((products.product_items[0].price -
+                                            products.product_items[0]
+                                                .discount_price) *
                                             100) /
-                                        100}
+                                            products.product_items[0].price
+                                    )}
                                     % off){" "}
                                 </span>
                                 <button className="btn btn-primary rounded rounded-5">
@@ -447,17 +449,18 @@ export default function SingleProduct() {
                                                                     .product_items
                                                                     .length >
                                                                     0 &&
-                                                                    ` (off ${
-                                                                        (100 *
+                                                                    ` (off ${Math.floor(
+                                                                        ((el
+                                                                            .product_items[0]
+                                                                            .price -
                                                                             el
                                                                                 .product_items[0]
-                                                                                .price -
-                                                                            100 *
-                                                                                el
-                                                                                    .product_items[0]
-                                                                                    .discount_price) /
-                                                                        100
-                                                                    }%)`}
+                                                                                .discount_price) *
+                                                                            100) /
+                                                                            el
+                                                                                .product_items[0]
+                                                                                .price
+                                                                    )}%)`}
                                                             </p>
                                                         </div>
                                                     </div>
