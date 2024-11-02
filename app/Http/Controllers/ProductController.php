@@ -142,13 +142,13 @@ class ProductController extends Controller
                 }
             })
 
-        // Apply the category filter only if categories exist
+            // Apply the category filter only if categories exist
 
 
 
 
-        // Apply pagination and retrieve the products
-        ->limit(50)  // Limit the number of products
+            // Apply pagination and retrieve the products
+            ->limit(50)  // Limit the number of products
             ->offset($offset)  // Apply pagination offset
             ->get();
 
@@ -192,5 +192,34 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         //
+    }
+    function topProduct()
+    {
+        $product = ProductItem::with(['product', 'product.category', 'product.galleryImages'])  // Load related data
+
+
+            // Apply the category filter only if categories exist
+
+            // Apply pagination and retrieve the products
+            ->limit(9)
+            ->offset(8)  // Limit the number of products // Apply pagination offset
+            ->get();
+
+        return response()->json($product);
+    }
+    function featuredProduct()
+    {
+        $product = ProductItem::with(['product', 'product.category', 'product.galleryImages'])->whereHas('product',function($query){
+            $query->where('feature',true);
+        })  // Load related data
+
+
+            // Apply the category filter only if categories exist
+
+            // Apply pagination and retrieve the products
+            ->limit(9)  // Limit the number of products // Apply pagination offset
+            ->get();
+
+        return response()->json($product);
     }
 }

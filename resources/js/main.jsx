@@ -23,7 +23,7 @@ function Main() {
         });
     }, []);
     return (
-        <>
+        <div  className="bg-white">
             <header id="header" className="">
                 <NavBar />
             </header>
@@ -38,7 +38,7 @@ function Main() {
             {manageLogin.united && <United />}
             
             </section>
-        </>
+        </div>
     );
 }
 

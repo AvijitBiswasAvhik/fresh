@@ -9,15 +9,8 @@ export default function Products() {
     let { category } = useParams();
     let [products, setProducts] = useState();
     const [hasMore, setHasMore] = useState(true);
-    let { cart, setCart, addCart } = useStateContext();
-    let [filter, setFilter] = useState({
-        category: [],
-        price_min: 0,
-        price_max: 10000,
-        discount: "",
-        brand: "",
-        offset: products && products.length,
-    });
+    let { cart, setCart, addCart, filter, setFilter } = useStateContext();
+
     let [sidebar, setSidebar] = useState(
         <div className="shadow " id="">
             <h5 className="px-1">Filters</h5>
@@ -27,11 +20,9 @@ export default function Products() {
                     <input
                         className="form-checkbox"
                         type="checkbox"
-                        value="electronics" // Set a meaningful value for the category
+                        value="electronics"
                         id="flexCheckDefault"
-                        onChange={(e) => {
-                            categoryF(e);
-                        }}
+                        onChange={(e) => categoryF(e)}
                     />
 
                     <label
@@ -52,7 +43,7 @@ export default function Products() {
                         }}
                     />
                     <label className="form-check-label" htmlFor="flexCheckShoe">
-                    Glass
+                        Glass
                     </label>
                 </li>
                 <li className="d-flex align-items-center gap-1">
@@ -311,26 +302,24 @@ export default function Products() {
             </ul>
         </div>
     );
-    let categoryF = (e) => {
-        e.stopPropagation();
+    const categoryF = (e) => {
+        // e.stopPropagation();
         const { checked, value } = e.target;
-
         setFilter((prev) => {
-            // Check if category is already selected
             const isCategorySelected = prev.category.includes(value);
-
-            // If checked, add to category; if unchecked, remove from category
             const updatedCategory = checked
                 ? isCategorySelected
-                    ? prev.category
-                    : [...prev.category, value]
-                : prev.category.filter((cat) => cat !== value);
+                    ? prev.category // No change if already selected
+                    : [...prev.category, value] // Add new category
+                : prev.category.filter((cat) => cat !== value); // Remove category if unchecked
 
+            console.log("Updated category array:", updatedCategory);
             return {
                 ...prev,
                 category: updatedCategory,
             };
         });
+        //setSidebar(sidebar)
     };
     let brand = (e) => {
         e.stopPropagation();
@@ -409,7 +398,10 @@ export default function Products() {
         // Fetch more data from the API using offset
         setTimeout(() => {
             axiosClient
-                .post(`/product`, filter)
+                .post(`/product`, {
+                    ...filter,
+                    offset: products && products.length,
+                })
                 .then((response) => {
                     // Check if the response has data and if there's more data
                     if (response.data.length > 0) {
@@ -428,27 +420,38 @@ export default function Products() {
         }, 1000);
     };
     useEffect(() => {
+        console.log(filter);
         axiosClient
-            .post(`/product`, filter )
+            .post(`/product`, filter)
             .then((response) => {
-            console.log(response.data);
-            if (response.data.length < 50) {
-                setHasMore(false);
-            }
-            setProducts(response.data);
+                console.log(response.data);
+                if (response.data.length < 50) {
+                    setHasMore(false);
+                }
+                setProducts(response.data);
             })
             .catch((error) => {
                 console.log(error);
             });
     }, [filter, !filter.offset]);
-    console.log(products);
+
     return (
         <div id="product" className="bg-white">
             <div className="product-nav p-1 d-flex align-items-center justify-content-between mb-3 shadow-sm">
-                <p className="text-muted product-nav-result-count my-auto">
-                    Showing <strong>499</strong> results for
-                    <strong className="text-uppercase"> {category}</strong>
-                </p>
+                {filter.category.length > 0 && (
+                    <p className="text-muted product-nav-result-count my-auto">
+                        Showing <strong>499</strong> results for
+                        {filter.category.map((el) => {
+                            return (
+                                <strong className="text-uppercase text-primary mx-1">
+                                    <span className="text-danger"></span>
+                                    {el}
+                                    <span className="text-danger">,</span>
+                                </strong>
+                            );
+                        })}
+                    </p>
+                )}
                 <div className="product-filter d-flex align-items-center gap-1">
                     <label htmlFor="product-sort-by" className="">
                         Sort By :
@@ -562,7 +565,6 @@ export default function Products() {
                                                             <p className="">
                                                                 <span
                                                                     className="h6"
-                                                                    
                                                                     style={{
                                                                         fontSize:
                                                                             "16px",
@@ -610,7 +612,7 @@ export default function Products() {
                                                                             0
                                                                         ) {
                                                                             console.log(
-                                                                                el
+                                                                                el.id
                                                                             );
                                                                             addCart(
                                                                                 el.id

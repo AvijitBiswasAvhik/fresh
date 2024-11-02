@@ -13,3 +13,37 @@
     backdrop-filter: blur(2px);
     text-shadow: 1px 1px 1px grey;
 }
+#top-slider-image-container{
+    max-height: 300px;
+    object-fit: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+#top-product-card{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.top-slider-image-container-image{
+    height: 100%;
+    width: 100%;
+}
+.top-product-body{
+    position: absolute;
+    bottom: 10px;
+}
+#top-product-button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgb(236, 125, 144);
+    border-radius: 20px;
+    font-size: medium;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 2px;
+    background-color: rgba(238, 233, 233, 0.685);
+    color: rgb(117, 50, 61);
+}

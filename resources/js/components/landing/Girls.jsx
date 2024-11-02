@@ -1,9 +1,10 @@
 import React from "react";
 import "../../../css/component/landing/Girls.css";
+
 export default function Girls() {
     return (
         <>
-            <h3 id="girls-main-title">Girls</h3>
+            <h3 id="girls-main-title">Electronics</h3>
             <div className="" id="girl-section-content-container">
                 <div className="girl-section-content-box">
                     <img

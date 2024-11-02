@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('title',100);
             $table->string('product_image',100);
             $table->string('description',250);
+            
             $table->timestamps();
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->foreign('subcategory_id')->references('id')->on('categories')->onDelete('cascade');

@@ -11,6 +11,7 @@ use App\Http\Controllers\UserCartController;
 use App\Http\Controllers\BkashPayment;
 use App\Http\Controllers\openAi;
 use App\Http\Controllers\PayPalController;
+use App\Models\Product;
 use App\Models\UserCart;
 
 /*
@@ -46,15 +47,17 @@ Route::middleware(['auth:sanctum'])->group(
     Route::get('product/categories', [DataFlow::class, 'getCategories']);
     Route::post('set-profile-image', [HomeController::class, 'setProfileImage']);
     Route::get('/cart-items', [UserCartController::class, 'CartPage']);
-    Route::get('/open-ai',[openAi::class, 'openAi']);
     Route::post('cart/increse-qty',[UserCartController::class, 'addQty']);
     Route::post('cart/decrese-qty',[UserCartController::class, 'deleteQty']);
     Route::post('cart/destroy',[UserCartController::class, 'destroy']);
     Route::post('paypal/create-payment', [PayPalController::class, 'createPayment'])->name('paypal.create');
     Route::get('order', [DataFlow::class, 'order']);
+   
     }
 
 );
+Route::get('top-product',[ProductController::class, 'topProduct']);
+Route::get('feature-product',[ProductController::class, 'featuredProduct']);
 Route::post('product', [ProductController::class, 'show']);
 Route::get('product-view', [ProductController::class, 'singleProduct']);
 Route::get('related-product', [ProductController::class, 'relatedProduct']);

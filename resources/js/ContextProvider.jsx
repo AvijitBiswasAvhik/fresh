@@ -23,7 +23,10 @@ const StateContext = createContext({
     hideCart: () => {},
     order: {},
     setOrder: () => {},
-    setOr:()=> {},
+    setOr: () => {},
+    filter: {},
+    saveFilter: () => {},
+    setFilter: () => {},
 });
 
 export function ContextProvider({ children }) {
@@ -52,19 +55,36 @@ export function ContextProvider({ children }) {
     let [cartData, setCartData] = useState([]);
     let [newCart, setNewcart] = useState(1);
     let [order, setOrder] = useState(false);
-    useEffect(() => {
-        axiosClient.get("order?offset=0").then((response) => {
-            setOrder((pre) => {
-                return response.data ;
-            });
-        }).catch((response) => {
-            console.log(response);
-        });
-    }, [manageLogin.loginNow]);
-    let setOr = (offset)=>{
-        
+    let [filter, setFilter] = useState({
+        category: [],
+        price_min: 0,
+        price_max: 10000,
+        discount: "",
+        brand: "",
+        offset: 0,
+    });
+    let saveFilter = (val)=>{
+        setFilter((pre)=>{
+            return {
+                ...pre,
+                category: [...pre.category, val],
+            }
+        })
     }
-    
+    useEffect(() => {
+        axiosClient
+            .get("order?offset=0")
+            .then((response) => {
+                setOrder((pre) => {
+                    return response.data;
+                });
+            })
+            .catch((response) => {
+                console.log(response);
+            });
+    }, [manageLogin.loginNow]);
+    let setOr = (offset) => {};
+
     useEffect(() => {
         if (manageLogin.loginNow == true && manageLogin.authToken) {
             let url = `${metaData.appUrl}api/user/is-login`;
@@ -215,6 +235,10 @@ export function ContextProvider({ children }) {
                 order,
                 setOrder,
                 setOr,
+                filter,
+                saveFilter,
+                setFilter,
+                
             }}
         >
             {children}

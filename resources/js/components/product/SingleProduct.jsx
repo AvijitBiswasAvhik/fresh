@@ -96,12 +96,12 @@ export default function SingleProduct() {
 
                 ctx.drawImage(
                     sourceImage,
-                    mouseX,
-                    mouseY,
-                    200,
-                    200,
-                    0,
-                    0,
+                    mouseX-100,
+                    mouseY-100,
+                    100,
+                    100,
+                    50,
+                    50,
                     400,
                     400
                 );
@@ -180,7 +180,9 @@ export default function SingleProduct() {
                     singleImage.style.maxHeight = nHeight + "px";
                 }
             };
-            img.src = target.querySelector("img").src;
+            img.src = target.querySelector(
+                ".single-product-single-images"
+            ).src;
         }
     };
     return (
