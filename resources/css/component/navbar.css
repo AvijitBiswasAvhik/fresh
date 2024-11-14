@@ -148,10 +148,11 @@
     transform: translateY(100vh); /* Initial state, off-screen at the bottom */
     transition: opacity 0.5s ease-out; /* Optional: smooth transition for opacity */
     overflow: visible;
-    opacity: 0; /* Initially hidden */
+    display: none; /* Initially hidden */
 }
 
 #pop-up-cart-content.show {
+    display: block;
     animation: pop-up-cart-content 1s ease-in-out forwards;
     opacity: 1; /* Fade in during animation */
     top: 60px;

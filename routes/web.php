@@ -7,6 +7,7 @@ use App\Http\Middleware\ValidateToken;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\data;
+use App\Http\Controllers\FaceBookController;
 use App\Http\Controllers\PayPal;
 use App\Http\Controllers\PayPalController;
 
@@ -21,7 +22,7 @@ use App\Http\Controllers\PayPalController;
 |
 */
 
-Route::get('/data', [App\Http\Controllers\data::class, 'data'])->name('home');
+//Route::get('/data', [App\Http\Controllers\data::class, 'data'])->name('home');
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/login', [App\Http\Controllers\HomeController::class, 'login'])->name('login');
 Route::get('/product-view', [App\Http\Controllers\HomeController::class, 'productView'])->name('product-view');
@@ -45,3 +46,5 @@ Route::get('paypal/success', [PayPalController::class, 'executePayment'])->name(
 Route::get('paypal/cancel', [PayPalController::class, 'cancelPayment'])->name('paypal.cancel');
 
 Route::get('/order', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('auth/facebook',[FaceBookController::class,'redirectToFacebook']);
+Route::get('auth/facebook/callback', [FacebookController::class, 'handleFacebookCallback']);

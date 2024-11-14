@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ProductController;
-use App\Http\Requests\StoreProductControllerRequest;
-use App\Http\Requests\UpdateProductControllerRequest;
+use App\Models\FaceBook;
+use App\Http\Requests\StoreFaceBookRequest;
+use App\Http\Requests\UpdateFaceBookRequest;
+use Laravel\Socialite\Facades\Socialite;
+use SebastianBergmann\CodeCoverage\Driver\Driver;
 
-class ProductControllerController extends Controller
+class FaceBookController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,6 +21,9 @@ class ProductControllerController extends Controller
     /**
      * Show the form for creating a new resource.
      */
+    public function redirectToFacebook(){
+        return Socialite::driver('facebook')->redirect();
+    }
     public function create()
     {
         //
@@ -27,7 +32,7 @@ class ProductControllerController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProductControllerRequest $request)
+    public function store(StoreFaceBookRequest $request)
     {
         //
     }
@@ -35,7 +40,7 @@ class ProductControllerController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ProductController $productController)
+    public function show(FaceBook $faceBook)
     {
         //
     }
@@ -43,7 +48,7 @@ class ProductControllerController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ProductController $productController)
+    public function edit(FaceBook $faceBook)
     {
         //
     }
@@ -51,7 +56,7 @@ class ProductControllerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductControllerRequest $request, ProductController $productController)
+    public function update(UpdateFaceBookRequest $request, FaceBook $faceBook)
     {
         //
     }
@@ -59,7 +64,7 @@ class ProductControllerController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProductController $productController)
+    public function destroy(FaceBook $faceBook)
     {
         //
     }

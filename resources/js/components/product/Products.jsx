@@ -497,14 +497,18 @@ export default function Products() {
                     </div>
                 </div>
             </div>
-            <div className="row w-100" id="products-show-section">
+            <div
+                className="row w-100 mx-auto justify-content-center"
+                id="roducts-show-section"
+            >
                 <div
                     className="col-md-3 col-lg-2 d-none d-md-block"
                     id="products-show-sidebar-box"
                 >
                     <div id="products-show-sidebar">{sidebar}</div>
+                    
                 </div>
-                <div className="col-12 col-md-9 col-lg-10">
+                <div className="col-12 col-md-9 col-lg-10 p-0">
                     {products && (
                         <InfiniteScroll
                             dataLength={products.length}
@@ -517,7 +521,7 @@ export default function Products() {
                                 </p>
                             } // Message when no more items
                         >
-                            <div className="row bg-white w-100 mx-auto d-dlex align-items-center justify-content-center">
+                            <div className="row bg-white w-100 mx-auto">
                                 {products &&
                                     products.map((el, i) => {
                                         return (
@@ -611,9 +615,6 @@ export default function Products() {
                                                                                 .length >
                                                                             0
                                                                         ) {
-                                                                            console.log(
-                                                                                el.id
-                                                                            );
                                                                             addCart(
                                                                                 el.id
                                                                             );

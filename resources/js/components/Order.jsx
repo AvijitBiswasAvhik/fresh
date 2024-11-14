@@ -74,7 +74,7 @@ function Order() {
                                 </div>
                                 <div className="col-12 col-sm-8 col-md-9 col-lg-10">
                                     <h4 className="order-product-title">
-                                        <Link to={`/product-view?sku=${item.product_item.sku}`} className="nav-link">{item.product_name}</Link>
+                                        {item.product_item && <Link to={`/product-view?sku=${item.product_item.sku}`} className="nav-link">{item.product_name}</Link>}
                                     </h4>
                                     <table className="table">
                                         <thead className="">

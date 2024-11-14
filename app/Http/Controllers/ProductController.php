@@ -169,7 +169,13 @@ class ProductController extends Controller
         $product = $category->products->load('productItems')->load('category')->load('galleryImages');
         return response(json_encode($product));
     }
+    public function electronics(Product $product, Category $categories)
+    {
+        $category = $categories->where('category', 'electronics')->first();
+        $products = $category->products()->with('productItems')->limit(5)->get();
 
+        return response()->json($products);
+    }
     /**
      * Show the form for editing the specified resource.
      */
@@ -209,8 +215,8 @@ class ProductController extends Controller
     }
     function featuredProduct()
     {
-        $product = ProductItem::with(['product', 'product.category', 'product.galleryImages'])->whereHas('product',function($query){
-            $query->where('feature',true);
+        $product = ProductItem::with(['product', 'product.category', 'product.galleryImages'])->whereHas('product', function ($query) {
+            $query->where('feature', true);
         })  // Load related data
 
 

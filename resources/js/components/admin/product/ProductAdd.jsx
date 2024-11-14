@@ -187,8 +187,13 @@ export default function ProductAdd() {
     /////////////Handle drop events //////////
     let handleDrop = (e, el) => {
         var myImage = new Image();
+        
+            
+        
         // Assuming you are working with a file input for dropping images
         let file = e.target.files[0];
+        console.log(file)
+        if (el != true) {
         setProduct((oldEl) => {
             let formData = new FormData();
             formData.append("image", file);
@@ -197,11 +202,11 @@ export default function ProductAdd() {
                 ...oldEl,
                 image: file,
             };
-        });
+        });}
         if (file) {
             let imgSrc = URL.createObjectURL(file); // Create a temporary URL for the dropped image
             myImage.src = imgSrc;
-
+            console.log(imgSrc);
             myImage.onload = () => {
                 const reader = new FileReader();
                 let showImage = document.getElementById(
@@ -238,7 +243,6 @@ export default function ProductAdd() {
                 reader.readAsDataURL(file);
                 // Now you can use 'myImage' as the image object
                 // Example: document.body.appendChild(myImage);
-                console.log(file);
             };
         }
     };
@@ -437,7 +441,6 @@ export default function ProductAdd() {
                 product[key].forEach((el, i) => {
                     let keys = Object.keys(el);
                     data.append(keys[0], el[keys[0]]);
-                    console.log(el[keys[0]]);
                 });
             } else {
                 // For other keys, append them normally
@@ -722,7 +725,6 @@ export default function ProductAdd() {
                                 aria-label="Default select example"
                                 id="create-product-sub-category"
                                 onChange={(e) => {
-                                    console.log(e.target.value);
                                     setProduct({
                                         ...product,
                                         subCategory: e.target.value,
@@ -905,7 +907,7 @@ export default function ProductAdd() {
                                 id="product-image-upload"
                                 placeholder="Drop File"
                                 onChange={(e) => {
-                                    handleDrop(e);
+                                    handleDrop(e,false);
                                 }}
                             />
                             <div

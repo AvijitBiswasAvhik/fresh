@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import "../../css/component/navbar.css";
-import '../../css/component/cart.css'
+import "../../css/component/cart.css";
 import { useStateContext } from "../ContextProvider";
 import Cart from "./product/Cart";
 
@@ -34,11 +34,11 @@ export default function NavBar() {
         sideBar.style.top = e.clientY + 30 + "px";
     };
     let showCart = (e) => {
+        e.stopPropagation();
         let popCart = document.getElementById("pop-up-cart-content");
         popCart.classList.add("show");
         let reactApp = document.getElementById("react-app");
 
-        e.stopPropagation();
         document.body.addEventListener("click", (e) => {
             e.stopPropagation();
             let popCart = document.getElementById("pop-up-cart-content");
@@ -48,7 +48,6 @@ export default function NavBar() {
             }
         });
     };
-
     let middleMan = (e) => {
         let popCart = document.getElementById("pop-up-cart-content");
         popCart.classList.add("expand");
@@ -72,19 +71,11 @@ export default function NavBar() {
                         href="/"
                         className="brand-image-link text-decoration-none"
                     >
-                        {manageLogin.loginData.image ? (
-                            <img
-                                className="card-img-top brand-image-element"
-                                src={manageLogin.loginData.image}
-                                alt="Card image cap"
-                            />
-                        ) : (
-                            <img
-                                className="card-img-top brand-image-element"
-                                src=""
-                                alt="Card image cap"
-                            />
-                        )}
+                        <img
+                            className="card-img-top brand-image-element"
+                            src="\storage\site-image.gif"
+                            alt="Card image cap"
+                        />
                     </a>
                 </div>
             </div>
@@ -227,7 +218,7 @@ export default function NavBar() {
                         // onMouseEnter={(e) => middleMan(e)}
                         // onMouseLeave={outCart}
                     > */}
-                        <Cart />
+                    <Cart />
                     {/* </div> */}
                 </div>
             </div>

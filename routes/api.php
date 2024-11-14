@@ -64,5 +64,5 @@ Route::get('related-product', [ProductController::class, 'relatedProduct']);
 //Route::post('cart-data', [ProductController::class, 'cartData']);
 //Route::get('user/data', [data::class, 'data']);
 Route::post('user/login', [HomeController::class, 'login']);
-
+Route::get('/product/electronics',[ProductController::class, 'electronics']);
 Route::post('ggg',[PayPalController::class, 'orderItems']);
