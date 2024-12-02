@@ -248,8 +248,7 @@ export default function SingleProduct() {
                                             (hoverPosition.px /
                                                 (hoverPosition.width -
                                                     hoverPosition.bgS
-                                                        .ratioWidth -
-                                                    10)) *
+                                                        .ratioWidth)) *
                                             100
                                         }% ${
                                             (hoverPosition.py /
