@@ -37,6 +37,7 @@ Route::middleware([ValidateToken::class])->group(function () {
     Route::get('/admin', [App\Http\Controllers\HomeController::class, 'index']);
     Route::get('/admin/product-add', [App\Http\Controllers\HomeController::class, 'index'])->name('product-add');
     Route::get('/admin/product-list', [App\Http\Controllers\HomeController::class, 'index'])->name('product-list');
+    Route::get('/admin/user-list', [App\Http\Controllers\HomeController::class, 'index'])->name('user-list');
 });
 Route::get('/accese-denied',function(){
     return view('accese-denied');

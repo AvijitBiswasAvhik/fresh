@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Models\Address;
 use App\Models\UserPaymentMethod;
 use App\Models\UserCart;
+use App\Models\Order;
 
 class User extends Authenticatable
 {
@@ -53,5 +54,8 @@ class User extends Authenticatable
     }
     public function userCart(){
         return $this->hasMany(UserCart::class);
+    }
+    public function order(){
+        return $this->hasMany(Order::class, 'user_id');
     }
 }

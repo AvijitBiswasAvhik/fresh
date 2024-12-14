@@ -1,0 +1,135 @@
+:root {
+    --main-color: #3498db;
+    --secondary-color: #2ecc71;
+    --font-size: 16px;
+    --card-bg: #e3e5e6;
+}
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    padding: 0;
+}
+
+.user {
+    display: flex;
+    width: fit-content;
+    align-items: end;
+    height: 280px;
+
+}
+.admin-user-card {
+    position: relative;
+    height: fit-content;
+    user-select: none;
+}
+.admin-user-card-photo {
+    position: absolute;
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    z-index: 100;
+    border: 5px solid white;
+
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.admin-user-card-photo::before {
+    content: "";
+    position: absolute;
+    height: 5px;
+    width: 10px;
+    z-index: 1001;
+    background-color: var(--card-bg);
+    top: 50%;
+    left: -15px;
+    border-radius: 0 20px;
+    box-shadow: 3px -3px 0 2px white;
+}
+.admin-user-card-photo::after {
+    content: "";
+    position: absolute;
+    height: 5px;
+    width: 10px;
+    z-index: 1001;
+    background-color: var(--card-bg);
+    top: 50%;
+    right: -15px;
+    box-shadow: -3px -3px 0 2px white;
+    border-radius: 20px 0;
+}
+
+.admin-user-photo {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 100%;
+}
+.admin-user-details {
+    border: none;
+    
+    background-color: var(--card-bg);
+    border-radius: 5px;
+    width: 200px;
+    overflow: hidden;
+    color: #77676f;
+    text-align: center;
+    padding-top: 35px;
+    font-weight: bolder;
+    box-shadow: 2px 2px 2px 2px rgb(105, 105, 105);
+}
+.user-name {
+    font-size: 18px;
+    letter-spacing: 0.5px;
+    line-height: normal;
+}
+.user-content {
+    line-height: 14px;
+}
+.user-social-container {
+   padding: 0;
+   display: flex;
+   justify-content: center;
+   gap: 10px;
+   align-items: center;
+    
+}
+ .user-social-container .user-social-list {
+    display: inline-block;
+
+} 
+.user-social-container .user-social-list:nth-child(2){
+    color: black;
+}
+.user-social-container .user-social-list:nth-child(1){
+    color: blue;
+}
+.user-social-container .user-social-list:nth-child(3){
+    color: blue;
+}
+.user-social-container .user-social-list:nth-child(4){
+    color: purple;
+}
+.user-social-container .user-social-list:nth-child(5){
+    color: red;
+}
+/* .user-social-container .user-social-list:nth-child(odd) {
+    color: blue;
+}
+
+.user-social-container .user-social-list:nth-child(even) {
+    color: black;
+} */
+
+.user-admin-card-footer{
+    height: 30px;
+    width: 100%;
+    background-color: rgba(129, 129, 125, 0.39);
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px;
+    color: rgb(70, 70, 70);
+    letter-spacing: .3px;
+}

@@ -8,6 +8,7 @@ import Register from "./components/auth/Register";
 import United from "./components/auth/United";
 import { useStateContext } from "./ContextProvider";
 import Address from "./components/auth/Address";
+import Footer from "./components/Footer";
 
 function Main() {
     let {manageLogin} = useStateContext();
@@ -33,8 +34,10 @@ function Main() {
             <main className="px-md-4 px-2 py-2" id="content">
                 <Outlet />
             </main>
-            <footer id="footer"></footer>
-            <section className="" id="auth-section">
+            <footer className="" id="footer">
+                <Footer />
+            </footer>
+            <section className="py-2" id="auth-section">
             {manageLogin.united && <United />}
             
             </section>

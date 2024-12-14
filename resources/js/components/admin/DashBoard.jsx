@@ -5,8 +5,8 @@ import Navbar from "./Navbar";
 import { useStateContext } from "../../ContextProvider";
 
 const Dashboard = () => {
-    let {manageLogin} = useStateContext();
-   // console.log(manageLogin.authToken)
+    let { manageLogin } = useStateContext();
+    // console.log(manageLogin.authToken)
     useEffect(() => {
         let allMenu = document.querySelectorAll(".dashboard-sidebar-menu");
         allMenu.forEach((el, i) => {
@@ -26,14 +26,15 @@ const Dashboard = () => {
         });
     }, []);
     return (
-        <div className="container p-0 w-100 overflow-hidden" id="admin-dashboard">
+        <div
+            className="container p-0"
+            id="admin-dashboard"
+
+        >
             <Navbar />
-            <div className="row px-md-3 px-lg-5" id="admin-dashboard">
-                <div className="col-12">
-                    
-                </div>
+            <div className="row w-100 mx-auto" id="admin-dashboard-container">
                 <div
-                    className="col-lg-2 col-md-3 d-md-block  d-none p-0 position-relative"
+                    className="col-lg-2 col-md-3 d-md-block d-none p-0 position-relative"
                     id="admin-dashboard-sidebar"
                 >
                     <ul
@@ -86,14 +87,21 @@ const Dashboard = () => {
                                 aria-expanded="false"
                                 aria-controls="collapseExample2"
                             >
-                                Link with href
+                                User
                             </a>
                             <ul
                                 className="collapse dashboard-sidebar-menu-collapse"
                                 id="collapseExample2"
                                 style={{ listStyleType: "none" }}
                             >
-                                <li>hello</li>
+                                <li>
+                                    <Link
+                                        to={`/admin/user-list?token=${manageLogin.authToken}`}
+                                        className="click-able"
+                                    >
+                                        User List
+                                    </Link>
+                                </li>
                                 <li>
                                     <Link
                                         to={`/admin/product-list?token=${manageLogin.authToken}`}
@@ -113,11 +121,16 @@ const Dashboard = () => {
                         <li className=""></li>
                     </ul>
                 </div>
-                <div className="col-lg-10 col-md-9 col-12 pe-md-0" id="admin-dashboard-body">
-                <div className="shadow h-100 rounded-1 w-100 bg-white p-1 px-2"><Outlet /></div>
+                <div
+                    className="col-lg-10 col-md-9 col-12 pe-md-0"
+                    id="admin-dashboard-body"
+                >
+                    <div className="shadow h-100 rounded-1 w-100 bg-white p-1 px-2">
+                        <Outlet />
+                    </div>
                 </div>
             </div>
-            </div>
+        </div>
     );
 };
 

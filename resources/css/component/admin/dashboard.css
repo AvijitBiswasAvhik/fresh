@@ -26,3 +26,10 @@
  .dashboard-sidebar-menu-collapse > li{
     cursor: pointer;
  }
+ #admin-dashboard-container{
+    position: relative;
+ }
+#admin-dashboard-sidebar{
+    position: sticky;
+    top: 0;
+}

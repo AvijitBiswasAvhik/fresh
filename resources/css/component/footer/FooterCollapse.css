@@ -1,0 +1,52 @@
+.footer-list-ul {
+    list-style-type: none;
+}
+.footer-list-menu-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    letter-spacing: .5px;
+    font-weight: 700;
+    border-radius: 10px;
+    cursor: pointer;
+    
+    
+    
+}
+.footer-list-menu-container:hover{
+    background-color: #4252C8;
+}
+.footer-list-ul {
+    height: 0; /* Start with height 0 */
+    overflow: hidden;
+    transition: height 0.5s ease; /* Smooth height transition */
+}
+
+.footer-list-ul.expanded {
+    height: 100%; /* Target height when expanded (adjust as needed) */
+}
+@media screen and (min-width: 768px) {
+    .footer-list-ul {
+        height: 100%;
+    }
+}
+.footer-list:hover{
+    background-color: #4252C8;
+    cursor: pointer;
+    
+}
+.footer-social-media-box{
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 10px;
+    position: relative;
+}
+.footer-social-media-list{
+    margin-left: -30px;
+}
+.footer-social-media-list svg{
+    height: 30px;
+    width: 20px;
+}

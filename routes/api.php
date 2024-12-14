@@ -13,6 +13,7 @@ use App\Http\Controllers\openAi;
 use App\Http\Controllers\PayPalController;
 use App\Models\Product;
 use App\Models\UserCart;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +43,7 @@ Route::middleware(['auth:sanctum'])->group(
     Route::post('users/payment-data/save', [UserPaymentMethodController::class, 'store']);
     Route::get('users/payment-data/show', [UserPaymentMethodController::class, 'show']);
     Route::post('admin/product-add', [ProductController::class, 'create']);
+    Route::get('admin/user-list', [UserController::class, 'UserList']);
     Route::post('add-to-cart', [UserCartController::class, 'store']);
     Route::get('cart-data', [UserCartController::class, 'show']);
     Route::get('product/categories', [DataFlow::class, 'getCategories']);

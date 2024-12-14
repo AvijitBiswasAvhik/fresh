@@ -12,6 +12,7 @@ import ProductList from "./components/admin/product/ProductList";
 import Account from "./components/auth/Account&Security";
 import CartPage from "./components/CartPage";
 import Order from "./components/Order";
+import UserList from "./components/admin/user/UserList";
 const router = createBrowserRouter([
     {
         path: "/",
@@ -67,7 +68,12 @@ const router = createBrowserRouter([
             {
                 path: "/admin/product-list",
                 element: <ProductList />,
+            },
+            {
+                path: "/admin/user-list",
+                element: <UserList />,
             }
+
         ],
     },
 ]);
