@@ -2,6 +2,7 @@
     display: grid;
     grid-template-columns: 3fr 2fr;
     grid-gap: 10px;
+    position: relative;
 }
 .show-image-container {
     height: 50ppx !important;
@@ -10,7 +11,7 @@
     display: grid;
     grid-template-columns: 120px 1fr;
     gap: 5px;
-    position: sticky !important;
+    position: sticky;
     top: 10px;
 }
 .single-product-images {
@@ -111,14 +112,16 @@
 #single-product-lense {
     position: absolute;
     z-index: 10; /* Higher than .main-image */
-}
-#single-product-lense {
     pointer-events: none;
 }
+
+
 #zoom-place {
-    position: relative;
     border-radius: 2px;
     box-shadow: 0 0 5px gray;
+}
+#zoomed-image-box{
+    
 }
 .zoomed-image {
     /* Hide overflow if needed background-size: 400% 400%; */

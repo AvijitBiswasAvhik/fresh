@@ -1,0 +1,99 @@
+/* degine produc data top section*/
+:root {
+}
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    color: #1d2327;
+}
+#product-data-top-section {
+    border: 1px solid rgb(172, 172, 172);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-radius: 2px;
+}
+#product-data-top-header {
+    font-size: 14px;
+    box-sizing: border-box;
+    margin: 0;
+    line-height: 28px;
+}
+
+#product-top-section-type {
+    padding: 5px;
+    border-radius: 2px;
+    margin-left: 3px;
+    border: 1px solid rgb(177, 177, 177);
+}
+.product-data-fild-on-off {
+    content: "\f347";
+    border: 1px solid black;
+    height: 20px;
+    width: 20px;
+    color: black;
+    font-family: inherit;
+}
+
+.product-data-fild-on-off::before {
+    content: "\f347";
+}
+/* product data from container degine*/
+#product-data-from-container {
+    border-right: 1px solid grey;
+    border-left: 1px solid grey;
+    border-bottom: 1px solid grey;
+}
+.product-data-from-list-container {
+    height: 100%;
+    list-style-type: none;
+    padding-left: 0;
+    border-right: 0.1px solid rgb(230, 228, 228);
+    background-color: #fafafa;
+}
+.product-data-list {
+    border-bottom: 0.1em solid rgb(230, 228, 228);
+    padding: 5px;
+    line-height: 20px;
+    color: #135e96;
+    font-size: 13px;
+    cursor: pointer;
+}
+.product-data-list label{
+    display: flex;
+    gap: 5px;
+}
+
+/**** now each list section */
+#product-general-data {
+    width: 100%;
+}
+.product-data-input-field {
+    display: flex;
+}
+.product-data-input-field label {
+    width: 150px;
+    font-size: 13px;
+}
+.product-data-input-field label span {
+    font-size: 8px;
+    font-weight: 100;
+}
+.product-data-input-field input {
+    border: 0.1em solid rgb(230, 228, 228);
+    border-radius: 5px;
+    padding: 5px;
+}
+.product-data-inventory-stock-management-description {
+    font-size: 12px;
+}
+#product-data-inventory-stock-management {
+    font-size: 12px;
+    margin-right: 5px;
+}
+.product-data-from-list-stock-status{
+    list-style-type: none;
+    padding: 0;
+}

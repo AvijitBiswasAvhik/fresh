@@ -33,17 +33,17 @@ class StoreProductControllerRequest extends FormRequest
             'firstCategory' => 'required',
             'subCategory' => 'required',
             'price' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
             //'tag' => ['required',new tag()],
             'quantity' => 'required',
             'discountPrice' => 'required|numeric|lt:price|not_in:0',
             //'variations' => ['required',new Varitions()],
             //'variations.*.sku' => 'required',
             //'galleryImage' => 'required',
-            'gallery-image0' => 'image|mimes:jpeg,png,jpg,gif|max:10240',
-            'gallery-image1' => 'image|mimes:jpeg,png,jpg,gif|max:10240',
-            'gallery-image2' => 'image|mimes:jpeg,png,jpg,gif|max:10240',
-            'gallery-image3' => 'image|mimes:jpeg,png,jpg,gif|max:10240',
+            'gallery-image0' => 'image|mimes:jpeg,png,jpg,gif,webp|max:10240',
+            'gallery-image1' => 'image|mimes:jpeg,png,jpg,gif,webp|max:10240',
+            'gallery-image2' => 'image|mimes:jpeg,png,jpg,gif,webp|max:10240',
+            'gallery-image3' => 'image|mimes:jpeg,png,jpg,gif,webp|max:10240',
 
 
 

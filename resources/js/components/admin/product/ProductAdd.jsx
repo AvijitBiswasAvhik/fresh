@@ -4,6 +4,7 @@ import "../../../../css/component/admin/add-product.css";
 import axios from "axios";
 import axiosClient from "../../../Axios";
 import { useStateContext } from "../../../ContextProvider";
+import Variations from "./Variations";
 
 export default function ProductAdd() {
     let [product, setProduct] = useState({
@@ -1046,6 +1047,10 @@ export default function ProductAdd() {
                         })}
                 </div>
             </div>
+            <div className="" id="varions-product-place">
+                <Variations/>
+            </div>
+
             <div className="mb-3 d-flex justify-content-end"></div>
             <div className="mb-3 p-2 d-flex justify-content-end">
                 <button

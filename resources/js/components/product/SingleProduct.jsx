@@ -144,7 +144,6 @@ export default function SingleProduct() {
         <>
             {products && (
                 <div id="single-product">
-                    
                     <div className="single-product-top-section p-0">
                         <div className="show-image-container">
                             <div
@@ -206,8 +205,6 @@ export default function SingleProduct() {
                                                 alt=""
                                                 id="single-product-lense"
                                                 style={{
-                                                    backgroundColor:
-                                                        "#0dcaff33",
                                                     top:
                                                         hoverPosition.top -
                                                         hoverPosition.bgS
@@ -261,7 +258,6 @@ export default function SingleProduct() {
                                 />
                             ) : (
                                 <div className="single-product-top single-product-top-price-content p-2">
-                                    
                                     <p className="h5 sticky-title">
                                         {products.title}
                                     </p>
@@ -305,7 +301,7 @@ export default function SingleProduct() {
                                     <div id="variants" className="row">
                                         <div
                                             id="variants-color"
-                                            className="col d-flex gap-5 mb-4"
+                                            className="col-12 d-flex gap-5 mb-4"
                                         >
                                             <span className="color fw-bold text-muted">
                                                 Color
@@ -324,7 +320,7 @@ export default function SingleProduct() {
                                         </div>
                                         <div
                                             id="variants-storage"
-                                            className="col fw-4 fw-bold text-muted d-flex gap-4 mb-4"
+                                            className="col-12 fw-4 fw-bold text-muted d-flex gap-4 mb-4"
                                         >
                                             <span>Storage</span>
                                             <div className="variants-all-storage d-flex gap-1">
@@ -344,7 +340,7 @@ export default function SingleProduct() {
                                         <span className="highlight-items fw-bold text-muted">
                                             Highlights
                                         </span>
-                                        <ul className="">
+                                        <ul className="px-1">
                                             <li className="d-flex gap-2">
                                                 <span className="variants-name">
                                                     color
