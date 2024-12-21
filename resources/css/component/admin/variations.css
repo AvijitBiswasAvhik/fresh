@@ -65,7 +65,9 @@
     display: flex;
     gap: 5px;
 }
-
+.input-box{
+    max-width: 300px;
+}
 /**** now each list section */
 #product-general-data {
     width: 100%;
@@ -73,9 +75,8 @@
 .product-data-input-field {
     display: flex;
 }
-.product-data-input-field label {
+.product-data-input-field label{
     width: 150px;
-    font-size: 13px;
 }
 .product-data-input-field label span {
     font-size: 8px;
@@ -96,4 +97,10 @@
 .product-data-from-list-stock-status{
     list-style-type: none;
     padding: 0;
+}
+.shiping-product-data-input{
+    width: 33%;
+}
+.active{
+    background-color: #e0e0e0;
 }

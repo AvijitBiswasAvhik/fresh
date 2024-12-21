@@ -43,6 +43,22 @@
 .footer-end{
     min-height: 100px;
 }
+.footer-btn-anglo{
+    color: white;
+}
 .footer-btn-anglo:hover{
     background-color: rgba(240, 248, 255, 0.281);
+}
+/****atribute section working****/
+#atribute-creating-field{
+    border: 1px solid rgb(190, 190, 190);
+    width: 100%;
+    border-radius: 3px;
+    user-select: none;
+    min-height: 35px;
+    
+}
+.list-style-type-none{
+    list-style: none;
+    color: rgb(155, 155, 155);
 }

@@ -76,7 +76,6 @@
     border: 1px solid white;
     height: 60%;
     color: black !important;
-    border-radius: 50%;
 }
 
 .cart-favorite-menu .favorite,
@@ -112,14 +111,18 @@
     width: 45%;
 }
 .cart-menu-item:hover {
-    background-color: #8a8fa734;
+    background-color: #aaaaaa3f;
+    border-radius: 50%;
 }
+
+
 .cart-favorite-menu .sign-button:hover {
-    background-color: #8a8fa734;
+  
 }
 .nav-item button:hover {
     background-color: #aaaaaa3f;
 }
+
 .nav-categorise-link {
     display: flex;
     align-items: center;

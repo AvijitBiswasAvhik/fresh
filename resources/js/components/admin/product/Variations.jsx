@@ -3,7 +3,7 @@ import "../../../../css/component/admin/variations.css";
 import { formToJSON } from "axios";
 export default function Variations() {
     let [showItem, setShowItem] = useState({
-        general: false,
+        general: true,
         inventory: false,
         shiping: false,
         link_product: false,
@@ -12,20 +12,138 @@ export default function Variations() {
         get_more_options: false,
         pintres: false,
     });
+    let [svgEl, setSvgEl] = useState({
+        general: (
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                className="bi bi-wrench-adjustable"
+                viewBox="0 0 16 16"
+            >
+                <path d="M16 4.5a4.5 4.5 0 0 1-1.703 3.526L13 5l2.959-1.11q.04.3.041.61" />
+                <path d="M11.5 9c.653 0 1.273-.139 1.833-.39L12 5.5 11 3l3.826-1.53A4.5 4.5 0 0 0 7.29 6.092l-6.116 5.096a2.583 2.583 0 1 0 3.638 3.638L9.908 8.71A4.5 4.5 0 0 0 11.5 9m-1.292-4.361-.596.893.809-.27a.25.25 0 0 1 .287.377l-.596.893.809-.27.158.475-1.5.5a.25.25 0 0 1-.287-.376l.596-.893-.809.27a.25.25 0 0 1-.287-.377l.596-.893-.809.27-.158-.475 1.5-.5a.25.25 0 0 1 .287.376M3 14a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
+            </svg>
+        ),
+        inventory: (
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                className="bi bi-clipboard-data-fill"
+                viewBox="0 0 16 16"
+            >
+                <path d="M6.5 0A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0zm3 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z" />
+                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A2.5 2.5 0 0 1 9.5 5h-3A2.5 2.5 0 0 1 4 2.5zM10 8a1 1 0 1 1 2 0v5a1 1 0 1 1-2 0zm-6 4a1 1 0 1 1 2 0v1a1 1 0 1 1-2 0zm4-3a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0v-3a1 1 0 0 1 1-1" />
+            </svg>
+        ),
+        shiping: (
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                className="bi bi-truck"
+                viewBox="0 0 16 16"
+            >
+                <path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5zm1.294 7.456A2 2 0 0 1 4.732 11h5.536a2 2 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456M12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2" />
+            </svg>
+        ),
+        link_product: (
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                className="bi bi-link-45deg"
+                viewBox="0 0 16 16"
+            >
+                <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z" />
+                <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z" />
+            </svg>
+        ),
+        atribute: (
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                className="bi bi-diagram-2"
+                viewBox="0 0 16 16"
+            >
+                <path
+                    fillRule="evenodd"
+                    d="M6 3.5A1.5 1.5 0 0 1 7.5 2h1A1.5 1.5 0 0 1 10 3.5v1A1.5 1.5 0 0 1 8.5 6v1H11a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 5 7h2.5V6A1.5 1.5 0 0 1 6 4.5zM8.5 5a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5zM3 11.5A1.5 1.5 0 0 1 4.5 10h1A1.5 1.5 0 0 1 7 11.5v1A1.5 1.5 0 0 1 5.5 14h-1A1.5 1.5 0 0 1 3 12.5zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm4.5.5a1.5 1.5 0 0 1 1.5-1.5h1a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5h-1A1.5 1.5 0 0 1 9 12.5zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z"
+                />
+            </svg>
+        ),
+        advance: (
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                className="bi bi-gear"
+                viewBox="0 0 16 16"
+            >
+                <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0" />
+                <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115z" />
+            </svg>
+        ),
+        get_more_options: (
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                className="bi bi-plug-fill"
+                viewBox="0 0 16 16"
+            >
+                <path d="M6 0a.5.5 0 0 1 .5.5V3h3V.5a.5.5 0 0 1 1 0V3h1a.5.5 0 0 1 .5.5v3A3.5 3.5 0 0 1 8.5 10c-.002.434-.01.845-.04 1.22-.041.514-.126 1.003-.317 1.424a2.08 2.08 0 0 1-.97 1.028C6.725 13.9 6.169 14 5.5 14c-.998 0-1.61.33-1.974.718A1.92 1.92 0 0 0 3 16H2c0-.616.232-1.367.797-1.968C3.374 13.42 4.261 13 5.5 13c.581 0 .962-.088 1.218-.219.241-.123.4-.3.514-.55.121-.266.193-.621.23-1.09.027-.34.035-.718.037-1.141A3.5 3.5 0 0 1 4 6.5v-3a.5.5 0 0 1 .5-.5h1V.5A.5.5 0 0 1 6 0" />
+            </svg>
+        ),
+        pintres: (
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                className="bi bi-pinterest"
+                viewBox="0 0 16 16"
+            >
+                <path d="M8 0a8 8 0 0 0-2.915 15.452c-.07-.633-.134-1.606.027-2.297.146-.625.938-3.977.938-3.977s-.239-.479-.239-1.187c0-1.113.645-1.943 1.448-1.943.682 0 1.012.512 1.012 1.127 0 .686-.437 1.712-.663 2.663-.188.796.4 1.446 1.185 1.446 1.422 0 2.515-1.5 2.515-3.664 0-1.915-1.377-3.254-3.342-3.254-2.276 0-3.612 1.707-3.612 3.471 0 .688.265 1.425.595 1.826a.24.24 0 0 1 .056.23c-.061.252-.196.796-.222.907-.035.146-.116.177-.268.107-1-.465-1.624-1.926-1.624-3.1 0-2.523 1.834-4.84 5.286-4.84 2.775 0 4.932 1.977 4.932 4.62 0 2.757-1.739 4.976-4.151 4.976-.811 0-1.573-.421-1.834-.919l-.498 1.902c-.181.695-.669 1.566-.995 2.097A8 8 0 1 0 8 0" />
+            </svg>
+        ),
+    });
+    let [att, setAtt] = useState({ atribute_input: false });
     useEffect(() => {
         // console.log(showItem);
     }, [showItem]);
+    let [productData, setProductData] = useState({
+        general: { regular_price: 0, sale_price: 0 },
+        inventory: {
+            sku: "",
+            upc: "",
+            stock_management: { status: 0, show: true },
+        },
+        shiping: {
+            weight: "",
+            dimentions: { length: "", width: "", height: "" },
+        },
+        link_product: { cross_sell: "", up_sell: "" },
+        atribute: {
+            atribute_1: {
+                name: "",
+                visible_on_product: false,
+                used_for_variation: false,
+                values: "",
+            },
+        },
+    });
     let handleClick = (e, key) => {
         e.stopPropagation();
-        // for (let key in showItem) {
-        //     if (key == "general") {
-        //         console.log(key);
-        //         showItem[key] = true;
-        //     } else {
-        //         showItem[key] = false;
-        //     }
-        // }
-        // setShowItem({ ...showItem });
         let updateShowItem = Object.keys(showItem).reduce((acc, currentKey) => {
             acc[currentKey] = currentKey === key;
             return acc;
@@ -77,7 +195,7 @@ export default function Variations() {
                 </div>
                 <div id="product-data-from-container">
                     <div className="row">
-                        <div className="col-4">
+                        <div className="col-2 col-sm-1 col-md-3">
                             <ul className="product-data-from-list-container">
                                 {Object.keys(showItem).map((key) => {
                                     let st = key
@@ -87,10 +205,10 @@ export default function Variations() {
                                                 acc += " ";
 
                                                 return acc;
-                                            }else if(i == 0){
+                                            } else if (i == 0) {
                                                 acc += crr.toUpperCase();
                                                 return acc;
-                                            }else {
+                                            } else {
                                                 acc += crr;
                                                 return acc;
                                             }
@@ -106,17 +224,27 @@ export default function Variations() {
                                                 showItem[key] === true
                                                     ? "active"
                                                     : ""
-                                            }`}
+                                            } `}
                                         >
-                                            {st}
+                                            <div className="d-flex gap-1 ">
+                                                <div className="text-primary">
+                                                    {svgEl[key]}
+                                                </div>
+                                                <div className="text-primary d-none d-md-block">
+                                                    {st}
+                                                </div>{" "}
+                                            </div>
                                         </li>
                                     );
                                 })}
                             </ul>
                         </div>
-                        <div className="col-8">
+                        <div className="col-10 col-sm-11 col-md-9 d-flex justify-content-start">
                             {showItem.general && (
-                                <div id="product-general-data" className="px-2">
+                                <div
+                                    id="product-general-data"
+                                    className="px-2 border border-2"
+                                >
                                     <div className="product-data-input-field py-3">
                                         <label htmlFor="product-data-regular-price">
                                             Regular price (<span>৳ </span>)
@@ -139,104 +267,444 @@ export default function Variations() {
                                     </div>
                                 </div>
                             )}
-                            <div id="product-inventory-data" className="px-2">
-                                <div className="product-data-input-field py-3 d-sm-flex d-block">
-                                    <label htmlFor="product-data-inventory-sku">
-                                        SKU
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className="genterl-input-field"
-                                        id="product-data-inventory-sku"
-                                    />
+
+                            {showItem.inventory && (
+                                <div
+                                    id="product-inventory-data"
+                                    className="px-2"
+                                >
+                                    <div className="product-data-input-field py-3 d-sm-flex d-block">
+                                        <label htmlFor="product-data-inventory-sku">
+                                            SKU
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="genterl-input-field"
+                                            id="product-data-inventory-sku"
+                                        />
+                                    </div>
+                                    <div className="product-data-input-field py-3  d-sm-flex d-block">
+                                        <label htmlFor="product-data-inventory-gtin">
+                                            GTIN, UPC, EAN, or ISBN
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="genterl-input-field"
+                                            id="product-data-inventory-gtin"
+                                        />
+                                    </div>
+                                    <div className="product-data-input-field py-3  d-sm-flex d-block">
+                                        <label htmlFor="product-data-inventory-stock-management">
+                                            Stock management
+                                        </label>
+                                        <input
+                                            type="checkbox"
+                                            className="genterl-input-field"
+                                            id="product-data-inventory-stock-management"
+                                        />
+                                        <span className="product-data-inventory-stock-management-description">
+                                            Track stock quantity for this
+                                            product
+                                        </span>
+                                    </div>
+                                    <div className="product-data-input-field py-3  d-sm-flex d-block">
+                                        <label htmlFor="product-data-inventory-stock-quantity">
+                                            Quantity
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="genterl-input-field"
+                                            id="product-data-inventory-stock-quantity"
+                                        />
+                                    </div>
+                                    <div className="product-data-input-field py-3  d-sm-flex d-block">
+                                        <label htmlFor="product-data-inventory-stock-management">
+                                            Stock status
+                                        </label>
+                                        <ul className="product-data-from-list-stock-status">
+                                            <li className="product-data-list">
+                                                <label>
+                                                    <input
+                                                        type="radio"
+                                                        className="genterl-input-field"
+                                                        value="In Stock"
+                                                        name="_inventory-stock-status"
+                                                    />
+                                                    In stock
+                                                </label>
+                                            </li>
+                                            <li className="product-data-list">
+                                                <label>
+                                                    <input
+                                                        type="radio"
+                                                        className="genterl-input-field"
+                                                        value="Out Stock"
+                                                        name="_inventory-stock-status"
+                                                    />
+                                                    Out of stock
+                                                </label>
+                                            </li>
+                                            <li className="product-data-list">
+                                                <label>
+                                                    <input
+                                                        type="radio"
+                                                        className="genterl-input-field"
+                                                        value="On Order"
+                                                        name="_inventory-stock-status"
+                                                    />
+                                                    On backorder
+                                                </label>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div className="product-data-input-field py-3  d-sm-flex d-block">
+                                        <label htmlFor="product-data-inventory-sold-indvidual">
+                                            Sold individually
+                                        </label>
+                                        <input
+                                            type="checkbox"
+                                            className="genterl-input-field"
+                                            id="product-data-inventory-sold-indvidual"
+                                        />
+                                        <span className="product-data-inventory-sold-indvidual px-2">
+                                            Limit purchases to 1 item per order
+                                        </span>
+                                    </div>
                                 </div>
-                                <div className="product-data-input-field py-3  d-sm-flex d-block">
-                                    <label htmlFor="product-data-inventory-gtin">
-                                        GTIN, UPC, EAN, or ISBN
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className="genterl-input-field"
-                                        id="product-data-inventory-gtin"
-                                    />
-                                </div>
-                                <div className="product-data-input-field py-3  d-sm-flex d-block">
-                                    <label htmlFor="product-data-inventory-stock-management">
-                                        Stock management
-                                    </label>
-                                    <input
-                                        type="checkbox"
-                                        className="genterl-input-field"
-                                        id="product-data-inventory-stock-management"
-                                    />
-                                    <span className="product-data-inventory-stock-management-description">
-                                        Track stock quantity for this product
-                                    </span>
-                                </div>
-                                <div className="product-data-input-field py-3  d-sm-flex d-block">
-                                    <label htmlFor="product-data-inventory-stock-quantity">
-                                        Quantity
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className="genterl-input-field"
-                                        id="product-data-inventory-stock-quantity"
-                                    />
-                                </div>
-                                <div className="product-data-input-field py-3  d-sm-flex d-block">
-                                    <label htmlFor="product-data-inventory-stock-management">
-                                        Stock status
-                                    </label>
-                                    <ul className="product-data-from-list-stock-status">
-                                        <li className="product-data-list">
-                                            <label>
+                            )}
+
+                            {showItem.shiping && (
+                                <div className="product-shiping-data px-2">
+                                    <div className="product-data-input-field py-3 d-sm-flex d-block">
+                                        <div className="row w-100">
+                                            <div className="col-md-4 col-12">
+                                                <label htmlFor="product-data-shiping-kg">
+                                                    Weight (kg)
+                                                </label>
+                                            </div>
+                                            <div className="col-md-8 col-12 d-flex">
                                                 <input
-                                                    type="radio"
+                                                    type="text"
                                                     className="genterl-input-field"
-                                                    value="In Stock"
-                                                    name="_inventory-stock-status"
+                                                    id="product-data-shiping-kg"
+                                                    placeholder="0"
                                                 />
-                                                In stock
-                                            </label>
-                                        </li>
-                                        <li className="product-data-list">
-                                            <label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="product-data-input-field py-3 d-sm-flex d-block">
+                                        <div className="row">
+                                            <div className="col-md-4 col-12">
+                                                <label>Dimensions (cm)</label>
+                                            </div>
+                                            <div className="col-md-8 col-12 d-flex">
                                                 <input
-                                                    type="radio"
-                                                    className="genterl-input-field"
-                                                    value="Out Stock"
-                                                    name="_inventory-stock-status"
+                                                    type="text"
+                                                    className="shiping-product-data-input"
+                                                    placeholder="Length"
                                                 />
-                                                Out of stock
-                                            </label>
-                                        </li>
-                                        <li className="product-data-list">
-                                            <label>
+
                                                 <input
-                                                    type="radio"
-                                                    className="genterl-input-field"
-                                                    value="On Order"
-                                                    name="_inventory-stock-status"
+                                                    type="text"
+                                                    className="shiping-product-data-input"
+                                                    placeholder="Width"
                                                 />
-                                                On backorder
+                                                <input
+                                                    type="text"
+                                                    className="shiping-product-data-input"
+                                                    placeholder="Height"
+                                                />
+                                                <span
+                                                    style={{
+                                                        fontSize: "9px",
+                                                        backgroundColor: "grey",
+                                                        height: "10px",
+                                                        width: "10px",
+                                                    }}
+                                                    className="my-auto mx-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
+                                                >
+                                                    ?
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                            {showItem.link_product && (
+                                <div id="product-link-data" className="px-2">
+                                    <div className="row py-2">
+                                        <div className="col-12 col-md-4">
+                                            <label htmlFor="product-relate-data-upsel">
+                                                Upsells
                                             </label>
-                                        </li>
-                                    </ul>
+                                        </div>
+                                        <div className="col-12 col-md-8 d-flex gap-1">
+                                            <input
+                                                type="text"
+                                                className="genterl-input-field"
+                                                id="product-relate-data-upsel"
+                                                placeholder="Search for a product"
+                                            />
+                                            <span
+                                                style={{
+                                                    fontSize: "9px",
+                                                    backgroundColor: "grey",
+                                                    height: "10px",
+                                                    width: "10px",
+                                                }}
+                                                className="my-auto mx-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
+                                            >
+                                                ?
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div className="row py-2">
+                                        <div className="col-12 col-md-4">
+                                            <label htmlFor="product-relate-data-cross-sel">
+                                                Cross-sells
+                                            </label>
+                                        </div>
+                                        <div className="col-12 col-md-8 d-flex gap-1">
+                                            <input
+                                                type="text"
+                                                className="genterl-input-field"
+                                                id="product-relate-data-cross-sel"
+                                                placeholder="Search for a product"
+                                            />
+
+                                            <span
+                                                style={{
+                                                    fontSize: "9px",
+                                                    backgroundColor: "grey",
+                                                    height: "10px",
+                                                    width: "10px",
+                                                }}
+                                                className="my-auto mx-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
+                                            >
+                                                ?
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="product-data-input-field py-3  d-sm-flex d-block">
-                                    <label htmlFor="product-data-inventory-sold-indvidual">
-                                        Sold individually
-                                    </label>
-                                    <input
-                                        type="checkbox"
-                                        className="genterl-input-field"
-                                        id="product-data-inventory-sold-indvidual"
-                                    />
-                                    <span className="product-data-inventory-sold-indvidual px-2">
-                                        Limit purchases to 1 item per order
-                                    </span>
+                            )}
+                            {showItem.atribute && (
+                                <div id="product-link-data" className="px-2">
+                                    <div className="row py-2 d-flex align-items-start">
+                                        <div className="col-12 col-md-4 mb-1">
+                                            <button
+                                                className="btn btn-outline-secondary"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setProductData((pre) => {
+                                                        let atributeLength = Object.keys(pre.atribute);
+                                                        return {
+                                                            ...pre,
+                                                            atribute: {
+                                                                ...pre.atribute,
+                                                                [`atribute_${atributeLength+1}`]: {
+                                                                    name: "",
+                                                                    visible_on_product: false,
+                                                                    used_for_variation: false,
+                                                                    values: "",
+                                                                },
+                                                            },
+                                                        };
+                                                    });
+                                                }}
+                                            >
+                                                Add new
+                                            </button>
+                                        </div>
+                                        <div className="col-12 col-md-4 col d-flex align-items-center">
+                                            <span
+                                                id="atribute-creating-field"
+                                                className="d-flex flex-column align-items-center"
+                                            >
+                                                <span
+                                                    onClick={(e) =>
+                                                        setAtt({
+                                                            ...att,
+                                                            atribute_input:
+                                                                !att.atribute_input,
+                                                        })
+                                                    }
+                                                    className="d-flex align-items-center w-100 px-1 d-flex justify-content-between"
+                                                >
+                                                    <span
+                                                        style={{
+                                                            fontSize: "12px",
+                                                            color: "rgb(128, 124, 124)",
+                                                        }}
+                                                    >
+                                                        Add existing
+                                                    </span>
+                                                    <span className="">
+                                                        <svg
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            width="16"
+                                                            height="16"
+                                                            fill="currentColor"
+                                                            className="bi bi-caret-down-fill"
+                                                            viewBox="0 0 16 16"
+                                                        >
+                                                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"></path>
+                                                        </svg>
+                                                    </span>
+                                                </span>
+                                                {att.atribute_input && (
+                                                    <span className="after-add-existing-atribute-product-data">
+                                                        <input
+                                                            type="text"
+                                                            className="w-100"
+                                                        />
+                                                        <ul className="list-style-type-none p-0">
+                                                            <li
+                                                                style={{
+                                                                    fontWeight:
+                                                                        "bold",
+                                                                    color: "rgb(128, 124, 124)",
+                                                                }}
+                                                            >
+                                                                Color
+                                                            </li>
+                                                            <li
+                                                                style={{
+                                                                    fontWeight:
+                                                                        "bold",
+                                                                    color: "rgb(128, 124, 124)",
+                                                                }}
+                                                            >
+                                                                weight
+                                                            </li>
+                                                        </ul>
+                                                    </span>
+                                                )}
+                                            </span>
+                                        </div>
+                                        <div className="col-12 col-md-4 d-flex">
+                                            <span className="text-primary">
+                                                Expand
+                                            </span>
+                                            /
+                                            <span className="text-primary">
+                                                Close
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div className="card rounded-0">
+                                        <div className="card-header">
+                                            <div className="d-flex align-items-center justify-content-between">
+                                                <div className="fw-bold">
+                                                    New attribute
+                                                </div>
+                                                <div className="">
+                                                    <div className="btn text-danger">
+                                                        Remove
+                                                    </div>
+                                                    <div className="btn">
+                                                        <svg
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            width="16"
+                                                            height="16"
+                                                            fill="currentColor"
+                                                            className="bi bi-list"
+                                                            viewBox="0 0 16 16"
+                                                        >
+                                                            <path
+                                                                fillRule="evenodd"
+                                                                d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"
+                                                            />
+                                                        </svg>
+                                                    </div>
+                                                    <div className="btn">
+                                                        <svg
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            width="16"
+                                                            height="16"
+                                                            fill="currentColor"
+                                                            className="bi bi-caret-down-fill"
+                                                            viewBox="0 0 16 16"
+                                                        >
+                                                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="card-body">
+                                            <div className="row">
+                                                <div className="col">
+                                                    <div className="form-group mb-2">
+                                                        <label>Name:</label>
+                                                        <input
+                                                            type="text"
+                                                            className="form-control"
+                                                            aria-describedby="emailHelp"
+                                                            placeholder="e.g. length or weight"
+                                                            style={{
+                                                                border: "1px solid grey",
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div className="form-check form-check-inline mb-2">
+                                                        <label>
+                                                            <input
+                                                                className="form-check-input"
+                                                                type="checkbox"
+                                                                value="option1"
+                                                                style={{
+                                                                    border: "1px solid grey",
+                                                                }}
+                                                            />
+                                                            Visible on the
+                                                            product page
+                                                        </label>
+                                                    </div>
+                                                    <div className="form-check form-check-inline mb-2">
+                                                        <label>
+                                                            <input
+                                                                className="form-check-input"
+                                                                type="checkbox"
+                                                                value="option2"
+                                                                style={{
+                                                                    border: "1px solid grey",
+                                                                }}
+                                                            />
+                                                            Used for variations
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div className="col">
+                                                    <div className="form-group">
+                                                        <label>
+                                                            Value(s)::
+                                                        </label>
+                                                        <textarea
+                                                            type="text"
+                                                            className="form-control"
+                                                            aria-describedby="emailHelp"
+                                                            placeholder="Enter options for customers to choose from, f.e. “Blue” or “Large”. Use “|” to separate different options."
+                                                            style={{
+                                                                border: "1px solid grey",
+                                                                minHeight:
+                                                                    "200px",
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        id="product-link-data"
+                                        className="my-2 p-1"
+                                    >
+                                        <div className="btn btn-outline-secondary">
+                                            Save Atribute
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
                     </div>
                 </div>

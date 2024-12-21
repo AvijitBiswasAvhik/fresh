@@ -133,7 +133,7 @@ export default function NavBar() {
             </div>
             <div className="nav-item item">
                 <div className="cart-favorite-menu px-1">
-                    <div className="sign-in cart-menu-item">
+                    <div className="sign-in">
                         <button
                             type="button"
                             className="btn sign-button fw-bold"

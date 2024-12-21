@@ -47,7 +47,7 @@ export default function FooterCollapse() {
                             expand(e);
                         }}
                     >
-                        <p className="my-auto">Shop</p>
+                        <p className="my-auto text-white">Shop</p>
                         <p className="my-auto">
                             {list.one ? (
                                 <svg
@@ -98,7 +98,7 @@ export default function FooterCollapse() {
                             expand(e);
                         }}
                     >
-                        <p className="my-auto">Product</p>
+                        <p className="my-auto text-white">Product</p>
                         <p className="my-auto">
                             {list.two ? (
                                 <svg
@@ -149,7 +149,7 @@ export default function FooterCollapse() {
                             expand(e);
                         }}
                     >
-                        <p className="my-auto">About</p>
+                        <p className="my-auto text-white">About</p>
                         <p className="my-auto">
                             {list.three ? (
                                 <svg
@@ -202,7 +202,7 @@ export default function FooterCollapse() {
                             expand(e);
                         }}
                     >
-                        <p className="my-auto">Help</p>
+                        <p className="my-auto text-white">Help</p>
                         <p className="my-auto">
                             {list.four ? (
                                 <svg
