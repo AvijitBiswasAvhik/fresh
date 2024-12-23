@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "../../../../css/component/admin/variations.css";
 import { formToJSON } from "axios";
 export default function Variations() {
@@ -118,30 +118,30 @@ export default function Variations() {
         ),
     });
     let [att, setAtt] = useState({ atribute_input: false });
-    useEffect(() => {
-        // console.log(showItem);
-    }, [showItem]);
+
     let [productData, setProductData] = useState({
         general: { regular_price: 0, sale_price: 0 },
         inventory: {
             sku: "",
             upc: "",
-            stock_management: { status: 0, show: true },
+            stock_management: { quantity: 0, show: true },
+            stock_status: "in stock",
+            sold_individually: true,
         },
         shiping: {
             weight: "",
             dimentions: { length: "", width: "", height: "" },
         },
         link_product: { cross_sell: "", up_sell: "" },
-        atribute: {
-            atribute_1: {
-                name: "",
-                visible_on_product: false,
-                used_for_variation: false,
-                values: "",
-            },
-        },
+        atribute: {},
     });
+    let [atributeBody, setAtributeBody] = useState([]);
+    useEffect(() => {
+        setAtributeBody(Object.keys(productData.atribute));
+    }, [productData.atribute]);
+    useEffect(() => {
+        console.log(productData);
+    }, [productData]);
     let handleClick = (e, key) => {
         e.stopPropagation();
         let updateShowItem = Object.keys(showItem).reduce((acc, currentKey) => {
@@ -150,6 +150,31 @@ export default function Variations() {
         }, {});
         setShowItem(updateShowItem);
     };
+    let handleValue = (e, name, key, stock) => {
+        e.stopPropagation();
+        setProductData((pre) => {
+            if (key == "stock_management") {
+                return {
+                    ...pre,
+                    [name]: {
+                        ...pre[name],
+                        [key]: {
+                            ...pre[name].stock_management,
+                            [stock]:
+                                stock == "show"
+                                    ? e.target.checked
+                                    : e.target.value,
+                        },
+                    },
+                };
+            }
+            return {
+                ...pre,
+                [name]: { ...pre[name], [key]: e.target.value },
+            };
+        });
+    };
+
     return (
         <div className="row" id="variations-header">
             <div className="col-12">
@@ -253,6 +278,17 @@ export default function Variations() {
                                             type="text"
                                             className="genterl-input-field"
                                             id="product-data-regular-price"
+                                            value={
+                                                productData.general
+                                                    .regular_price
+                                            }
+                                            onChange={(e) => {
+                                                handleValue(
+                                                    e,
+                                                    "general",
+                                                    "regular_price"
+                                                );
+                                            }}
                                         />
                                     </div>
                                     <div className="product-data-input-field py-3">
@@ -263,6 +299,16 @@ export default function Variations() {
                                             type="text"
                                             className="genterl-input-field"
                                             id="product-data-sale-price"
+                                            value={
+                                                productData.general.sale_price
+                                            }
+                                            onChange={(e) => {
+                                                handleValue(
+                                                    e,
+                                                    "general",
+                                                    "sale_price"
+                                                );
+                                            }}
                                         />
                                     </div>
                                 </div>
@@ -281,6 +327,14 @@ export default function Variations() {
                                             type="text"
                                             className="genterl-input-field"
                                             id="product-data-inventory-sku"
+                                            value={productData.inventory.sku}
+                                            onChange={(e) => {
+                                                handleValue(
+                                                    e,
+                                                    "inventory",
+                                                    "sku"
+                                                );
+                                            }}
                                         />
                                     </div>
                                     <div className="product-data-input-field py-3  d-sm-flex d-block">
@@ -291,6 +345,14 @@ export default function Variations() {
                                             type="text"
                                             className="genterl-input-field"
                                             id="product-data-inventory-gtin"
+                                            value={productData.inventory.upc}
+                                            onChange={(e) => {
+                                                handleValue(
+                                                    e,
+                                                    "inventory",
+                                                    "upc"
+                                                );
+                                            }}
                                         />
                                     </div>
                                     <div className="product-data-input-field py-3  d-sm-flex d-block">
@@ -301,6 +363,18 @@ export default function Variations() {
                                             type="checkbox"
                                             className="genterl-input-field"
                                             id="product-data-inventory-stock-management"
+                                            checked={
+                                                productData.inventory
+                                                    .stock_management.show
+                                            }
+                                            onChange={(e) => {
+                                                handleValue(
+                                                    e,
+                                                    "inventory",
+                                                    "stock_management",
+                                                    "show"
+                                                );
+                                            }}
                                         />
                                         <span className="product-data-inventory-stock-management-description">
                                             Track stock quantity for this
@@ -315,6 +389,18 @@ export default function Variations() {
                                             type="text"
                                             className="genterl-input-field"
                                             id="product-data-inventory-stock-quantity"
+                                            value={
+                                                productData.inventory
+                                                    .stock_management.quantity
+                                            }
+                                            onChange={(e) => {
+                                                handleValue(
+                                                    e,
+                                                    "inventory",
+                                                    "stock_management",
+                                                    "quantity"
+                                                );
+                                            }}
                                         />
                                     </div>
                                     <div className="product-data-input-field py-3  d-sm-flex d-block">
@@ -329,6 +415,13 @@ export default function Variations() {
                                                         className="genterl-input-field"
                                                         value="In Stock"
                                                         name="_inventory-stock-status"
+                                                        onChange={(e) => {
+                                                            handleValue(
+                                                                e,
+                                                                "inventory",
+                                                                "stock_status"
+                                                            );
+                                                        }}
                                                     />
                                                     In stock
                                                 </label>
@@ -340,6 +433,13 @@ export default function Variations() {
                                                         className="genterl-input-field"
                                                         value="Out Stock"
                                                         name="_inventory-stock-status"
+                                                        onChange={(e) => {
+                                                            handleValue(
+                                                                e,
+                                                                "inventory",
+                                                                "stock_status"
+                                                            );
+                                                        }}
                                                     />
                                                     Out of stock
                                                 </label>
@@ -351,6 +451,13 @@ export default function Variations() {
                                                         className="genterl-input-field"
                                                         value="On Order"
                                                         name="_inventory-stock-status"
+                                                        onChange={(e) => {
+                                                            handleValue(
+                                                                e,
+                                                                "inventory",
+                                                                "stock_status"
+                                                            );
+                                                        }}
                                                     />
                                                     On backorder
                                                 </label>
@@ -365,6 +472,20 @@ export default function Variations() {
                                             type="checkbox"
                                             className="genterl-input-field"
                                             id="product-data-inventory-sold-indvidual"
+                                            onChange={(e) => {
+                                                e.stopPropagation();
+                                                setProductData((pre) => {
+                                                    return {
+                                                        ...pre,
+                                                        inventory: {
+                                                            ...pre.inventory,
+                                                            sold_individually:
+                                                                e.target
+                                                                    .checked,
+                                                        },
+                                                    };
+                                                });
+                                            }}
                                         />
                                         <span className="product-data-inventory-sold-indvidual px-2">
                                             Limit purchases to 1 item per order
@@ -388,6 +509,17 @@ export default function Variations() {
                                                     className="genterl-input-field"
                                                     id="product-data-shiping-kg"
                                                     placeholder="0"
+                                                    value={
+                                                        productData.shiping
+                                                            .weight
+                                                    }
+                                                    onChange={(e) => {
+                                                        handleValue(
+                                                            e,
+                                                            "shiping",
+                                                            "weight"
+                                                        );
+                                                    }}
                                                 />
                                             </div>
                                         </div>
@@ -402,17 +534,95 @@ export default function Variations() {
                                                     type="text"
                                                     className="shiping-product-data-input"
                                                     placeholder="Length"
+                                                    value={
+                                                        productData.shiping
+                                                            .dimentions.length
+                                                    }
+                                                    onChange={(e) => {
+                                                        e.stopPropagation();
+                                                        setProductData(
+                                                            (pre) => {
+                                                                return {
+                                                                    ...pre,
+                                                                    shiping: {
+                                                                        ...pre.shiping,
+                                                                        dimentions:
+                                                                            {
+                                                                                ...pre
+                                                                                    .shiping
+                                                                                    .dimentions,
+                                                                                length: e
+                                                                                    .target
+                                                                                    .value,
+                                                                            },
+                                                                    },
+                                                                };
+                                                            }
+                                                        );
+                                                    }}
                                                 />
 
                                                 <input
                                                     type="text"
                                                     className="shiping-product-data-input"
                                                     placeholder="Width"
+                                                    value={
+                                                        productData.shiping
+                                                            .dimentions.width
+                                                    }
+                                                    onChange={(e) => {
+                                                        e.stopPropagation();
+                                                        setProductData(
+                                                            (pre) => {
+                                                                return {
+                                                                    ...pre,
+                                                                    shiping: {
+                                                                        ...pre.shiping,
+                                                                        dimentions:
+                                                                            {
+                                                                                ...pre
+                                                                                    .shiping
+                                                                                    .dimentions,
+                                                                                width: e
+                                                                                    .target
+                                                                                    .value,
+                                                                            },
+                                                                    },
+                                                                };
+                                                            }
+                                                        );
+                                                    }}
                                                 />
                                                 <input
                                                     type="text"
                                                     className="shiping-product-data-input"
                                                     placeholder="Height"
+                                                    value={
+                                                        productData.shiping
+                                                            .dimentions.height
+                                                    }
+                                                    onChange={(e) => {
+                                                        e.stopPropagation();
+                                                        setProductData(
+                                                            (pre) => {
+                                                                return {
+                                                                    ...pre,
+                                                                    shiping: {
+                                                                        ...pre.shiping,
+                                                                        dimentions:
+                                                                            {
+                                                                                ...pre
+                                                                                    .shiping
+                                                                                    .dimentions,
+                                                                                height: e
+                                                                                    .target
+                                                                                    .value,
+                                                                            },
+                                                                    },
+                                                                };
+                                                            }
+                                                        );
+                                                    }}
                                                 />
                                                 <span
                                                     style={{
@@ -488,24 +698,52 @@ export default function Variations() {
                                 </div>
                             )}
                             {showItem.atribute && (
-                                <div id="product-link-data" className="px-2">
+                                <div
+                                    id="product-link-data"
+                                    className="px-2 w-100"
+                                >
                                     <div className="row py-2 d-flex align-items-start">
                                         <div className="col-12 col-md-4 mb-1">
-                                            <button
+                                            <div
                                                 className="btn btn-outline-secondary"
                                                 onClick={(e) => {
                                                     e.stopPropagation();
+                                                    if (
+                                                        Object.keys(
+                                                            productData.atribute
+                                                        ).length >= 5
+                                                    ) {
+                                                        return;
+                                                    }
                                                     setProductData((pre) => {
-                                                        let atributeLength = Object.keys(pre.atribute);
+                                                        let atributeLength =
+                                                            Object.keys(
+                                                                pre.atribute
+                                                            );
+                                                        let key = `atribute_${
+                                                            atributeLength.length >
+                                                            0
+                                                                ? Number(
+                                                                      atributeLength[
+                                                                          atributeLength.length -
+                                                                              1
+                                                                      ].match(
+                                                                          /\d+$/
+                                                                      )[0]
+                                                                  ) + 1
+                                                                : 1 // If atributeLength is empty, start from 1
+                                                        }`;
+
                                                         return {
                                                             ...pre,
                                                             atribute: {
                                                                 ...pre.atribute,
-                                                                [`atribute_${atributeLength+1}`]: {
+                                                                [key]: {
                                                                     name: "",
                                                                     visible_on_product: false,
                                                                     used_for_variation: false,
-                                                                    values: "",
+                                                                    value: "",
+                                                                    span_view: true,
                                                                 },
                                                             },
                                                         };
@@ -513,7 +751,7 @@ export default function Variations() {
                                                 }}
                                             >
                                                 Add new
-                                            </button>
+                                            </div>
                                         </div>
                                         <div className="col-12 col-md-4 col d-flex align-items-center">
                                             <span
@@ -591,110 +829,331 @@ export default function Variations() {
                                             </span>
                                         </div>
                                     </div>
-                                    <div className="card rounded-0">
-                                        <div className="card-header">
-                                            <div className="d-flex align-items-center justify-content-between">
-                                                <div className="fw-bold">
-                                                    New attribute
+                                    {Object.keys(productData.atribute).map(
+                                        (key) => {
+                                            return (
+                                                <div
+                                                    className="card rounded-0 mb-4 w-100"
+                                                    key={key}
+                                                >
+                                                    <div className="card-header">
+                                                        <div className="d-flex align-items-center justify-content-between">
+                                                            <div className="fw-bold">
+                                                                {key}
+                                                            </div>
+                                                            <div className="">
+                                                                <div
+                                                                    className="btn text-danger"
+                                                                    onClick={(
+                                                                        e
+                                                                    ) => {
+                                                                        e.stopPropagation();
+
+                                                                        setProductData(
+                                                                            (
+                                                                                prev
+                                                                            ) => {
+                                                                                const {
+                                                                                    [key]: _,
+                                                                                    ...rest
+                                                                                } =
+                                                                                    prev.atribute; // Remove the `key` dynamically
+                                                                                return {
+                                                                                    ...prev,
+                                                                                    atribute:
+                                                                                        rest, // Update `atribute` without the removed key
+                                                                                };
+                                                                            }
+                                                                        );
+                                                                    }}
+                                                                >
+                                                                    Remove
+                                                                </div>
+                                                                <div className="btn">
+                                                                    <svg
+                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                        width="16"
+                                                                        height="16"
+                                                                        fill="currentColor"
+                                                                        className="bi bi-list"
+                                                                        viewBox="0 0 16 16"
+                                                                    >
+                                                                        <path
+                                                                            fillRule="evenodd"
+                                                                            d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"
+                                                                        />
+                                                                    </svg>
+                                                                </div>
+                                                                <div
+                                                                    className={`indicator-atribute btn ${
+                                                                        productData
+                                                                            .atribute[
+                                                                            key
+                                                                        ]
+                                                                            .span_view
+                                                                            ? "view-indicator-atribute"
+                                                                            : ""
+                                                                    }`}
+                                                                    onClick={(
+                                                                        e
+                                                                    ) => {
+                                                                        e.stopPropagation();
+                                                                        setProductData(
+                                                                            (
+                                                                                pre
+                                                                            ) => {
+                                                                                return {
+                                                                                    ...pre,
+                                                                                    atribute:
+                                                                                        {
+                                                                                            ...pre.atribute,
+                                                                                            [key]: {
+                                                                                                ...pre
+                                                                                                    .atribute[
+                                                                                                    key
+                                                                                                ],
+                                                                                                span_view:
+                                                                                                    !pre
+                                                                                                        .atribute[
+                                                                                                        key
+                                                                                                    ]
+                                                                                                        .span_view,
+                                                                                            },
+                                                                                        },
+                                                                                };
+                                                                            }
+                                                                        );
+                                                                    }}
+                                                                >
+                                                                    <svg
+                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                        width="16"
+                                                                        height="16"
+                                                                        fill="currentColor"
+                                                                        className="bi bi-caret-down-fill"
+                                                                        viewBox="0 0 16 16"
+                                                                    >
+                                                                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+                                                                    </svg>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {productData.atribute[key]
+                                                        .span_view && (
+                                                        <div className="card-body">
+                                                            <div className="row">
+                                                                <div className="col">
+                                                                    <div className="form-group mb-2">
+                                                                        <label>
+                                                                            Name:
+                                                                        </label>
+                                                                        <input
+                                                                            type="text"
+                                                                            className="form-control"
+                                                                            aria-describedby="emailHelp"
+                                                                            placeholder="e.g. length or weight"
+                                                                            style={{
+                                                                                border: "1px solid grey",
+                                                                            }}
+                                                                            onChange={(
+                                                                                e
+                                                                            ) => {
+                                                                                e.stopPropagation();
+                                                                                setProductData(
+                                                                                    (
+                                                                                        pre
+                                                                                    ) => {
+                                                                                        return {
+                                                                                            ...pre,
+                                                                                            atribute:
+                                                                                                {
+                                                                                                    ...pre.atribute,
+                                                                                                    [key]: {
+                                                                                                        ...pre
+                                                                                                            .atribute[
+                                                                                                            key
+                                                                                                        ],
+                                                                                                        name: e
+                                                                                                            .target
+                                                                                                            .value,
+                                                                                                    },
+                                                                                                },
+                                                                                        };
+                                                                                    }
+                                                                                );
+                                                                            }}
+                                                                            value={
+                                                                                productData
+                                                                                    .atribute[
+                                                                                    key
+                                                                                ]
+                                                                                    .name
+                                                                            }
+                                                                        />
+                                                                    </div>
+                                                                    <div className="form-check form-check-inline mb-2">
+                                                                        <label>
+                                                                            <input
+                                                                                className="form-check-input"
+                                                                                type="checkbox"
+                                                                                style={{
+                                                                                    border: "1px solid grey",
+                                                                                }}
+                                                                                checked={
+                                                                                    productData
+                                                                                        .atribute[
+                                                                                        key
+                                                                                    ]
+                                                                                        .visible_on_product
+                                                                                }
+                                                                                onChange={(
+                                                                                    e
+                                                                                ) => {
+                                                                                    e.stopPropagation();
+                                                                                    setProductData(
+                                                                                        (
+                                                                                            pre
+                                                                                        ) => {
+                                                                                            return {
+                                                                                                ...pre,
+                                                                                                atribute:
+                                                                                                    {
+                                                                                                        ...pre.atribute,
+                                                                                                        [key]: {
+                                                                                                            ...pre
+                                                                                                                .atribute[
+                                                                                                                key
+                                                                                                            ],
+                                                                                                            visible_on_product:
+                                                                                                                e
+                                                                                                                    .target
+                                                                                                                    .checked,
+                                                                                                        },
+                                                                                                    },
+                                                                                            };
+                                                                                        }
+                                                                                    );
+                                                                                }}
+                                                                            />
+                                                                            Visible
+                                                                            on
+                                                                            the
+                                                                            product
+                                                                            page
+                                                                        </label>
+                                                                    </div>
+                                                                    <div className="form-check form-check-inline mb-2">
+                                                                        <label>
+                                                                            <input
+                                                                                className="form-check-input"
+                                                                                type="checkbox"
+                                                                                value="option2"
+                                                                                style={{
+                                                                                    border: "1px solid grey",
+                                                                                }}
+                                                                                checked={
+                                                                                    productData
+                                                                                        .atribute[
+                                                                                        key
+                                                                                    ]
+                                                                                        .used_for_variation
+                                                                                }
+                                                                                onChange={(
+                                                                                    e
+                                                                                ) => {
+                                                                                    e.stopPropagation();
+                                                                                    setProductData(
+                                                                                        (
+                                                                                            pre
+                                                                                        ) => {
+                                                                                            return {
+                                                                                                ...pre,
+                                                                                                atribute:
+                                                                                                    {
+                                                                                                        ...pre.atribute,
+                                                                                                        [key]: {
+                                                                                                            ...pre
+                                                                                                                .atribute[
+                                                                                                                key
+                                                                                                            ],
+                                                                                                            used_for_variation:
+                                                                                                                e
+                                                                                                                    .target
+                                                                                                                    .checked,
+                                                                                                        },
+                                                                                                    },
+                                                                                            };
+                                                                                        }
+                                                                                    );
+                                                                                }}
+                                                                            />
+                                                                            Used
+                                                                            for
+                                                                            variations
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col">
+                                                                    <div className="form-group">
+                                                                        <label>
+                                                                            Value(s)::
+                                                                        </label>
+                                                                        <textarea
+                                                                            type="text"
+                                                                            className="form-control"
+                                                                            aria-describedby="emailHelp"
+                                                                            placeholder="Enter options for customers to choose from, f.e. “Blue” or “Large”. Use “|” to separate different options."
+                                                                            style={{
+                                                                                border: "1px solid grey",
+                                                                                minHeight:
+                                                                                    "200px",
+                                                                            }}
+                                                                            value={
+                                                                                productData
+                                                                                    .atribute[
+                                                                                    key
+                                                                                ]
+                                                                                    .value
+                                                                            }
+                                                                            onChange={(
+                                                                                e
+                                                                            ) => {
+                                                                                e.stopPropagation();
+                                                                                setProductData(
+                                                                                    (
+                                                                                        pre
+                                                                                    ) => {
+                                                                                        return {
+                                                                                            ...pre,
+                                                                                            atribute:
+                                                                                                {
+                                                                                                    ...pre.atribute,
+                                                                                                    [key]: {
+                                                                                                        ...pre
+                                                                                                            .atribute[
+                                                                                                            key
+                                                                                                        ],
+                                                                                                        value: e
+                                                                                                            .target
+                                                                                                            .value,
+                                                                                                    },
+                                                                                                },
+                                                                                        };
+                                                                                    }
+                                                                                );
+                                                                            }}
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    )}
                                                 </div>
-                                                <div className="">
-                                                    <div className="btn text-danger">
-                                                        Remove
-                                                    </div>
-                                                    <div className="btn">
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            width="16"
-                                                            height="16"
-                                                            fill="currentColor"
-                                                            className="bi bi-list"
-                                                            viewBox="0 0 16 16"
-                                                        >
-                                                            <path
-                                                                fillRule="evenodd"
-                                                                d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"
-                                                            />
-                                                        </svg>
-                                                    </div>
-                                                    <div className="btn">
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            width="16"
-                                                            height="16"
-                                                            fill="currentColor"
-                                                            className="bi bi-caret-down-fill"
-                                                            viewBox="0 0 16 16"
-                                                        >
-                                                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
-                                                        </svg>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="card-body">
-                                            <div className="row">
-                                                <div className="col">
-                                                    <div className="form-group mb-2">
-                                                        <label>Name:</label>
-                                                        <input
-                                                            type="text"
-                                                            className="form-control"
-                                                            aria-describedby="emailHelp"
-                                                            placeholder="e.g. length or weight"
-                                                            style={{
-                                                                border: "1px solid grey",
-                                                            }}
-                                                        />
-                                                    </div>
-                                                    <div className="form-check form-check-inline mb-2">
-                                                        <label>
-                                                            <input
-                                                                className="form-check-input"
-                                                                type="checkbox"
-                                                                value="option1"
-                                                                style={{
-                                                                    border: "1px solid grey",
-                                                                }}
-                                                            />
-                                                            Visible on the
-                                                            product page
-                                                        </label>
-                                                    </div>
-                                                    <div className="form-check form-check-inline mb-2">
-                                                        <label>
-                                                            <input
-                                                                className="form-check-input"
-                                                                type="checkbox"
-                                                                value="option2"
-                                                                style={{
-                                                                    border: "1px solid grey",
-                                                                }}
-                                                            />
-                                                            Used for variations
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <div className="col">
-                                                    <div className="form-group">
-                                                        <label>
-                                                            Value(s)::
-                                                        </label>
-                                                        <textarea
-                                                            type="text"
-                                                            className="form-control"
-                                                            aria-describedby="emailHelp"
-                                                            placeholder="Enter options for customers to choose from, f.e. “Blue” or “Large”. Use “|” to separate different options."
-                                                            style={{
-                                                                border: "1px solid grey",
-                                                                minHeight:
-                                                                    "200px",
-                                                            }}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                            );
+                                        }
+                                    )}
+
                                     <div
                                         id="product-link-data"
                                         className="my-2 p-1"

@@ -475,10 +475,8 @@ export default function ProductAdd() {
     };
     //console.log(manageLogin)
     return (
-        <form
-            onSubmit={(e) => {
-                handleSubmit(e);
-            }}
+        <div
+            
             className=""
         >
             <div className="mb-3">
@@ -1056,10 +1054,13 @@ export default function ProductAdd() {
                 <button
                     className="btn btn-primary rounded-5 mt-2 text-white p-1 px-2 fs-5 mt-4end-0"
                     style={{ FontFace: "Roboto" }}
+                    onClick={(e) => {
+                        handleSubmit(e);
+                    }}
                 >
                     Create Product
                 </button>
             </div>
-        </form>
+        </div>
     );
 }

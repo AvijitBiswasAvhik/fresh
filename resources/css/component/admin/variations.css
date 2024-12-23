@@ -104,3 +104,15 @@
 .active{
     background-color: #e0e0e0;
 }
+
+/************ View indicator atribute *********/
+.indicator-atribute{
+    transition: .2s;
+    border-radius: 50%;
+    transform: rotate(-90deg);
+
+}
+.view-indicator-atribute{
+    transform: rotate(0deg);
+    transition: transform .2s;
+}
