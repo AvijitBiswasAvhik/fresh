@@ -3,14 +3,77 @@ import "../../../../css/component/admin/variations.css";
 import { formToJSON } from "axios";
 export default function Variations() {
     let [showItem, setShowItem] = useState({
-        general: true,
-        inventory: false,
-        shiping: false,
-        link_product: false,
-        atribute: false,
-        advance: false,
-        get_more_options: false,
-        pintres: false,
+        general: { show: true, item: false, product_type: ["simple_product"] },
+        inventory: {
+            show: false,
+            item: false,
+            product_type: [
+                "simple_product",
+                "grouped_product",
+                "variable_product",
+                "external_product",
+            ],
+        },
+        shiping: {
+            show: false,
+            item: false,
+            product_type: [
+                "simple_product",
+                "grouped_product",
+                "variable_product",
+            ],
+        },
+        link_product: {
+            show: false,
+            item: false,
+            product_type: [
+                "simple_product",
+                "grouped_product",
+                "variable_product",
+                "external_product",
+            ],
+        },
+        atribute: {
+            show: false,
+            item: false,
+            product_type: [
+                "simple_product",
+                "grouped_product",
+                "variable_product",
+                "external_product",
+            ],
+        },
+        advance: {
+            show: false,
+            item: false,
+            product_type: [
+                "simple_product",
+                "grouped_product",
+                "variable_product",
+                "external_product",
+            ],
+        },
+        get_more_options: {
+            show: false,
+            item: false,
+            product_type: [
+                "simple_product",
+                "grouped_product",
+                "variable_product",
+                "external_product",
+            ],
+        },
+        pinterest: {
+            show: false,
+            item: false,
+            product_type: ["simple_product", "variable_product"],
+        },
+        variations: {
+            show: false,
+            item: false,
+            isAtribute: false,
+            product_type: ["variable_product"],
+        },
     });
     let [svgEl, setSvgEl] = useState({
         general: (
@@ -104,7 +167,7 @@ export default function Variations() {
                 <path d="M6 0a.5.5 0 0 1 .5.5V3h3V.5a.5.5 0 0 1 1 0V3h1a.5.5 0 0 1 .5.5v3A3.5 3.5 0 0 1 8.5 10c-.002.434-.01.845-.04 1.22-.041.514-.126 1.003-.317 1.424a2.08 2.08 0 0 1-.97 1.028C6.725 13.9 6.169 14 5.5 14c-.998 0-1.61.33-1.974.718A1.92 1.92 0 0 0 3 16H2c0-.616.232-1.367.797-1.968C3.374 13.42 4.261 13 5.5 13c.581 0 .962-.088 1.218-.219.241-.123.4-.3.514-.55.121-.266.193-.621.23-1.09.027-.34.035-.718.037-1.141A3.5 3.5 0 0 1 4 6.5v-3a.5.5 0 0 1 .5-.5h1V.5A.5.5 0 0 1 6 0" />
             </svg>
         ),
-        pintres: (
+        pinterest: (
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -116,10 +179,24 @@ export default function Variations() {
                 <path d="M8 0a8 8 0 0 0-2.915 15.452c-.07-.633-.134-1.606.027-2.297.146-.625.938-3.977.938-3.977s-.239-.479-.239-1.187c0-1.113.645-1.943 1.448-1.943.682 0 1.012.512 1.012 1.127 0 .686-.437 1.712-.663 2.663-.188.796.4 1.446 1.185 1.446 1.422 0 2.515-1.5 2.515-3.664 0-1.915-1.377-3.254-3.342-3.254-2.276 0-3.612 1.707-3.612 3.471 0 .688.265 1.425.595 1.826a.24.24 0 0 1 .056.23c-.061.252-.196.796-.222.907-.035.146-.116.177-.268.107-1-.465-1.624-1.926-1.624-3.1 0-2.523 1.834-4.84 5.286-4.84 2.775 0 4.932 1.977 4.932 4.62 0 2.757-1.739 4.976-4.151 4.976-.811 0-1.573-.421-1.834-.919l-.498 1.902c-.181.695-.669 1.566-.995 2.097A8 8 0 1 0 8 0" />
             </svg>
         ),
+        variations: (
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                className="bi bi-border-all"
+                viewBox="0 0 16 16"
+            >
+                <path d="M0 0h16v16H0zm1 1v6.5h6.5V1zm7.5 0v6.5H15V1zM15 8.5H8.5V15H15zM7.5 15V8.5H1V15z" />
+            </svg>
+        ),
     });
+
     let [att, setAtt] = useState({ atribute_input: false });
 
     let [productData, setProductData] = useState({
+        product_type: "simple_product",
         general: { regular_price: 0, sale_price: 0 },
         inventory: {
             sku: "",
@@ -134,20 +211,24 @@ export default function Variations() {
         },
         link_product: { cross_sell: "", up_sell: "" },
         atribute: {},
+        advance: { purchese_note: "", menu_order: 0, enable_review: false },
+        pinterest: { condition: "", google_category: "" },
+        variations: {},
     });
-    let [atributeBody, setAtributeBody] = useState([]);
-    useEffect(() => {
-        setAtributeBody(Object.keys(productData.atribute));
-    }, [productData.atribute]);
     useEffect(() => {
         console.log(productData);
     }, [productData]);
     let handleClick = (e, key) => {
         e.stopPropagation();
+
         let updateShowItem = Object.keys(showItem).reduce((acc, currentKey) => {
-            acc[currentKey] = currentKey === key;
+            acc[currentKey] = {
+                ...showItem[currentKey],
+                show: currentKey === key,
+            };
             return acc;
         }, {});
+        console.log(updateShowItem, "hh");
         setShowItem(updateShowItem);
     };
     let handleValue = (e, name, key, stock) => {
@@ -187,22 +268,31 @@ export default function Variations() {
                                     <select
                                         name="product-top-section-type"
                                         id="product-top-section-type"
-                                        defaultValue="variable"
+                                        onChange={(e) => {
+                                            setProductData((pre) => {
+                                                return {
+                                                    ...pre,
+                                                    product_type:
+                                                        e.target.value,
+                                                };
+                                            });
+                                        }}
+                                        value={productData.product_type}
                                     >
                                         <optgroup label="product type">
-                                            <option value="simple">
+                                            <option value="simple_product">
                                                 Simple product
                                             </option>
                                             <option
-                                                value="grouped"
-                                                defaultValue="grouped"
+                                                value="grouped_product"
+                                                defaultValue="grouped_product"
                                             >
                                                 Grouped product
                                             </option>
-                                            <option value="external">
+                                            <option value="external_product">
                                                 External/Affiliate product
                                             </option>
-                                            <option value="variable">
+                                            <option value="variable_product">
                                                 Variable product
                                             </option>
                                         </optgroup>
@@ -222,50 +312,58 @@ export default function Variations() {
                     <div className="row">
                         <div className="col-2 col-sm-1 col-md-3">
                             <ul className="product-data-from-list-container">
-                                {Object.keys(showItem).map((key) => {
-                                    let st = key
-                                        .split("")
-                                        .reduce((acc, crr, i) => {
-                                            if (crr == "_") {
-                                                acc += " ";
+                                {Object.keys(showItem)
+                                    .filter((key) =>
+                                        showItem[key].product_type.includes(
+                                            productData.product_type
+                                        )
+                                    )
+                                    .map((key) => {
+                                        let st = key
+                                            .split("")
+                                            .reduce((acc, crr, i) => {
+                                                if (crr == "_") {
+                                                    acc += " ";
 
-                                                return acc;
-                                            } else if (i == 0) {
-                                                acc += crr.toUpperCase();
-                                                return acc;
-                                            } else {
-                                                acc += crr;
-                                                return acc;
-                                            }
-                                        }, "");
-                                    return (
-                                        <li
-                                            key={key}
-                                            onClick={(e) => {
-                                                handleClick(e, key);
-                                                console.log(key.search("_"));
-                                            }}
-                                            className={`product-data-list ${
-                                                showItem[key] === true
-                                                    ? "active"
-                                                    : ""
-                                            } `}
-                                        >
-                                            <div className="d-flex gap-1 ">
-                                                <div className="text-primary">
-                                                    {svgEl[key]}
+                                                    return acc;
+                                                } else if (i == 0) {
+                                                    acc += crr.toUpperCase();
+                                                    return acc;
+                                                } else {
+                                                    acc += crr;
+                                                    return acc;
+                                                }
+                                            }, "");
+                                        return (
+                                            <li
+                                                key={key}
+                                                onClick={(e) => {
+                                                    handleClick(e, key);
+                                                    console.log(
+                                                        key.search("_")
+                                                    );
+                                                }}
+                                                className={`product-data-list ${
+                                                    showItem[key].show === true
+                                                        ? "active"
+                                                        : ""
+                                                } `}
+                                            >
+                                                <div className="d-flex gap-1 ">
+                                                    <div className="text-primary">
+                                                        {svgEl[key]}
+                                                    </div>
+                                                    <div className="text-primary d-none d-md-block">
+                                                        {st}
+                                                    </div>{" "}
                                                 </div>
-                                                <div className="text-primary d-none d-md-block">
-                                                    {st}
-                                                </div>{" "}
-                                            </div>
-                                        </li>
-                                    );
-                                })}
+                                            </li>
+                                        );
+                                    })}
                             </ul>
                         </div>
                         <div className="col-10 col-sm-11 col-md-9 d-flex justify-content-start">
-                            {showItem.general && (
+                            {showItem.general.show && (
                                 <div
                                     id="product-general-data"
                                     className="px-2 border border-2"
@@ -314,7 +412,7 @@ export default function Variations() {
                                 </div>
                             )}
 
-                            {showItem.inventory && (
+                            {showItem.inventory.show && (
                                 <div
                                     id="product-inventory-data"
                                     className="px-2"
@@ -381,89 +479,96 @@ export default function Variations() {
                                             product
                                         </span>
                                     </div>
-                                    <div className="product-data-input-field py-3  d-sm-flex d-block">
-                                        <label htmlFor="product-data-inventory-stock-quantity">
-                                            Quantity
-                                        </label>
-                                        <input
-                                            type="text"
-                                            className="genterl-input-field"
-                                            id="product-data-inventory-stock-quantity"
-                                            value={
-                                                productData.inventory
-                                                    .stock_management.quantity
-                                            }
-                                            onChange={(e) => {
-                                                handleValue(
-                                                    e,
-                                                    "inventory",
-                                                    "stock_management",
-                                                    "quantity"
-                                                );
-                                            }}
-                                        />
-                                    </div>
-                                    <div className="product-data-input-field py-3  d-sm-flex d-block">
-                                        <label htmlFor="product-data-inventory-stock-management">
-                                            Stock status
-                                        </label>
-                                        <ul className="product-data-from-list-stock-status">
-                                            <li className="product-data-list">
-                                                <label>
-                                                    <input
-                                                        type="radio"
-                                                        className="genterl-input-field"
-                                                        value="In Stock"
-                                                        name="_inventory-stock-status"
-                                                        onChange={(e) => {
-                                                            handleValue(
-                                                                e,
-                                                                "inventory",
-                                                                "stock_status"
-                                                            );
-                                                        }}
-                                                    />
-                                                    In stock
-                                                </label>
-                                            </li>
-                                            <li className="product-data-list">
-                                                <label>
-                                                    <input
-                                                        type="radio"
-                                                        className="genterl-input-field"
-                                                        value="Out Stock"
-                                                        name="_inventory-stock-status"
-                                                        onChange={(e) => {
-                                                            handleValue(
-                                                                e,
-                                                                "inventory",
-                                                                "stock_status"
-                                                            );
-                                                        }}
-                                                    />
-                                                    Out of stock
-                                                </label>
-                                            </li>
-                                            <li className="product-data-list">
-                                                <label>
-                                                    <input
-                                                        type="radio"
-                                                        className="genterl-input-field"
-                                                        value="On Order"
-                                                        name="_inventory-stock-status"
-                                                        onChange={(e) => {
-                                                            handleValue(
-                                                                e,
-                                                                "inventory",
-                                                                "stock_status"
-                                                            );
-                                                        }}
-                                                    />
-                                                    On backorder
-                                                </label>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                    {productData.inventory.stock_management
+                                        .show && (
+                                        <div className="product-data-input-field py-3  d-sm-flex d-block">
+                                            <label htmlFor="product-data-inventory-stock-quantity">
+                                                Quantity
+                                            </label>
+                                            <input
+                                                type="text"
+                                                className="genterl-input-field"
+                                                id="product-data-inventory-stock-quantity"
+                                                value={
+                                                    productData.inventory
+                                                        .stock_management
+                                                        .quantity
+                                                }
+                                                onChange={(e) => {
+                                                    handleValue(
+                                                        e,
+                                                        "inventory",
+                                                        "stock_management",
+                                                        "quantity"
+                                                    );
+                                                }}
+                                            />
+                                        </div>
+                                    )}
+                                    {!productData.inventory.stock_management
+                                        .show && (
+                                        <div className="product-data-input-field py-3  d-sm-flex d-block">
+                                            <label htmlFor="product-data-inventory-stock-management">
+                                                Stock status
+                                            </label>
+                                            <ul className="product-data-from-list-stock-status">
+                                                <li className="product-data-list">
+                                                    <label>
+                                                        <input
+                                                            type="radio"
+                                                            className="genterl-input-field"
+                                                            value="In Stock"
+                                                            name="_inventory-stock-status"
+                                                            onChange={(e) => {
+                                                                handleValue(
+                                                                    e,
+                                                                    "inventory",
+                                                                    "stock_status"
+                                                                );
+                                                            }}
+                                                        />
+                                                        In stock
+                                                    </label>
+                                                </li>
+                                                <li className="product-data-list">
+                                                    <label>
+                                                        <input
+                                                            type="radio"
+                                                            className="genterl-input-field"
+                                                            value="Out Stock"
+                                                            name="_inventory-stock-status"
+                                                            onChange={(e) => {
+                                                                handleValue(
+                                                                    e,
+                                                                    "inventory",
+                                                                    "stock_status"
+                                                                );
+                                                            }}
+                                                        />
+                                                        Out of stock
+                                                    </label>
+                                                </li>
+                                                <li className="product-data-list">
+                                                    <label>
+                                                        <input
+                                                            type="radio"
+                                                            className="genterl-input-field"
+                                                            value="On Order"
+                                                            name="_inventory-stock-status"
+                                                            onChange={(e) => {
+                                                                handleValue(
+                                                                    e,
+                                                                    "inventory",
+                                                                    "stock_status"
+                                                                );
+                                                            }}
+                                                        />
+                                                        On backorder
+                                                    </label>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    )}
                                     <div className="product-data-input-field py-3  d-sm-flex d-block">
                                         <label htmlFor="product-data-inventory-sold-indvidual">
                                             Sold individually
@@ -494,7 +599,7 @@ export default function Variations() {
                                 </div>
                             )}
 
-                            {showItem.shiping && (
+                            {showItem.shiping.show && (
                                 <div className="product-shiping-data px-2">
                                     <div className="product-data-input-field py-3 d-sm-flex d-block">
                                         <div className="row w-100">
@@ -640,7 +745,7 @@ export default function Variations() {
                                     </div>
                                 </div>
                             )}
-                            {showItem.link_product && (
+                            {showItem.link_product.show && (
                                 <div id="product-link-data" className="px-2">
                                     <div className="row py-2">
                                         <div className="col-12 col-md-4">
@@ -654,6 +759,17 @@ export default function Variations() {
                                                 className="genterl-input-field"
                                                 id="product-relate-data-upsel"
                                                 placeholder="Search for a product"
+                                                value={
+                                                    productData.link_product
+                                                        .up_sell
+                                                }
+                                                onChange={(e) =>
+                                                    handleValue(
+                                                        e,
+                                                        "link_product",
+                                                        "up_sell"
+                                                    )
+                                                }
                                             />
                                             <span
                                                 style={{
@@ -680,6 +796,17 @@ export default function Variations() {
                                                 className="genterl-input-field"
                                                 id="product-relate-data-cross-sel"
                                                 placeholder="Search for a product"
+                                                value={
+                                                    productData.link_product
+                                                        .cross_sell
+                                                }
+                                                onChange={(e) =>
+                                                    handleValue(
+                                                        e,
+                                                        "link_product",
+                                                        "cross_sell"
+                                                    )
+                                                }
                                             />
 
                                             <span
@@ -697,7 +824,7 @@ export default function Variations() {
                                     </div>
                                 </div>
                             )}
-                            {showItem.atribute && (
+                            {showItem.atribute.show && (
                                 <div
                                     id="product-link-data"
                                     className="px-2 w-100"
@@ -1162,6 +1289,511 @@ export default function Variations() {
                                             Save Atribute
                                         </div>
                                     </div>
+                                </div>
+                            )}
+                            {showItem.advance.show && (
+                                <div
+                                    id="product-link-data"
+                                    className="px-2 w-100"
+                                >
+                                    <label className="d-block">
+                                        <div className="row py-2 d-flex align-items-start">
+                                            <div className="col-md-5 col">
+                                                Purchase note
+                                            </div>
+                                            <div className="col col-md-7">
+                                                <textarea
+                                                    onChange={(e) => {
+                                                        handleValue(
+                                                            e,
+                                                            "advance",
+                                                            "purchese_note"
+                                                        );
+                                                    }}
+                                                    value={
+                                                        productData.advance
+                                                            .purchese_note
+                                                    }
+                                                />
+                                            </div>
+                                        </div>
+                                    </label>
+                                    <label className="d-block">
+                                        <div className="row py-2 d-flex align-items-start">
+                                            <div className="col-md-5 col">
+                                                Menu order
+                                            </div>
+                                            <div className="col col-md-7">
+                                                <input
+                                                    type="number"
+                                                    onChange={(e) => {
+                                                        handleValue(
+                                                            e,
+                                                            "advance",
+                                                            "menu_order"
+                                                        );
+                                                    }}
+                                                    value={
+                                                        productData.advance
+                                                            .menu_order
+                                                    }
+                                                />
+                                            </div>
+                                        </div>
+                                    </label>
+                                    <label className="d-block">
+                                        <div className="row py-2 d-flex align-items-start">
+                                            <div className="col-md-5 col">
+                                                Enable reviews
+                                            </div>
+                                            <div className="col col-md-7">
+                                                <input
+                                                    type="checkbox"
+                                                    onChange={(e) => {
+                                                        setProductData(
+                                                            (pre) => {
+                                                                return {
+                                                                    ...pre,
+                                                                    advance: {
+                                                                        ...pre.advance,
+                                                                        enable_review:
+                                                                            !pre
+                                                                                .advance
+                                                                                .enable_review,
+                                                                    },
+                                                                };
+                                                            }
+                                                        );
+                                                    }}
+                                                    checked={
+                                                        productData.advance
+                                                            .enable_review
+                                                    }
+                                                />
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            )}
+                            {showItem.pinterest.show && (
+                                <div
+                                    id="product-link-data"
+                                    className="px-2 w-100"
+                                >
+                                    <div className="row py-2 d-flex align-items-start">
+                                        <div className="col fw-bold">
+                                            Product attributes
+                                        </div>
+                                    </div>
+
+                                    <label className="d-block">
+                                        <div className="row py-2 d-flex align-items-start">
+                                            <div className="col-md-5 col">
+                                                Condition
+                                            </div>
+                                            <div className="col col-md-7">
+                                                <select
+                                                    id="pinterest_attributes_condition"
+                                                    name="pinterest_attributes[condition]"
+                                                    className="select short w-50"
+                                                    onChange={(e) => {
+                                                        handleValue(
+                                                            e,
+                                                            "pinterest",
+                                                            "condition"
+                                                        );
+                                                    }}
+                                                    value={
+                                                        productData.pinterest
+                                                            .condition
+                                                    }
+                                                >
+                                                    <option value="">
+                                                        Default
+                                                    </option>
+                                                    <option value="new">
+                                                        New
+                                                    </option>
+                                                    <option value="refurbished">
+                                                        Refurbished
+                                                    </option>
+                                                    <option value="used">
+                                                        Used
+                                                    </option>{" "}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </label>
+                                    <label className="d-block">
+                                        <div className="row py-2 d-flex align-items-start">
+                                            <div className="col-md-5 col-4">
+                                                Google Category
+                                            </div>
+                                            <div className="col col-md-7 d-flex align-items-center">
+                                                <span
+                                                    id="atribute-creating-field"
+                                                    className="d-flex flex-column align-items-center"
+                                                >
+                                                    <span
+                                                        onClick={(e) =>
+                                                            setAtt({
+                                                                ...att,
+                                                                atribute_input:
+                                                                    !att.atribute_input,
+                                                            })
+                                                        }
+                                                        className="d-flex align-items-center w-100 px-1 d-flex justify-content-between"
+                                                    >
+                                                        <span
+                                                            style={{
+                                                                fontSize:
+                                                                    "12px",
+                                                                color: "rgb(128, 124, 124)",
+                                                            }}
+                                                        >
+                                                            Add existing
+                                                        </span>
+                                                        <span className="">
+                                                            <svg
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                width="16"
+                                                                height="16"
+                                                                fill="currentColor"
+                                                                className="bi bi-caret-down-fill"
+                                                                viewBox="0 0 16 16"
+                                                            >
+                                                                <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"></path>
+                                                            </svg>
+                                                        </span>
+                                                    </span>
+                                                    {att.atribute_input && (
+                                                        <span className="after-add-existing-atribute-product-data">
+                                                            <input
+                                                                type="text"
+                                                                className="w-100"
+                                                            />
+                                                            <ul className="list-style-type-none p-0">
+                                                                <li
+                                                                    style={{
+                                                                        fontWeight:
+                                                                            "bold",
+                                                                        color: "rgb(128, 124, 124)",
+                                                                    }}
+                                                                    data-value="color"
+                                                                    onClick={(
+                                                                        e
+                                                                    ) => {
+                                                                        setProductData(
+                                                                            (
+                                                                                pre
+                                                                            ) => {
+                                                                                return {
+                                                                                    ...pre,
+                                                                                    pinterest:
+                                                                                        {
+                                                                                            ...pre.pinterest,
+                                                                                            google_category:
+                                                                                                e
+                                                                                                    .target
+                                                                                                    .dataset
+                                                                                                    .value,
+                                                                                        },
+                                                                                };
+                                                                            }
+                                                                        );
+                                                                    }}
+                                                                >
+                                                                    Color
+                                                                </li>
+                                                                <li
+                                                                    style={{
+                                                                        fontWeight:
+                                                                            "bold",
+                                                                        color: "rgb(128, 124, 124)",
+                                                                    }}
+                                                                >
+                                                                    weight
+                                                                </li>
+                                                            </ul>
+                                                        </span>
+                                                    )}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            )}
+                            {showItem.variations.show && (
+                                <div
+                                    id="product-link-data"
+                                    className="p-2 w-100"
+                                >
+                                    {Object.keys(productData.atribute) && (
+                                        <>
+                                            <div className="row mb-2">
+                                                <div className="col-12 d-flex gap-2 mb-3">
+                                                    <span className="my-auto">
+                                                        Default Form Values:
+                                                    </span>
+                                                    <select
+                                                        name=""
+                                                        id=""
+                                                        className="form-control w-50 vorder border-2"
+                                                    >
+                                                        {Object.keys(
+                                                            productData.atribute
+                                                        )
+                                                            .filter((key) => {
+                                                                return (
+                                                                    productData
+                                                                        .atribute[
+                                                                        key
+                                                                    ].name
+                                                                        .length >
+                                                                    0
+                                                                );
+                                                            })
+                                                            .map((key) => {
+                                                                return (
+                                                                    <option value="">
+                                                                        {
+                                                                            productData
+                                                                                .atribute[
+                                                                                key
+                                                                            ]
+                                                                                .name
+                                                                        }
+                                                                    </option>
+                                                                );
+                                                            })}
+                                                    </select>
+                                                    <span
+                                                        style={{
+                                                            fontSize: "9px",
+                                                            backgroundColor:
+                                                                "grey",
+                                                            height: "10px",
+                                                            width: "10px",
+                                                        }}
+                                                        className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
+                                                    >
+                                                        ?
+                                                    </span>
+                                                </div>
+                                                <div className="col-12 gap-2 d-flex">
+                                                    <div className="btn btn-outline-primary">
+                                                        Generate variations
+                                                    </div>
+                                                    <div className="btn btn-outline-success ">
+                                                        Add manually
+                                                    </div>
+                                                    <div className="btn btn-outline-secondary">
+                                                        bulk actions
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="card">
+                                                <div className="card-header">
+                                                    <div className="d-flex align-items-center justify-content-between">
+                                                        <div className="d-flex align-items-center gap-1">
+                                                            <span>#100</span>
+                                                            <select
+                                                                name=""
+                                                                id=""
+                                                                className="form-control"
+                                                            >
+                                                                <option value="">
+                                                                    Any color
+                                                                </option>
+                                                                <option value="green">
+                                                                    green
+                                                                </option>
+                                                                <option value="red">
+                                                                    red
+                                                                </option>
+                                                            </select>
+                                                            <select
+                                                                name=""
+                                                                id=""
+                                                                className="form-control"
+                                                            >
+                                                                <option value="">
+                                                                    Any weight
+                                                                </option>
+                                                                <option value="100">
+                                                                    100
+                                                                </option>
+                                                                <option value="200">
+                                                                    200
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                        <div className="d-flex align-items-center gap-2">
+                                                            <span className="text-danger">
+                                                                Remove
+                                                            </span>
+                                                            <span className="text-primary">
+                                                                Edith
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="card-body">
+                                                    <div className="row">
+                                                        <div className="col">
+                                                            {!productData
+                                                                .variations
+                                                                .img && (
+                                                                <label
+                                                                    style={{
+                                                                        height: "100px",
+                                                                        width: "100px",
+                                                                    }}
+                                                                >
+                                                                    <svg
+                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                        width="16"
+                                                                        height="16"
+                                                                        fill="blue"
+                                                                        className="bi bi-card-image"
+                                                                        viewBox="0 0 16 16"
+                                                                        style={{
+                                                                            height: "100%",
+                                                                            width: "100%",
+                                                                            objectFit:
+                                                                                "cover",
+                                                                        }}
+                                                                    >
+                                                                        <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                                                                        <path d="M1.5 2A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2zm13 1a.5.5 0 0 1 .5.5v6l-3.775-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12v.54L1 12.5v-9a.5.5 0 0 1 .5-.5z" />
+                                                                    </svg>
+                                                                    <input
+                                                                        onChange={(
+                                                                            e
+                                                                        ) => {
+                                                                            let file =
+                                                                                e
+                                                                                    .target
+                                                                                    .files[0];
+                                                                            console.log(
+                                                                                file
+                                                                            );
+                                                                            if (
+                                                                                file
+                                                                            ) {
+                                                                                const reader =
+                                                                                    new FileReader();
+                                                                                reader.onload =
+                                                                                    (
+                                                                                        event
+                                                                                    ) => {
+                                                                                        console.log(
+                                                                                            "hh"
+                                                                                        );
+                                                                                        setProductData(
+                                                                                            (
+                                                                                                pre
+                                                                                            ) => {
+                                                                                                console.log(
+                                                                                                    event
+                                                                                                        .target
+                                                                                                        .result,
+                                                                                                    "jjj"
+                                                                                                );
+
+                                                                                                return {
+                                                                                                    ...pre,
+                                                                                                    variations:
+                                                                                                        {
+                                                                                                            img: event
+                                                                                                                .target
+                                                                                                                .result,
+                                                                                                        },
+                                                                                                };
+                                                                                            }
+                                                                                        );
+                                                                                    };
+                                                                                reader.readAsDataURL(
+                                                                                    file
+                                                                                );
+                                                                            }
+                                                                        }}
+                                                                        type="file"
+                                                                        style={{
+                                                                            visibility:
+                                                                                "hidden",
+                                                                            height: "0",
+                                                                            width: "0",
+                                                                        }}
+                                                                        accept="image/*"
+                                                                    />
+                                                                </label>
+                                                            )}
+
+                                                            {productData
+                                                                .variations
+                                                                .img && (
+                                                                <div
+                                                                    style={{
+                                                                        height: "100px",
+                                                                        width: "100px",
+                                                                        position:
+                                                                            "relative",
+                                                                            
+                                                                    }}
+                                                                    className="d-flex align-items-center justify-content-center fw-bold"
+                                                                >
+                                                                    <div
+                                                                        style={{
+                                                                            height: "30px",
+                                                                            width: "30px",
+                                                                            position: 'absolute'
+                                                                        }}
+                                                                        onClick={(e)=>{
+                                                                            e.stopPropagation()
+                                                                            setProductData((pre)=>{
+                                                                                return{
+                                                                                    ...pre,
+                                                                                    variations:{}
+                                                                                }
+                                                                            })
+                                                                        }}
+                                                                    >
+                                                                        <svg
+                                                                            xmlns="http://www.w3.org/2000/svg"
+                                                                            width="40"
+                                                                            height="40"
+                                                                            fill="red"
+                                                                            className="bi bi-x-lg"
+                                                                            viewBox="3 3 16 16"
+                                                                        >
+                                                                            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                                                                        </svg>
+                                                                    </div>
+                                                                    <img
+                                                                        src={
+                                                                            productData
+                                                                                .variations
+                                                                                .img
+                                                                        }
+                                                                        alt=""
+                                                                        style={{
+                                                                            height: "100%",
+                                                                            width: "100%",
+                                                                            objectFit:
+                                                                                "cover",
+                                                                        }}
+                                                                    />
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                        <div className="col"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
                             )}
                         </div>
