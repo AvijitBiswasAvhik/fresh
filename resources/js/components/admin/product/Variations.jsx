@@ -259,6 +259,71 @@ export default function Variations() {
             };
         });
     };
+    let checkVal = (e, key, sub, subKey) => {
+        e.stopPropagation();
+        setProductData((pre) => {
+            return {
+                ...pre,
+                variations: {
+                    ...pre.variations,
+                    [key]: {
+                        ...pre.variations[key],
+                        [sub]: {
+                            ...pre.variations[key][sub],
+                            [subKey]: e.target.checked,
+                        },
+                    },
+                },
+            };
+        });
+    };
+    let storeVartions = (e, name, key, sub, subKey, exSub, exSubKey) => {
+        e.stopPropagation();
+        setProductData((pre) => {
+            if (exSub) {
+                return {
+                    ...pre,
+                    variations: {
+                        ...pre.variations,
+                        [key]: {
+                            ...pre.variations[key],
+                            [sub]: {
+                                ...pre.variations[key][sub],
+                                [exSub]: {
+                                    ...pre.variations[key][sub][exSub],
+                                    [exSubKey]: e.target.value,
+                                },
+                            },
+                        },
+                    },
+                };
+            } else if (sub) {
+                return {
+                    ...pre,
+                    variations: {
+                        ...pre.variations,
+                        [key]: {
+                            ...pre.variations[key],
+                            [sub]: {
+                                ...pre.variations[key][sub],
+                                [subKey]: e.target.value,
+                            },
+                        },
+                    },
+                };
+            }
+            return {
+                ...pre,
+                variations: {
+                    ...pre.variations,
+                    [key]: {
+                        ...pre.variations[key],
+                        [name]: e.target.value,
+                    },
+                },
+            };
+        });
+    };
 
     return (
         <div className="row" id="variations-header">
@@ -875,7 +940,9 @@ export default function Variations() {
                                                                     used_for_variation: false,
                                                                     value: "",
                                                                     span_view: true,
+                                                                    
                                                                 },
+                                                                varitions_show:true,
                                                             },
                                                         };
                                                     });
@@ -992,7 +1059,8 @@ export default function Variations() {
                                                                                 return {
                                                                                     ...prev,
                                                                                     atribute:
-                                                                                        rest, // Update `atribute` without the removed key
+                                                                                        rest,
+                                                                                        varitions_show:false, // Update `atribute` without the removed key
                                                                                 };
                                                                             }
                                                                         );
@@ -1528,123 +1596,85 @@ export default function Variations() {
                                 </div>
                             )}
                             {showItem.variations.show && (
-                                <div
-                                    id="product-link-data"
-                                    className="p-2 w-100"
-                                >
-                                    {Object.keys(productData.atribute) && (
-                                        <>
-                                            <div className="row mb-2">
-                                                <div className="col-12 d-flex gap-2 mb-3">
-                                                    <span className="my-auto">
-                                                        Default Form Values:
-                                                    </span>
-                                                    <select
-                                                        name=""
-                                                        id=""
-                                                        className="form-control w-50 vorder border-2"
-                                                    >
-                                                        {Object.keys(
-                                                            productData.atribute
-                                                        )
-                                                            .filter((key) => {
-                                                                return (
-                                                                    productData
-                                                                        .atribute[
-                                                                        key
-                                                                    ].name
-                                                                        .length >
-                                                                    0
-                                                                );
-                                                            })
-                                                            .map((key) => {
-                                                                return (
-                                                                    <option value="">
-                                                                        {
-                                                                            productData
-                                                                                .atribute[
-                                                                                key
-                                                                            ]
-                                                                                .name
+                                <>
+                                    {productData.atribute.varitions_show && (
+                                        <div
+                                            id="product-link-data"
+                                            className="p-2 w-100"
+                                        >
+                                            {Object.keys(
+                                                productData.atribute
+                                            ) && (
+                                                <>
+                                                    <div className="row mb-2">
+                                                        <div className="col-12 d-flex gap-2 mb-3">
+                                                            <span className="my-auto">
+                                                                Default Form
+                                                                Values:
+                                                            </span>
+                                                            <select
+                                                                name=""
+                                                                id=""
+                                                                className="form-control w-50 vorder border-2"
+                                                            >
+                                                                {Object.keys(
+                                                                    productData.atribute
+                                                                )
+                                                                    .filter(
+                                                                        (
+                                                                            key
+                                                                        ) => {
+                                                                            if(key != 'varitions_show'){
+                                                                            return (
+                                                                                productData
+                                                                                    .atribute[
+                                                                                    key
+                                                                                ]
+                                                                                    .name
+                                                                                    .length >
+                                                                                0
+                                                                            );}
                                                                         }
-                                                                    </option>
-                                                                );
-                                                            })}
-                                                    </select>
-                                                    <span
-                                                        style={{
-                                                            fontSize: "9px",
-                                                            backgroundColor:
-                                                                "grey",
-                                                            height: "10px",
-                                                            width: "10px",
-                                                        }}
-                                                        className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
-                                                    >
-                                                        ?
-                                                    </span>
-                                                </div>
-                                                <div className="col-12 gap-2 d-flex">
-                                                    <div className="btn btn-outline-primary">
-                                                        Generate variations
-                                                    </div>
-                                                    <div
-                                                        className="btn btn-outline-success "
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            setProductData(
-                                                                (pre) => {
-                                                                    let keys =
-                                                                        Object.keys(
-                                                                            pre.variations
-                                                                        );
-                                                                    let nKey =
-                                                                        keys.length
-                                                                            ? Number(
-                                                                                  keys[
-                                                                                      keys.length -
-                                                                                          1
-                                                                                  ]
-                                                                              ) +
-                                                                              1
-                                                                            : 1;
-                                                                    return {
-                                                                        ...pre,
-                                                                        variations:
-                                                                            {
-                                                                                ...pre.variations,
-                                                                                [nKey]: {
-                                                                                    img:'',
-                                                                                },
-                                                                            },
-                                                                    };
-                                                                }
-                                                            );
-                                                        }}
-                                                    >
-                                                        Add manually
-                                                    </div>
-                                                    <div className="btn btn-outline-secondary">
-                                                        bulk actions
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {Object.keys(productData.variations)
-                                                .length > 0 &&
-                                                Object.keys(
-                                                    productData.variations
-                                                ).map((key) => {
-                                                    return (
-                                                        <div
-                                                            className="card"
-                                                            key={key}
-                                                        >
-                                                            <div
-                                                                className="card-header"
+                                                                    )
+                                                                    .map(
+                                                                        (
+                                                                            key
+                                                                        ) => {
+                                                                            return (
+                                                                                <option value="">
+                                                                                    {
+                                                                                        productData
+                                                                                            .atribute[
+                                                                                            key
+                                                                                        ]
+                                                                                            .name
+                                                                                    }
+                                                                                </option>
+                                                                            );
+                                                                        }
+                                                                    )}
+                                                            </select>
+                                                            <span
                                                                 style={{
-                                                                    cursor: "pointer",
+                                                                    fontSize:
+                                                                        "9px",
+                                                                    backgroundColor:
+                                                                        "grey",
+                                                                    height: "10px",
+                                                                    width: "10px",
                                                                 }}
+                                                                className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
+                                                            >
+                                                                ?
+                                                            </span>
+                                                        </div>
+                                                        <div className="col-12 gap-2 d-flex">
+                                                            <div className="btn btn-outline-primary">
+                                                                Generate
+                                                                variations
+                                                            </div>
+                                                            <div
+                                                                className="btn btn-outline-success "
                                                                 onClick={(
                                                                     e
                                                                 ) => {
@@ -1653,17 +1683,76 @@ export default function Variations() {
                                                                         (
                                                                             pre
                                                                         ) => {
+                                                                            let keys =
+                                                                                Object.keys(
+                                                                                    pre.variations
+                                                                                );
+                                                                            let nKey =
+                                                                                keys.length
+                                                                                    ? Number(
+                                                                                          keys[
+                                                                                              keys.length -
+                                                                                                  1
+                                                                                          ]
+                                                                                      ) +
+                                                                                      1
+                                                                                    : 1;
                                                                             return {
                                                                                 ...pre,
                                                                                 variations:
                                                                                     {
                                                                                         ...pre.variations,
-                                                                                        [key]: {...pre.variations[key],
-                                                                                            show: !pre
-                                                                                                .variations[
-                                                                                                key
-                                                                                            ]
-                                                                                                .show,
+                                                                                        [nKey]: {
+                                                                                            img: "",
+                                                                                            gtin: "",
+                                                                                            enable: "",
+                                                                                            download_able:
+                                                                                                "",
+                                                                                            virtual:
+                                                                                                "",
+                                                                                            manage_stock:
+                                                                                                {
+                                                                                                    stock_quaninty:
+                                                                                                        "",
+                                                                                                    allow_backorder:
+                                                                                                        "",
+                                                                                                    low_stock:
+                                                                                                        "",
+                                                                                                    show: false,
+                                                                                                },
+
+                                                                                            regular_price:
+                                                                                                "",
+                                                                                            sale_price:
+                                                                                                "",
+                                                                                            stock_status:
+                                                                                                "in stock",
+
+                                                                                            shiping:
+                                                                                                {
+                                                                                                    weight: "",
+                                                                                                    dimentions:
+                                                                                                        {
+                                                                                                            length: "",
+                                                                                                            width: "",
+                                                                                                            height: "",
+                                                                                                        },
+                                                                                                    shiping_class:
+                                                                                                        "same as parent",
+                                                                                                },
+                                                                                            description:
+                                                                                                "",
+                                                                                            downloadable_file:
+                                                                                                {
+                                                                                                    name: "",
+                                                                                                    url: "",
+                                                                                                    file: "",
+                                                                                                    download_limit:
+                                                                                                        "",
+                                                                                                    download_expirity:
+                                                                                                        "",
+                                                                                                    show: false,
+                                                                                                },
                                                                                         },
                                                                                     },
                                                                             };
@@ -1671,815 +1760,496 @@ export default function Variations() {
                                                                     );
                                                                 }}
                                                             >
-                                                                <div className="d-flex align-items-center justify-content-between">
-                                                                    <div className="d-flex align-items-center gap-1">
-                                                                        <span>
-                                                                            #
-                                                                            {
-                                                                                key
-                                                                            }
-                                                                        </span>
-                                                                        <select
-                                                                            name=""
-                                                                            id=""
-                                                                            className="form-control"
-                                                                        >
-                                                                            <option value="">
-                                                                                Any
-                                                                                color
-                                                                            </option>
-                                                                            <option value="green">
-                                                                                green
-                                                                            </option>
-                                                                            <option value="red">
-                                                                                red
-                                                                            </option>
-                                                                        </select>
-                                                                        <select
-                                                                            name=""
-                                                                            id=""
-                                                                            className="form-control"
-                                                                        >
-                                                                            <option value="">
-                                                                                Any
-                                                                                weight
-                                                                            </option>
-                                                                            <option value="100">
-                                                                                100
-                                                                            </option>
-                                                                            <option value="200">
-                                                                                200
-                                                                            </option>
-                                                                        </select>
-                                                                    </div>
-                                                                    <div className="d-flex align-items-center gap-2">
-                                                                        <span
-                                                                            className="text-danger"
-                                                                            onClick={(
-                                                                                e
-                                                                            ) => {
-                                                                                e.stopPropagation();
-                                                                                setProductData(
-                                                                                    (
-                                                                                        pre
-                                                                                    ) => {
-                                                                                        const updatedVariations =
+                                                                Add manually
+                                                            </div>
+                                                            <div className="btn btn-outline-secondary">
+                                                                bulk actions
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    {Object.keys(
+                                                        productData.variations
+                                                    ).length > 0 &&
+                                                        Object.keys(
+                                                            productData.variations
+                                                        ).map((key) => {
+                                                            return (
+                                                                <div
+                                                                    className="card"
+                                                                    key={key}
+                                                                >
+                                                                    <div
+                                                                        className="card-header"
+                                                                        style={{
+                                                                            cursor: "pointer",
+                                                                        }}
+                                                                        onClick={(
+                                                                            e
+                                                                        ) => {
+                                                                            e.stopPropagation();
+                                                                            setProductData(
+                                                                                (
+                                                                                    pre
+                                                                                ) => {
+                                                                                    return {
+                                                                                        ...pre,
+                                                                                        variations:
                                                                                             {
                                                                                                 ...pre.variations,
-                                                                                            };
-
-                                                                                        // Delete the specific key
-                                                                                        delete updatedVariations[
-                                                                                            key
-                                                                                        ];
-
-                                                                                        return {
-                                                                                            ...pre,
-                                                                                            variations:
-                                                                                                {
-                                                                                                    ...updatedVariations,
+                                                                                                [key]: {
+                                                                                                    ...pre
+                                                                                                        .variations[
+                                                                                                        key
+                                                                                                    ],
+                                                                                                    show: !pre
+                                                                                                        .variations[
+                                                                                                        key
+                                                                                                    ]
+                                                                                                        .show,
                                                                                                 },
-                                                                                        };
+                                                                                            },
+                                                                                    };
+                                                                                }
+                                                                            );
+                                                                        }}
+                                                                    >
+                                                                        <div className="d-flex align-items-center justify-content-between">
+                                                                            <div className="d-flex align-items-center gap-1">
+                                                                                <span>
+                                                                                    #
+                                                                                    {
+                                                                                        key
                                                                                     }
-                                                                                );
-                                                                            }}
-                                                                        >
-                                                                            Remove
-                                                                        </span>
-                                                                        <span className="text-primary">
-                                                                            Edith
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            {productData
-                                                                .variations[key]
-                                                                .show && (
-                                                                <div className="card-body">
-                                                                    <div className="row">
-                                                                        <div className="col-6">
-                                                                            {!productData
-                                                                                .variations[key]
-                                                                                .img && (
-                                                                                <label
-                                                                                    style={{
-                                                                                        height: "100px",
-                                                                                        width: "100px",
-                                                                                        cursor: "pointer",
-                                                                                    }}
-                                                                                >
-                                                                                    <svg
-                                                                                        xmlns="http://www.w3.org/2000/svg"
-                                                                                        width="16"
-                                                                                        height="16"
-                                                                                        fill="blue"
-                                                                                        className="bi bi-card-image"
-                                                                                        viewBox="0 0 16 16"
-                                                                                        style={{
-                                                                                            height: "100%",
-                                                                                            width: "100%",
-                                                                                            objectFit:
-                                                                                                "cover",
-                                                                                        }}
-                                                                                    >
-                                                                                        <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
-                                                                                        <path d="M1.5 2A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2zm13 1a.5.5 0 0 1 .5.5v6l-3.775-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12v.54L1 12.5v-9a.5.5 0 0 1 .5-.5z" />
-                                                                                    </svg>
-                                                                                    <input
-                                                                                        onChange={(
-                                                                                            e
-                                                                                        ) => {
-                                                                                            let file =
-                                                                                                e
-                                                                                                    .target
-                                                                                                    .files[0];
-                                                                                            
-                                                                                            if (
-                                                                                                file
-                                                                                            ) {
-                                                                                                const reader =
-                                                                                                    new FileReader();
-                                                                                                reader.onload =
-                                                                                                    (
-                                                                                                        event
-                                                                                                    ) => {
-                                                                                                        
-                                                                                                        setProductData(
-                                                                                                            (
-                                                                                                                pre
-                                                                                                            ) => {
-                                                                                                                console.log(
-                                                                                                                    event
-                                                                                                                        .target
-                                                                                                                        .result,
-                                                                                                                    "jjj"
-                                                                                                                );
+                                                                                </span>
 
-                                                                                                                return {
-                                                                                                                    ...pre,
-                                                                                                                    variations:
-                                                                                                                        {
-                                                                                                                            ...pre.variations,
-                                                                                                                            [key]:{...pre.variations[key],img: event
-                                                                                                                                .target
-                                                                                                                                .result},
-                                                                                                                        },
-                                                                                                                };
-                                                                                                            }
-                                                                                                        );
+                                                                                <select
+                                                                                    name=""
+                                                                                    id=""
+                                                                                    className="form-control"
+                                                                                >
+                                                                                    <option value="">
+                                                                                        Any
+                                                                                        color
+                                                                                    </option>
+                                                                                    <option value="green">
+                                                                                        green
+                                                                                    </option>
+                                                                                    <option value="red">
+                                                                                        red
+                                                                                    </option>
+                                                                                </select>
+                                                                                <select
+                                                                                    name=""
+                                                                                    id=""
+                                                                                    className="form-control"
+                                                                                >
+                                                                                    <option value="">
+                                                                                        Any
+                                                                                        weight
+                                                                                    </option>
+                                                                                    <option value="100">
+                                                                                        100
+                                                                                    </option>
+                                                                                    <option value="200">
+                                                                                        200
+                                                                                    </option>
+                                                                                </select>
+                                                                            </div>
+                                                                            <div className="d-flex align-items-center gap-2">
+                                                                                <span
+                                                                                    className="text-danger"
+                                                                                    onClick={(
+                                                                                        e
+                                                                                    ) => {
+                                                                                        e.stopPropagation();
+                                                                                        setProductData(
+                                                                                            (
+                                                                                                pre
+                                                                                            ) => {
+                                                                                                const updatedVariations =
+                                                                                                    {
+                                                                                                        ...pre.variations,
                                                                                                     };
-                                                                                                reader.readAsDataURL(
-                                                                                                    file
-                                                                                                );
+
+                                                                                                // Delete the specific key
+                                                                                                delete updatedVariations[
+                                                                                                    key
+                                                                                                ];
+
+                                                                                                return {
+                                                                                                    ...pre,
+                                                                                                    variations:
+                                                                                                        {
+                                                                                                            ...updatedVariations,
+                                                                                                        },
+                                                                                                };
                                                                                             }
-                                                                                        }}
-                                                                                        type="file"
-                                                                                        style={{
-                                                                                            visibility:
-                                                                                                "hidden",
-                                                                                            height: "0",
-                                                                                            width: "0",
-                                                                                        }}
-                                                                                        accept="image/*"
-                                                                                    />
-                                                                                </label>
-                                                                            )}
-
-                                                                            {productData
-                                                                                .variations[key]
-                                                                                .img && (
-                                                                                <div
-                                                                                    style={{
-                                                                                        height: "100px",
-                                                                                        width: "100px",
-                                                                                        position:
-                                                                                            "relative",
+                                                                                        );
                                                                                     }}
-                                                                                    className="d-flex align-items-center justify-content-center fw-bold"
                                                                                 >
-                                                                                    <div
-                                                                                        style={{
-                                                                                            height: "30px",
-                                                                                            width: "30px",
-                                                                                            position:
-                                                                                                "absolute",
-                                                                                            cursor: "pointer",
-                                                                                        }}
-                                                                                        onClick={(
-                                                                                            e
-                                                                                        ) => {
-                                                                                            e.stopPropagation();
-                                                                                            setProductData(
-                                                                                                (
-                                                                                                    pre
-                                                                                                ) => {
-                                                                                                    const updatedVariations = pre.variations;
-                                                                                                    delete updatedVariations[key].img;
-                                                                                                    return {
-                                                                                                        ...pre,
-                                                                                                        variations:
-                                                                                                            {...updatedVariations},
-                                                                                                    };
-                                                                                                }
-                                                                                            );
-                                                                                        }}
-                                                                                    >
-                                                                                        <svg
-                                                                                            xmlns="http://www.w3.org/2000/svg"
-                                                                                            width="40"
-                                                                                            height="40"
-                                                                                            fill="red"
-                                                                                            className="bi bi-x-lg"
-                                                                                            viewBox="3 3 16 16"
-                                                                                        >
-                                                                                            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
-                                                                                        </svg>
-                                                                                    </div>
-                                                                                    <img
-                                                                                        src={
-                                                                                            productData
-                                                                                                .variations[key]
-                                                                                                .img
-                                                                                        }
-                                                                                        alt=""
-                                                                                        style={{
-                                                                                            height: "100%",
-                                                                                            width: "100%",
-                                                                                            objectFit:
-                                                                                                "cover",
-                                                                                        }}
-                                                                                    />
-                                                                                </div>
-                                                                            )}
-                                                                        </div>
-                                                                        <div className="col-6">
-                                                                            <div className="mb-3">
-                                                                                <label
-                                                                                    for="varations-product-name"
-                                                                                    className="form-label d-flex justify-content-between w-100 "
-                                                                                >
-                                                                                    <span>
-                                                                                        SKU{" "}
-                                                                                    </span>
-                                                                                    <span
-                                                                                        style={{
-                                                                                            fontSize:
-                                                                                                "9px",
-                                                                                            backgroundColor:
-                                                                                                "grey",
-                                                                                            height: "10px",
-                                                                                            width: "10px",
-                                                                                        }}
-                                                                                        className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
-                                                                                    >
-                                                                                        ?
-                                                                                    </span>
-                                                                                </label>
-                                                                                <input
-                                                                                    type="text"
-                                                                                    className="form-control"
-                                                                                    id="varations-product-name"
-                                                                                />
-                                                                            </div>
-                                                                            <div className="mb-3">
-                                                                                <label
-                                                                                    for="varations-product-gtin"
-                                                                                    className="form-label d-flex justify-content-between w-100"
-                                                                                >
-                                                                                    <span>
-                                                                                        GTIN,
-                                                                                        UPC,
-                                                                                        EAN,
-                                                                                        or
-                                                                                        ISBN{" "}
-                                                                                    </span>
-                                                                                    <span
-                                                                                        style={{
-                                                                                            fontSize:
-                                                                                                "9px",
-                                                                                            backgroundColor:
-                                                                                                "grey",
-                                                                                            height: "10px",
-                                                                                            width: "10px",
-                                                                                        }}
-                                                                                        className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
-                                                                                    >
-                                                                                        ?
-                                                                                    </span>
-                                                                                </label>
-                                                                                <input
-                                                                                    type="text"
-                                                                                    className="form-control"
-                                                                                    id="varations-product-gtin"
-                                                                                />
+                                                                                    Remove
+                                                                                </span>
+                                                                                <span className="text-primary">
+                                                                                    Edith
+                                                                                </span>
                                                                             </div>
                                                                         </div>
-                                                                        <div className="col-12">
+                                                                    </div>
+                                                                    {productData
+                                                                        .variations[
+                                                                        key
+                                                                    ].show && (
+                                                                        <div className="card-body">
                                                                             <div className="row">
-                                                                                <div className="col">
-                                                                                    <label>
-                                                                                        <input
-                                                                                            type="checkbox"
-                                                                                            className="form-controlform-check-input"
-                                                                                        />{" "}
-                                                                                        Enabled
-                                                                                    </label>
-                                                                                </div>
-                                                                                <div className="col">
-                                                                                    <label>
-                                                                                        <input
-                                                                                            type="checkbox"
-                                                                                            className="form-controlform-check-input"
-                                                                                        />{" "}
-                                                                                        Downloadable
-                                                                                    </label>
-                                                                                </div>
-                                                                                <div className="col">
-                                                                                    <label>
-                                                                                        <input
-                                                                                            type="checkbox"
-                                                                                            className="form-controlform-check-input"
-                                                                                        />{" "}
-                                                                                        Virtual
-                                                                                    </label>
-                                                                                </div>
-                                                                                <div className="col">
-                                                                                    <label>
-                                                                                        <input
-                                                                                            type="checkbox"
-                                                                                            className="form-controlform-check-input"
-                                                                                        />{" "}
-                                                                                        Manage
-                                                                                        stock?{" "}
-                                                                                    </label>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-6 py-3">
-                                                                            <div className="">
-                                                                                <label
-                                                                                    for="varations-product-regular-price"
-                                                                                    className="form-label d-flex justify-content-between w-100 "
-                                                                                >
-                                                                                    <span>
-                                                                                        Regular
-                                                                                        price
-                                                                                        (৳
-                                                                                        )
-                                                                                    </span>
-                                                                                    <span
-                                                                                        style={{
-                                                                                            fontSize:
-                                                                                                "9px",
-                                                                                            backgroundColor:
-                                                                                                "grey",
-                                                                                            height: "10px",
-                                                                                            width: "10px",
-                                                                                        }}
-                                                                                        className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
-                                                                                    >
-                                                                                        ?
-                                                                                    </span>
-                                                                                </label>
-                                                                                <input
-                                                                                    type="text"
-                                                                                    className="form-control"
-                                                                                    id="varations-product-regular-price"
-                                                                                    placeholder="Variation price (required)"
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-6 py-3">
-                                                                            <div className="">
-                                                                                <label
-                                                                                    for="varations-product-sale-price"
-                                                                                    className="form-label d-flex justify-content-between w-100 "
-                                                                                >
-                                                                                    <span>
-                                                                                        Sale
-                                                                                        price
-                                                                                        (৳
-                                                                                        )
-                                                                                        Schedule
-                                                                                    </span>
-                                                                                    <span
-                                                                                        style={{
-                                                                                            fontSize:
-                                                                                                "9px",
-                                                                                            backgroundColor:
-                                                                                                "grey",
-                                                                                            height: "10px",
-                                                                                            width: "10px",
-                                                                                        }}
-                                                                                        className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
-                                                                                    >
-                                                                                        ?
-                                                                                    </span>
-                                                                                </label>
-                                                                                <input
-                                                                                    type="text"
-                                                                                    className="form-control"
-                                                                                    id="varations-product-sale-price"
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-12 py-2">
-                                                                            <div className="">
-                                                                                <label
-                                                                                    for="varations-product-stock-status"
-                                                                                    className="form-label d-flex justify-content-between w-100 "
-                                                                                >
-                                                                                    <span>
-                                                                                        Stock
-                                                                                        status
-                                                                                    </span>
-                                                                                    <span
-                                                                                        style={{
-                                                                                            fontSize:
-                                                                                                "9px",
-                                                                                            backgroundColor:
-                                                                                                "grey",
-                                                                                            height: "10px",
-                                                                                            width: "10px",
-                                                                                        }}
-                                                                                        className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
-                                                                                    >
-                                                                                        ?
-                                                                                    </span>
-                                                                                </label>
-                                                                                <select
-                                                                                    className="form-control"
-                                                                                    id="varations-product-stock-status"
-                                                                                >
-                                                                                    <option value="in_stock">
-                                                                                        In
-                                                                                        stock
-                                                                                    </option>
-                                                                                    <option value="out_of_stock">
-                                                                                        Out
-                                                                                        of
-                                                                                        stock
-                                                                                    </option>
-                                                                                    <option value="on_back-order">
-                                                                                        On
-                                                                                        back
-                                                                                        order
-                                                                                    </option>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-6 py-2">
-                                                                            <div>
-                                                                                <label
-                                                                                    htmlFor="variation-product-stock-quantity"
-                                                                                    className="form-label d-flex justify-content-between"
-                                                                                >
-                                                                                    <span>
-                                                                                        {" "}
-                                                                                        Stock
-                                                                                        quantity
-                                                                                    </span>
-                                                                                    <span
-                                                                                        style={{
-                                                                                            fontSize:
-                                                                                                "9px",
-                                                                                            backgroundColor:
-                                                                                                "grey",
-                                                                                            height: "10px",
-                                                                                            width: "10px",
-                                                                                        }}
-                                                                                        className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
-                                                                                    >
-                                                                                        ?
-                                                                                    </span>
-                                                                                </label>
-                                                                                <input
-                                                                                    type="number"
-                                                                                    className="form-control"
-                                                                                    id="variation-product-stock-quantity"
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-6 py-2">
-                                                                            <div>
-                                                                                <label
-                                                                                    htmlFor="variation-product-stock-allow-backorder"
-                                                                                    className="form-label d-flex justify-content-between"
-                                                                                >
-                                                                                    <span>
-                                                                                        {" "}
-                                                                                        Allow
-                                                                                        backorders?
-                                                                                    </span>
-                                                                                    <span
-                                                                                        style={{
-                                                                                            fontSize:
-                                                                                                "9px",
-                                                                                            backgroundColor:
-                                                                                                "grey",
-                                                                                            height: "10px",
-                                                                                            width: "10px",
-                                                                                        }}
-                                                                                        className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
-                                                                                    >
-                                                                                        ?
-                                                                                    </span>
-                                                                                </label>
-                                                                                <select
-                                                                                    className="form-control"
-                                                                                    id="variation-product-stock-allow-backorder"
-                                                                                >
-                                                                                    <option value="not_allow">
-                                                                                        Do
-                                                                                        not
-                                                                                        allow
-                                                                                    </option>
-                                                                                    <option value="allow_notify_customer">
-                                                                                        Allow,but
-                                                                                        notify
-                                                                                        customer
-                                                                                    </option>
-                                                                                    <option value="allow">
-                                                                                        Allow
-                                                                                    </option>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-12 py-2">
-                                                                            <div>
-                                                                                <label
-                                                                                    htmlFor="variation-product-low-stock-therehold"
-                                                                                    className="form-label d-flex justify-content-between"
-                                                                                >
-                                                                                    <span>
-                                                                                        {" "}
-                                                                                        Low
-                                                                                        stock
-                                                                                        threshold
-                                                                                    </span>
-                                                                                    <span
-                                                                                        style={{
-                                                                                            fontSize:
-                                                                                                "9px",
-                                                                                            backgroundColor:
-                                                                                                "grey",
-                                                                                            height: "10px",
-                                                                                            width: "10px",
-                                                                                        }}
-                                                                                        className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
-                                                                                    >
-                                                                                        ?
-                                                                                    </span>
-                                                                                </label>
-                                                                                <input
-                                                                                    type="number"
-                                                                                    className="form-control"
-                                                                                    id="variation-product-low-stock-therehold"
-                                                                                    placeholder="Store-wide threshold (2)"
-                                                                                    step="0"
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-6 py-2">
-                                                                            <div className="">
-                                                                                <label
-                                                                                    for="varations-product-weight-kg"
-                                                                                    className="form-label d-flex justify-content-between w-100 "
-                                                                                >
-                                                                                    <span>
-                                                                                        Weight
-                                                                                        (kg)
-                                                                                    </span>
-                                                                                    <span
-                                                                                        style={{
-                                                                                            fontSize:
-                                                                                                "9px",
-                                                                                            backgroundColor:
-                                                                                                "grey",
-                                                                                            height: "10px",
-                                                                                            width: "10px",
-                                                                                        }}
-                                                                                        className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
-                                                                                    >
-                                                                                        ?
-                                                                                    </span>
-                                                                                </label>
-                                                                                <input
-                                                                                    type="text"
-                                                                                    className="form-control"
-                                                                                    id="varations-product-weight-kg"
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-6 py-2">
-                                                                            <div className="">
-                                                                                <label className="form-label d-flex justify-content-between w-100 ">
-                                                                                    <span>
-                                                                                        Dimensions
-                                                                                        (L×W×H)
-                                                                                        (cm)
-                                                                                    </span>
-                                                                                    <span
-                                                                                        style={{
-                                                                                            fontSize:
-                                                                                                "9px",
-                                                                                            backgroundColor:
-                                                                                                "grey",
-                                                                                            height: "10px",
-                                                                                            width: "10px",
-                                                                                        }}
-                                                                                        className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
-                                                                                    >
-                                                                                        ?
-                                                                                    </span>
-                                                                                </label>
-                                                                                <div className="d-flex gap-2">
-                                                                                    <input
-                                                                                        type="text"
-                                                                                        className="form-control d-inline"
-                                                                                        id="varations-product-weight-kg"
-                                                                                        placeholder="Length"
-                                                                                    />
-                                                                                    <input
-                                                                                        type="text"
-                                                                                        className="form-control"
-                                                                                        id="varations-product-weight-kg"
-                                                                                        placeholder="width"
-                                                                                    />
-                                                                                    <input
-                                                                                        type="text"
-                                                                                        className="form-control"
-                                                                                        id="varations-product-weight-kg"
-                                                                                        placeholder="Height"
-                                                                                    />
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col py-2">
-                                                                            <div className="">
-                                                                                <label
-                                                                                    className="form-label d-flex justify-content-between w-100 "
-                                                                                    htmlFor="varations-product-shiping-class"
-                                                                                >
-                                                                                    <span>
-                                                                                        Shipping
-                                                                                        class
-                                                                                    </span>
-                                                                                    <span
-                                                                                        style={{
-                                                                                            fontSize:
-                                                                                                "9px",
-                                                                                            backgroundColor:
-                                                                                                "grey",
-                                                                                            height: "10px",
-                                                                                            width: "10px",
-                                                                                        }}
-                                                                                        className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
-                                                                                    >
-                                                                                        ?
-                                                                                    </span>
-                                                                                </label>
+                                                                                <div className="col-6">
+                                                                                    {!productData
+                                                                                        .variations[
+                                                                                        key
+                                                                                    ]
+                                                                                        .img && (
+                                                                                        <label
+                                                                                            style={{
+                                                                                                height: "100px",
+                                                                                                width: "100px",
+                                                                                                cursor: "pointer",
+                                                                                            }}
+                                                                                        >
+                                                                                            <svg
+                                                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                                                width="16"
+                                                                                                height="16"
+                                                                                                fill="blue"
+                                                                                                className="bi bi-card-image"
+                                                                                                viewBox="0 0 16 16"
+                                                                                                style={{
+                                                                                                    height: "100%",
+                                                                                                    width: "100%",
+                                                                                                    objectFit:
+                                                                                                        "cover",
+                                                                                                }}
+                                                                                            >
+                                                                                                <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                                                                                                <path d="M1.5 2A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2zm13 1a.5.5 0 0 1 .5.5v6l-3.775-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12v.54L1 12.5v-9a.5.5 0 0 1 .5-.5z" />
+                                                                                            </svg>
+                                                                                            <input
+                                                                                                onChange={(
+                                                                                                    e
+                                                                                                ) => {
+                                                                                                    let file =
+                                                                                                        e
+                                                                                                            .target
+                                                                                                            .files[0];
 
-                                                                                <select
-                                                                                    className="form-control"
-                                                                                    id="varations-product-shiping-class"
-                                                                                >
-                                                                                    <option value="same_as_parent">
-                                                                                        same
-                                                                                        as
-                                                                                        parent
-                                                                                    </option>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-12 py-2">
-                                                                            <div className="">
-                                                                                <label
-                                                                                    className="form-label d-flex justify-content-between w-100 "
-                                                                                    htmlFor="varations-product-description"
-                                                                                >
-                                                                                    <span>
-                                                                                        Description
-                                                                                    </span>
-                                                                                    <span
-                                                                                        style={{
-                                                                                            fontSize:
-                                                                                                "9px",
-                                                                                            backgroundColor:
-                                                                                                "grey",
-                                                                                            height: "10px",
-                                                                                            width: "10px",
-                                                                                        }}
-                                                                                        className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
-                                                                                    >
-                                                                                        ?
-                                                                                    </span>
-                                                                                </label>
+                                                                                                    if (
+                                                                                                        file
+                                                                                                    ) {
+                                                                                                        const reader =
+                                                                                                            new FileReader();
+                                                                                                        reader.onload =
+                                                                                                            (
+                                                                                                                event
+                                                                                                            ) => {
+                                                                                                                setProductData(
+                                                                                                                    (
+                                                                                                                        pre
+                                                                                                                    ) => {
+                                                                                                                        return {
+                                                                                                                            ...pre,
+                                                                                                                            variations:
+                                                                                                                                {
+                                                                                                                                    ...pre.variations,
+                                                                                                                                    [key]: {
+                                                                                                                                        ...pre
+                                                                                                                                            .variations[
+                                                                                                                                            key
+                                                                                                                                        ],
+                                                                                                                                        img: event
+                                                                                                                                            .target
+                                                                                                                                            .result,
+                                                                                                                                    },
+                                                                                                                                },
+                                                                                                                        };
+                                                                                                                    }
+                                                                                                                );
+                                                                                                            };
+                                                                                                        reader.readAsDataURL(
+                                                                                                            file
+                                                                                                        );
+                                                                                                    }
+                                                                                                }}
+                                                                                                type="file"
+                                                                                                style={{
+                                                                                                    visibility:
+                                                                                                        "hidden",
+                                                                                                    height: "0",
+                                                                                                    width: "0",
+                                                                                                }}
+                                                                                                accept="image/*"
+                                                                                            />
+                                                                                        </label>
+                                                                                    )}
 
-                                                                                <textarea
-                                                                                    className="form-control"
-                                                                                    id="varations-product-description"
-                                                                                    placeholder="description"
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-12 py-2">
-                                                                            <div className="">
-                                                                                <label className="form-label d-flex justify-content-between w-100 lh-0">
-                                                                                    <span>
-                                                                                        Downloadable
-                                                                                        files
-                                                                                    </span>
-                                                                                    <span
-                                                                                        style={{
-                                                                                            fontSize:
-                                                                                                "9px",
-                                                                                            backgroundColor:
-                                                                                                "grey",
-                                                                                            height: "10px",
-                                                                                            width: "10px",
-                                                                                        }}
-                                                                                        className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
-                                                                                    >
-                                                                                        ?
-                                                                                    </span>
-                                                                                </label>
-
-                                                                                <div className="card p-1">
+                                                                                    {productData
+                                                                                        .variations[
+                                                                                        key
+                                                                                    ]
+                                                                                        .img && (
+                                                                                        <div
+                                                                                            style={{
+                                                                                                height: "100px",
+                                                                                                width: "100px",
+                                                                                                position:
+                                                                                                    "relative",
+                                                                                            }}
+                                                                                            className="d-flex align-items-center justify-content-center fw-bold"
+                                                                                        >
+                                                                                            <div
+                                                                                                style={{
+                                                                                                    height: "30px",
+                                                                                                    width: "30px",
+                                                                                                    position:
+                                                                                                        "absolute",
+                                                                                                    cursor: "pointer",
+                                                                                                }}
+                                                                                                onClick={(
+                                                                                                    e
+                                                                                                ) => {
+                                                                                                    e.stopPropagation();
+                                                                                                    setProductData(
+                                                                                                        (
+                                                                                                            pre
+                                                                                                        ) => {
+                                                                                                            const updatedVariations =
+                                                                                                                pre.variations;
+                                                                                                            delete updatedVariations[
+                                                                                                                key
+                                                                                                            ]
+                                                                                                                .img;
+                                                                                                            return {
+                                                                                                                ...pre,
+                                                                                                                variations:
+                                                                                                                    {
+                                                                                                                        ...updatedVariations,
+                                                                                                                    },
+                                                                                                            };
+                                                                                                        }
+                                                                                                    );
+                                                                                                }}
+                                                                                            >
+                                                                                                <svg
+                                                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                                                    width="40"
+                                                                                                    height="40"
+                                                                                                    fill="red"
+                                                                                                    className="bi bi-x-lg"
+                                                                                                    viewBox="3 3 16 16"
+                                                                                                >
+                                                                                                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                                                                                                </svg>
+                                                                                            </div>
+                                                                                            <img
+                                                                                                src={
+                                                                                                    productData
+                                                                                                        .variations[
+                                                                                                        key
+                                                                                                    ]
+                                                                                                        .img
+                                                                                                }
+                                                                                                alt=""
+                                                                                                style={{
+                                                                                                    height: "100%",
+                                                                                                    width: "100%",
+                                                                                                    objectFit:
+                                                                                                        "cover",
+                                                                                                }}
+                                                                                            />
+                                                                                        </div>
+                                                                                    )}
+                                                                                </div>
+                                                                                <div className="col-6">
+                                                                                    <div className="mb-3">
+                                                                                        <label
+                                                                                            htmlFor="varations-product-name"
+                                                                                            className="form-label d-flex justify-content-between w-100 "
+                                                                                        >
+                                                                                            <span>
+                                                                                                SKU{" "}
+                                                                                            </span>
+                                                                                            <span
+                                                                                                style={{
+                                                                                                    fontSize:
+                                                                                                        "9px",
+                                                                                                    backgroundColor:
+                                                                                                        "grey",
+                                                                                                    height: "10px",
+                                                                                                    width: "10px",
+                                                                                                }}
+                                                                                                className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
+                                                                                            >
+                                                                                                ?
+                                                                                            </span>
+                                                                                        </label>
+                                                                                        <input
+                                                                                            type="text"
+                                                                                            className="form-control"
+                                                                                            id="varations-product-name"
+                                                                                            onChange={(
+                                                                                                e
+                                                                                            ) => {
+                                                                                                storeVartions(
+                                                                                                    e,
+                                                                                                    "sku",
+                                                                                                    key
+                                                                                                );
+                                                                                            }}
+                                                                                            value={
+                                                                                                productData
+                                                                                                    .variations[
+                                                                                                    key
+                                                                                                ]
+                                                                                                    .sku
+                                                                                            }
+                                                                                        />
+                                                                                    </div>
+                                                                                    <div className="mb-3">
+                                                                                        <label
+                                                                                            htmlFor="varations-product-gtin"
+                                                                                            className="form-label d-flex justify-content-between w-100"
+                                                                                        >
+                                                                                            <span>
+                                                                                                GTIN,
+                                                                                                UPC,
+                                                                                                EAN,
+                                                                                                or
+                                                                                                ISBN{" "}
+                                                                                            </span>
+                                                                                            <span
+                                                                                                style={{
+                                                                                                    fontSize:
+                                                                                                        "9px",
+                                                                                                    backgroundColor:
+                                                                                                        "grey",
+                                                                                                    height: "10px",
+                                                                                                    width: "10px",
+                                                                                                }}
+                                                                                                className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
+                                                                                            >
+                                                                                                ?
+                                                                                            </span>
+                                                                                        </label>
+                                                                                        <input
+                                                                                            type="text"
+                                                                                            className="form-control"
+                                                                                            id="varations-product-gtin"
+                                                                                            onChange={(
+                                                                                                e
+                                                                                            ) => {
+                                                                                                storeVartions(
+                                                                                                    e,
+                                                                                                    "gtin",
+                                                                                                    key
+                                                                                                );
+                                                                                            }}
+                                                                                            value={
+                                                                                                productData
+                                                                                                    .variations[
+                                                                                                    key
+                                                                                                ]
+                                                                                                    .gtin
+                                                                                            }
+                                                                                        />
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div className="col-12">
                                                                                     <div className="row">
-                                                                                        <div className="col-5 py-2 d-flex justify-content-between">
-                                                                                            <label htmlFor="varations-product-downloadable-name">
-                                                                                                File
-                                                                                                name
-                                                                                            </label>
-                                                                                            <span
-                                                                                                style={{
-                                                                                                    fontSize:
-                                                                                                        "9px",
-                                                                                                    backgroundColor:
-                                                                                                        "grey",
-                                                                                                    height: "10px",
-                                                                                                    width: "10px",
-                                                                                                }}
-                                                                                                className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
-                                                                                            >
-                                                                                                ?
-                                                                                            </span>
-                                                                                        </div>
-                                                                                        <div className="col-5 py-2 d-flex justify-content-between">
-                                                                                            <label htmlFor="varations-product-downloadable-url">
-                                                                                                File
-                                                                                                URL
-                                                                                            </label>
-                                                                                            <span
-                                                                                                style={{
-                                                                                                    fontSize:
-                                                                                                        "9px",
-                                                                                                    backgroundColor:
-                                                                                                        "grey",
-                                                                                                    height: "10px",
-                                                                                                    width: "10px",
-                                                                                                }}
-                                                                                                className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
-                                                                                            >
-                                                                                                ?
-                                                                                            </span>
-                                                                                        </div>
-                                                                                        <div className="col-5 py-2">
-                                                                                            <input
-                                                                                                type="text"
-                                                                                                className="form-control"
-                                                                                                placeholder="File name"
-                                                                                                id="varations-product-downloadable-name"
-                                                                                            />
-                                                                                        </div>
-                                                                                        <div className="col-5 py-2">
-                                                                                            <input
-                                                                                                type="text"
-                                                                                                className="form-control"
-                                                                                                placeholder="file name"
-                                                                                                id="varations-product-downloadable-url"
-                                                                                            />
-                                                                                        </div>
-                                                                                        <div className="col-2 py-2 d-flex gap-2">
+                                                                                        <div className="col">
                                                                                             <label>
                                                                                                 <input
-                                                                                                    type="file"
-                                                                                                    accept="image/*"
-                                                                                                    className=""
-                                                                                                    style={{
-                                                                                                        visibility:
-                                                                                                            "hidden",
-                                                                                                        height: "0",
-                                                                                                        width: "0",
-                                                                                                    }}
-                                                                                                />
-                                                                                                <div className="btn btn-outline-primary">
-                                                                                                    Choose
-                                                                                                    file
-                                                                                                </div>
+                                                                                                    type="checkbox"
+                                                                                                    className="form-controlform-check-input"
+                                                                                                />{" "}
+                                                                                                Enabled
                                                                                             </label>
-
+                                                                                        </div>
+                                                                                        <div className="col">
+                                                                                            <label>
+                                                                                                <input
+                                                                                                    type="checkbox"
+                                                                                                    className="form-controlform-check-input"
+                                                                                                    onChange={(
+                                                                                                        e
+                                                                                                    ) => {
+                                                                                                        checkVal(
+                                                                                                            e,
+                                                                                                            key,
+                                                                                                            "downloadable_file",
+                                                                                                            "show"
+                                                                                                        );
+                                                                                                    }}
+                                                                                                    checked={
+                                                                                                        productData
+                                                                                                            .variations[
+                                                                                                            key
+                                                                                                        ]
+                                                                                                            .downloadable_file
+                                                                                                            .show
+                                                                                                    }
+                                                                                                />{" "}
+                                                                                                Downloadable
+                                                                                            </label>
+                                                                                        </div>
+                                                                                        <div className="col">
+                                                                                            <label>
+                                                                                                <input
+                                                                                                    type="checkbox"
+                                                                                                    className="form-controlform-check-input"
+                                                                                                />{" "}
+                                                                                                Virtual
+                                                                                            </label>
+                                                                                        </div>
+                                                                                        <div className="col">
+                                                                                            <label>
+                                                                                                <input
+                                                                                                    type="checkbox"
+                                                                                                    className="form-controlform-check-input"
+                                                                                                    onChange={(
+                                                                                                        e
+                                                                                                    ) => {
+                                                                                                        checkVal(
+                                                                                                            e,
+                                                                                                            key,
+                                                                                                            "manage_stock",
+                                                                                                            "show"
+                                                                                                        );
+                                                                                                    }}
+                                                                                                    checked={
+                                                                                                        productData
+                                                                                                            .variations[
+                                                                                                            key
+                                                                                                        ]
+                                                                                                            .manage_stock
+                                                                                                            .show
+                                                                                                    }
+                                                                                                />{" "}
+                                                                                                Manage
+                                                                                                stock?{" "}
+                                                                                            </label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div className="col-6 py-3">
+                                                                                    <div className="">
+                                                                                        <label
+                                                                                            htmlFor="varations-product-regular-price"
+                                                                                            className="form-label d-flex justify-content-between w-100 "
+                                                                                        >
+                                                                                            <span>
+                                                                                                Regular
+                                                                                                price
+                                                                                                (৳
+                                                                                                )
+                                                                                            </span>
                                                                                             <span
                                                                                                 style={{
                                                                                                     fontSize:
@@ -2491,92 +2261,770 @@ export default function Variations() {
                                                                                                 }}
                                                                                                 className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
                                                                                             >
-                                                                                                x
+                                                                                                ?
                                                                                             </span>
-                                                                                        </div>
-                                                                                        <div
-                                                                                            className="col-12 py-2
-                                                                        "
+                                                                                        </label>
+                                                                                        <input
+                                                                                            type="text"
+                                                                                            className="form-control"
+                                                                                            id="varations-product-regular-price"
+                                                                                            placeholder="Variation price (required)"
+                                                                                            onChange={(
+                                                                                                e
+                                                                                            ) => {
+                                                                                                storeVartions(
+                                                                                                    e,
+                                                                                                    "regular_price",
+                                                                                                    key
+                                                                                                );
+                                                                                            }}
+                                                                                            value={
+                                                                                                productData
+                                                                                                    .variations[
+                                                                                                    key
+                                                                                                ]
+                                                                                                    .regular_price
+                                                                                            }
+                                                                                        />
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div className="col-6 py-3">
+                                                                                    <div className="">
+                                                                                        <label
+                                                                                            htmlFor="varations-product-sale-price"
+                                                                                            className="form-label d-flex justify-content-between w-100 "
                                                                                         >
-                                                                                            <div className="btn btn-outline-primary">
-                                                                                                Add
-                                                                                                file
+                                                                                            <span>
+                                                                                                Sale
+                                                                                                price
+                                                                                                (৳
+                                                                                                )
+                                                                                                Schedule
+                                                                                            </span>
+                                                                                            <span
+                                                                                                style={{
+                                                                                                    fontSize:
+                                                                                                        "9px",
+                                                                                                    backgroundColor:
+                                                                                                        "grey",
+                                                                                                    height: "10px",
+                                                                                                    width: "10px",
+                                                                                                }}
+                                                                                                className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
+                                                                                            >
+                                                                                                ?
+                                                                                            </span>
+                                                                                        </label>
+                                                                                        <input
+                                                                                            type="text"
+                                                                                            className="form-control"
+                                                                                            id="varations-product-sale-price"
+                                                                                            onChange={(
+                                                                                                e
+                                                                                            ) => {
+                                                                                                storeVartions(
+                                                                                                    e,
+                                                                                                    "sale_price",
+                                                                                                    key
+                                                                                                );
+                                                                                            }}
+                                                                                            value={
+                                                                                                productData
+                                                                                                    .variations[
+                                                                                                    key
+                                                                                                ]
+                                                                                                    .sale_price
+                                                                                            }
+                                                                                        />
+                                                                                    </div>
+                                                                                </div>
+                                                                                {!productData
+                                                                                    .variations[
+                                                                                    key
+                                                                                ]
+                                                                                    .manage_stock
+                                                                                    .show && (
+                                                                                    <div className="col-12 py-2">
+                                                                                        <div className="">
+                                                                                            <label
+                                                                                                htmlFor="varations-product-stock-status"
+                                                                                                className="form-label d-flex justify-content-between w-100 "
+                                                                                            >
+                                                                                                <span>
+                                                                                                    Stock
+                                                                                                    status
+                                                                                                </span>
+                                                                                                <span
+                                                                                                    style={{
+                                                                                                        fontSize:
+                                                                                                            "9px",
+                                                                                                        backgroundColor:
+                                                                                                            "grey",
+                                                                                                        height: "10px",
+                                                                                                        width: "10px",
+                                                                                                    }}
+                                                                                                    className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
+                                                                                                >
+                                                                                                    ?
+                                                                                                </span>
+                                                                                            </label>
+                                                                                            <select
+                                                                                                className="form-control"
+                                                                                                id="varations-product-stock-status"
+                                                                                                onChange={(
+                                                                                                    e
+                                                                                                ) => {
+                                                                                                    storeVartions(
+                                                                                                        e,
+                                                                                                        "stock_status",
+                                                                                                        key
+                                                                                                    );
+                                                                                                }}
+                                                                                                value={
+                                                                                                    productData
+                                                                                                        .variations[
+                                                                                                        key
+                                                                                                    ]
+                                                                                                        .stock_status
+                                                                                                }
+                                                                                            >
+                                                                                                <option value="in_stock">
+                                                                                                    In
+                                                                                                    stock
+                                                                                                </option>
+                                                                                                <option value="out_of_stock">
+                                                                                                    Out
+                                                                                                    of
+                                                                                                    stock
+                                                                                                </option>
+                                                                                                <option value="on_back-order">
+                                                                                                    On
+                                                                                                    back
+                                                                                                    order
+                                                                                                </option>
+                                                                                            </select>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                )}
+                                                                                {productData
+                                                                                    .variations[
+                                                                                    key
+                                                                                ]
+                                                                                    .manage_stock
+                                                                                    .show && (
+                                                                                    <div className="col-12">
+                                                                                        <div className="row">
+                                                                                            <div className="col-6 py-2">
+                                                                                                <div>
+                                                                                                    <label
+                                                                                                        htmlFor="variation-product-stock-quantity"
+                                                                                                        className="form-label d-flex justify-content-between"
+                                                                                                    >
+                                                                                                        <span>
+                                                                                                            {" "}
+                                                                                                            Stock
+                                                                                                            quantity
+                                                                                                        </span>
+                                                                                                        <span
+                                                                                                            style={{
+                                                                                                                fontSize:
+                                                                                                                    "9px",
+                                                                                                                backgroundColor:
+                                                                                                                    "grey",
+                                                                                                                height: "10px",
+                                                                                                                width: "10px",
+                                                                                                            }}
+                                                                                                            className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
+                                                                                                        >
+                                                                                                            ?
+                                                                                                        </span>
+                                                                                                    </label>
+                                                                                                    <input
+                                                                                                        type="number"
+                                                                                                        className="form-control"
+                                                                                                        id="variation-product-stock-quantity"
+                                                                                                        onChange={(
+                                                                                                            e
+                                                                                                        ) => {
+                                                                                                            storeVartions(
+                                                                                                                e,
+                                                                                                                "stock_quantity",
+                                                                                                                key
+                                                                                                            );
+                                                                                                        }}
+                                                                                                        value={
+                                                                                                            productData
+                                                                                                                .variations[
+                                                                                                                key
+                                                                                                            ]
+                                                                                                                .stock_quantity
+                                                                                                        }
+                                                                                                    />
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div className="col-6 py-2">
+                                                                                                <div>
+                                                                                                    <label
+                                                                                                        htmlFor="variation-product-stock-allow-backorder"
+                                                                                                        className="form-label d-flex justify-content-between"
+                                                                                                    >
+                                                                                                        <span>
+                                                                                                            {" "}
+                                                                                                            Allow
+                                                                                                            backorders?
+                                                                                                        </span>
+                                                                                                        <span
+                                                                                                            style={{
+                                                                                                                fontSize:
+                                                                                                                    "9px",
+                                                                                                                backgroundColor:
+                                                                                                                    "grey",
+                                                                                                                height: "10px",
+                                                                                                                width: "10px",
+                                                                                                            }}
+                                                                                                            className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
+                                                                                                        >
+                                                                                                            ?
+                                                                                                        </span>
+                                                                                                    </label>
+                                                                                                    <select
+                                                                                                        className="form-control"
+                                                                                                        id="variation-product-stock-allow-backorder"
+                                                                                                        onChange={(
+                                                                                                            e
+                                                                                                        ) => {
+                                                                                                            storeVartions(
+                                                                                                                e,
+                                                                                                                "allow_backorder",
+                                                                                                                key
+                                                                                                            );
+                                                                                                        }}
+                                                                                                        value={
+                                                                                                            productData
+                                                                                                                .variations[
+                                                                                                                key
+                                                                                                            ]
+                                                                                                                .allow_backorder
+                                                                                                        }
+                                                                                                    >
+                                                                                                        <option value="not_allow">
+                                                                                                            Do
+                                                                                                            not
+                                                                                                            allow
+                                                                                                        </option>
+                                                                                                        <option value="allow_notify_customer">
+                                                                                                            Allow,but
+                                                                                                            notify
+                                                                                                            customer
+                                                                                                        </option>
+                                                                                                        <option value="allow">
+                                                                                                            Allow
+                                                                                                        </option>
+                                                                                                    </select>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div className="col-12 py-2">
+                                                                                                <div>
+                                                                                                    <label
+                                                                                                        htmlFor="variation-product-low-stock-therehold"
+                                                                                                        className="form-label d-flex justify-content-between"
+                                                                                                    >
+                                                                                                        <span>
+                                                                                                            {" "}
+                                                                                                            Low
+                                                                                                            stock
+                                                                                                            threshold
+                                                                                                        </span>
+                                                                                                        <span
+                                                                                                            style={{
+                                                                                                                fontSize:
+                                                                                                                    "9px",
+                                                                                                                backgroundColor:
+                                                                                                                    "grey",
+                                                                                                                height: "10px",
+                                                                                                                width: "10px",
+                                                                                                            }}
+                                                                                                            className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
+                                                                                                        >
+                                                                                                            ?
+                                                                                                        </span>
+                                                                                                    </label>
+                                                                                                    <input
+                                                                                                        type="number"
+                                                                                                        className="form-control"
+                                                                                                        id="variation-product-low-stock-therehold"
+                                                                                                        placeholder="Store-wide threshold (2)"
+                                                                                                        step="0"
+                                                                                                        onChange={(
+                                                                                                            e
+                                                                                                        ) => {
+                                                                                                            storeVartions(
+                                                                                                                e,
+                                                                                                                "low_stock",
+                                                                                                                key
+                                                                                                            );
+                                                                                                        }}
+                                                                                                        value={
+                                                                                                            productData
+                                                                                                                .variations[
+                                                                                                                key
+                                                                                                            ]
+                                                                                                                .low_stock
+                                                                                                        }
+                                                                                                    />
+                                                                                                </div>
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
+                                                                                )}
+                                                                                <div className="col-6 py-2">
+                                                                                    <div className="">
+                                                                                        <label
+                                                                                            htmlFor="varations-product-weight-kg"
+                                                                                            className="form-label d-flex justify-content-between w-100 "
+                                                                                        >
+                                                                                            <span>
+                                                                                                Weight
+                                                                                                (kg)
+                                                                                            </span>
+                                                                                            <span
+                                                                                                style={{
+                                                                                                    fontSize:
+                                                                                                        "9px",
+                                                                                                    backgroundColor:
+                                                                                                        "grey",
+                                                                                                    height: "10px",
+                                                                                                    width: "10px",
+                                                                                                }}
+                                                                                                className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
+                                                                                            >
+                                                                                                ?
+                                                                                            </span>
+                                                                                        </label>
+                                                                                        <input
+                                                                                            type="text"
+                                                                                            className="form-control"
+                                                                                            id="varations-product-weight-kg"
+                                                                                            onChange={(
+                                                                                                e
+                                                                                            ) => {
+                                                                                                storeVartions(
+                                                                                                    e,
+                                                                                                    "shiping",
+                                                                                                    key,
+                                                                                                    "shiping",
+                                                                                                    "weight"
+                                                                                                );
+                                                                                            }}
+                                                                                            value={
+                                                                                                productData
+                                                                                                    .variations[
+                                                                                                    key
+                                                                                                ]
+                                                                                                    .shiping
+                                                                                                    .weight
+                                                                                            }
+                                                                                        />
+                                                                                    </div>
                                                                                 </div>
-                                                                                <div className="card p-1"></div>
+                                                                                <div className="col-6 py-2">
+                                                                                    <div className="">
+                                                                                        <label className="form-label d-flex justify-content-between w-100 ">
+                                                                                            <span>
+                                                                                                Dimensions
+                                                                                                (L×W×H)
+                                                                                                (cm)
+                                                                                            </span>
+                                                                                            <span
+                                                                                                style={{
+                                                                                                    fontSize:
+                                                                                                        "9px",
+                                                                                                    backgroundColor:
+                                                                                                        "grey",
+                                                                                                    height: "10px",
+                                                                                                    width: "10px",
+                                                                                                }}
+                                                                                                className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
+                                                                                            >
+                                                                                                ?
+                                                                                            </span>
+                                                                                        </label>
+                                                                                        <div className="d-flex gap-2">
+                                                                                            <input
+                                                                                                type="text"
+                                                                                                className="form-control d-inline"
+                                                                                                id="varations-product-weight-kg"
+                                                                                                placeholder="Length"
+                                                                                                onChange={(
+                                                                                                    e
+                                                                                                ) => {
+                                                                                                    storeVartions(
+                                                                                                        e,
+                                                                                                        "",
+                                                                                                        key,
+                                                                                                        "shiping",
+                                                                                                        "",
+                                                                                                        "dimentions",
+                                                                                                        "length"
+                                                                                                    );
+                                                                                                }}
+                                                                                                value={
+                                                                                                    productData
+                                                                                                        .variations[
+                                                                                                        key
+                                                                                                    ]
+                                                                                                        .shiping
+                                                                                                        .dimentions
+                                                                                                        .length
+                                                                                                }
+                                                                                            />
+                                                                                            <input
+                                                                                                type="text"
+                                                                                                className="form-control"
+                                                                                                id="varations-product-weight-kg"
+                                                                                                placeholder="width"
+                                                                                                onChange={(
+                                                                                                    e
+                                                                                                ) => {
+                                                                                                    storeVartions(
+                                                                                                        e,
+                                                                                                        "",
+                                                                                                        key,
+                                                                                                        "shiping",
+                                                                                                        "",
+                                                                                                        "dimentions",
+                                                                                                        "width"
+                                                                                                    );
+                                                                                                }}
+                                                                                                value={
+                                                                                                    productData
+                                                                                                        .variations[
+                                                                                                        key
+                                                                                                    ]
+                                                                                                        .shiping
+                                                                                                        .dimentions
+                                                                                                        .width
+                                                                                                }
+                                                                                            />
+                                                                                            <input
+                                                                                                type="text"
+                                                                                                className="form-control"
+                                                                                                id="varations-product-weight-kg"
+                                                                                                placeholder="Height"
+                                                                                                onChange={(
+                                                                                                    e
+                                                                                                ) => {
+                                                                                                    storeVartions(
+                                                                                                        e,
+                                                                                                        "",
+                                                                                                        key,
+                                                                                                        "shiping",
+                                                                                                        "",
+                                                                                                        "dimentions",
+                                                                                                        "height"
+                                                                                                    );
+                                                                                                }}
+                                                                                                value={
+                                                                                                    productData
+                                                                                                        .variations[
+                                                                                                        key
+                                                                                                    ]
+                                                                                                        .shiping
+                                                                                                        .dimentions
+                                                                                                        .height
+                                                                                                }
+                                                                                            />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div className="col py-2">
+                                                                                    <div className="">
+                                                                                        <label
+                                                                                            className="form-label d-flex justify-content-between w-100 "
+                                                                                            htmlFor="varations-product-shiping-class"
+                                                                                        >
+                                                                                            <span>
+                                                                                                Shipping
+                                                                                                class
+                                                                                            </span>
+                                                                                            <span
+                                                                                                style={{
+                                                                                                    fontSize:
+                                                                                                        "9px",
+                                                                                                    backgroundColor:
+                                                                                                        "grey",
+                                                                                                    height: "10px",
+                                                                                                    width: "10px",
+                                                                                                }}
+                                                                                                className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
+                                                                                            >
+                                                                                                ?
+                                                                                            </span>
+                                                                                        </label>
+
+                                                                                        <select
+                                                                                            className="form-control"
+                                                                                            id="varations-product-shiping-class"
+                                                                                        >
+                                                                                            <option value="same_as_parent">
+                                                                                                same
+                                                                                                as
+                                                                                                parent
+                                                                                            </option>
+                                                                                        </select>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div className="col-12 py-2">
+                                                                                    <div className="">
+                                                                                        <label
+                                                                                            className="form-label d-flex justify-content-between w-100 "
+                                                                                            htmlFor="varations-product-description"
+                                                                                        >
+                                                                                            <span>
+                                                                                                Description
+                                                                                            </span>
+                                                                                            <span
+                                                                                                style={{
+                                                                                                    fontSize:
+                                                                                                        "9px",
+                                                                                                    backgroundColor:
+                                                                                                        "grey",
+                                                                                                    height: "10px",
+                                                                                                    width: "10px",
+                                                                                                }}
+                                                                                                className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
+                                                                                            >
+                                                                                                ?
+                                                                                            </span>
+                                                                                        </label>
+
+                                                                                        <textarea
+                                                                                            className="form-control"
+                                                                                            id="varations-product-description"
+                                                                                            placeholder="description"
+                                                                                            onChange={(
+                                                                                                e
+                                                                                            ) => {
+                                                                                                storeVartions(
+                                                                                                    e,
+                                                                                                    "description",
+                                                                                                    key
+                                                                                                );
+                                                                                            }}
+                                                                                            value={
+                                                                                                productData
+                                                                                                    .variations[
+                                                                                                    key
+                                                                                                ]
+                                                                                                    .description
+                                                                                            }
+                                                                                        />
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                {productData
+                                                                                    .variations[
+                                                                                    key
+                                                                                ]
+                                                                                    .downloadable_file
+                                                                                    .show && (
+                                                                                    <div className="col-12 py-2">
+                                                                                        <div className="row">
+                                                                                            <div className="col-12">
+                                                                                                <label className="form-label d-flex justify-content-between w-100 lh-0">
+                                                                                                    <span>
+                                                                                                        Downloadable
+                                                                                                        files
+                                                                                                    </span>
+                                                                                                    <span
+                                                                                                        style={{
+                                                                                                            fontSize:
+                                                                                                                "9px",
+                                                                                                            backgroundColor:
+                                                                                                                "grey",
+                                                                                                            height: "10px",
+                                                                                                            width: "10px",
+                                                                                                        }}
+                                                                                                        className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
+                                                                                                    >
+                                                                                                        ?
+                                                                                                    </span>
+                                                                                                </label>
+
+                                                                                                <div className="card p-1">
+                                                                                                    <div className="row">
+                                                                                                        <div className="col-5 py-2 d-flex justify-content-between">
+                                                                                                            <label htmlFor="varations-product-downloadable-name">
+                                                                                                                File
+                                                                                                                name
+                                                                                                            </label>
+                                                                                                            <span
+                                                                                                                style={{
+                                                                                                                    fontSize:
+                                                                                                                        "9px",
+                                                                                                                    backgroundColor:
+                                                                                                                        "grey",
+                                                                                                                    height: "10px",
+                                                                                                                    width: "10px",
+                                                                                                                }}
+                                                                                                                className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
+                                                                                                            >
+                                                                                                                ?
+                                                                                                            </span>
+                                                                                                        </div>
+                                                                                                        <div className="col-5 py-2 d-flex justify-content-between">
+                                                                                                            <label htmlFor="varations-product-downloadable-url">
+                                                                                                                File
+                                                                                                                URL
+                                                                                                            </label>
+                                                                                                            <span
+                                                                                                                style={{
+                                                                                                                    fontSize:
+                                                                                                                        "9px",
+                                                                                                                    backgroundColor:
+                                                                                                                        "grey",
+                                                                                                                    height: "10px",
+                                                                                                                    width: "10px",
+                                                                                                                }}
+                                                                                                                className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
+                                                                                                            >
+                                                                                                                ?
+                                                                                                            </span>
+                                                                                                        </div>
+                                                                                                        <div className="col-5 py-2">
+                                                                                                            <input
+                                                                                                                type="text"
+                                                                                                                className="form-control"
+                                                                                                                placeholder="File name"
+                                                                                                                id="varations-product-downloadable-name"
+                                                                                                            />
+                                                                                                        </div>
+                                                                                                        <div className="col-5 py-2">
+                                                                                                            <input
+                                                                                                                type="text"
+                                                                                                                className="form-control"
+                                                                                                                placeholder="file name"
+                                                                                                                id="varations-product-downloadable-url"
+                                                                                                            />
+                                                                                                        </div>
+                                                                                                        <div className="col-2 py-2 d-flex gap-2">
+                                                                                                            <label>
+                                                                                                                <input
+                                                                                                                    type="file"
+                                                                                                                    accept="image/*"
+                                                                                                                    className=""
+                                                                                                                    style={{
+                                                                                                                        visibility:
+                                                                                                                            "hidden",
+                                                                                                                        height: "0",
+                                                                                                                        width: "0",
+                                                                                                                    }}
+                                                                                                                />
+                                                                                                                <div className="btn btn-outline-primary">
+                                                                                                                    Choose
+                                                                                                                    file
+                                                                                                                </div>
+                                                                                                            </label>
+
+                                                                                                            <span
+                                                                                                                style={{
+                                                                                                                    fontSize:
+                                                                                                                        "9px",
+                                                                                                                    backgroundColor:
+                                                                                                                        "grey",
+                                                                                                                    height: "10px",
+                                                                                                                    width: "10px",
+                                                                                                                }}
+                                                                                                                className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
+                                                                                                            >
+                                                                                                                x
+                                                                                                            </span>
+                                                                                                        </div>
+                                                                                                        <div className="col-12 py-2">
+                                                                                                            <div className="btn btn-outline-primary">
+                                                                                                                Add
+                                                                                                                file
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div className="card p-1"></div>
+                                                                                            </div>
+
+                                                                                            <div className="col-6 py-2">
+                                                                                                <div className="d-flex justify-content-between">
+                                                                                                    <label
+                                                                                                        className="d-inline-block form-label"
+                                                                                                        htmlFor="product-variations-downloadable-times"
+                                                                                                    >
+                                                                                                        Download
+                                                                                                        limit{" "}
+                                                                                                    </label>
+                                                                                                    <span
+                                                                                                        style={{
+                                                                                                            fontSize:
+                                                                                                                "9px",
+                                                                                                            backgroundColor:
+                                                                                                                "grey",
+                                                                                                            height: "10px",
+                                                                                                            width: "10px",
+                                                                                                        }}
+                                                                                                        className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
+                                                                                                    >
+                                                                                                        x
+                                                                                                    </span>
+                                                                                                </div>
+                                                                                                <input
+                                                                                                    id="product-variations-downloadable-times"
+                                                                                                    type="number"
+                                                                                                    placeholder="unlimited"
+                                                                                                    className="form-control"
+                                                                                                />
+                                                                                            </div>
+                                                                                            <div className="col-6 py-2">
+                                                                                                <div className="d-flex justify-content-between">
+                                                                                                    <label
+                                                                                                        className="d-inline-block form-label"
+                                                                                                        htmlFor="product-variations-downloadable-expiry"
+                                                                                                    >
+                                                                                                        Download
+                                                                                                        expiry
+                                                                                                    </label>
+                                                                                                    <span
+                                                                                                        style={{
+                                                                                                            fontSize:
+                                                                                                                "9px",
+                                                                                                            backgroundColor:
+                                                                                                                "grey",
+                                                                                                            height: "10px",
+                                                                                                            width: "10px",
+                                                                                                        }}
+                                                                                                        className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
+                                                                                                    >
+                                                                                                        x
+                                                                                                    </span>
+                                                                                                </div>
+                                                                                                <input
+                                                                                                    id="product-variations-downloadable-expiry"
+                                                                                                    type="number"
+                                                                                                    placeholder="expirity"
+                                                                                                    className="form-control"
+                                                                                                />
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                )}
                                                                             </div>
                                                                         </div>
-                                                                        <div className="col-6 py-2">
-                                                                            <div className="d-flex justify-content-between">
-                                                                                <label
-                                                                                    className="d-inline-block form-label"
-                                                                                    htmlFor="product-variations-downloadable-times"
-                                                                                >
-                                                                                    Download
-                                                                                    limit{" "}
-                                                                                </label>
-                                                                                <span
-                                                                                    style={{
-                                                                                        fontSize:
-                                                                                            "9px",
-                                                                                        backgroundColor:
-                                                                                            "grey",
-                                                                                        height: "10px",
-                                                                                        width: "10px",
-                                                                                    }}
-                                                                                    className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
-                                                                                >
-                                                                                    x
-                                                                                </span>
-                                                                            </div>
-                                                                            <input
-                                                                                id="product-variations-downloadable-times"
-                                                                                type="number"
-                                                                                placeholder="unlimited"
-                                                                                className="form-control"
-                                                                            />
-                                                                        </div>
-                                                                        <div className="col-6 py-2">
-                                                                            <div className="d-flex justify-content-between">
-                                                                                <label
-                                                                                    className="d-inline-block form-label"
-                                                                                    htmlFor="product-variations-downloadable-expiry"
-                                                                                >
-                                                                                    Download
-                                                                                    expiry
-                                                                                </label>
-                                                                                <span
-                                                                                    style={{
-                                                                                        fontSize:
-                                                                                            "9px",
-                                                                                        backgroundColor:
-                                                                                            "grey",
-                                                                                        height: "10px",
-                                                                                        width: "10px",
-                                                                                    }}
-                                                                                    className="my-auto p-2 text-white rounded-5 d-flex align-items-center justify-content-center"
-                                                                                >
-                                                                                    x
-                                                                                </span>
-                                                                            </div>
-                                                                            <input
-                                                                                id="product-variations-downloadable-expiry"
-                                                                                type="number"
-                                                                                placeholder="expirity"
-                                                                                className="form-control"
-                                                                            />
-                                                                        </div>
-                                                                    </div>
+                                                                    )}
                                                                 </div>
-                                                            )}
-                                                        </div>
-                                                    );
-                                                })}
-                                        </>
+                                                            );
+                                                        })}
+                                                </>
+                                            )}
+                                        </div>
                                     )}
-                                </div>
+                                </>
                             )}
                         </div>
                     </div>
