@@ -420,7 +420,7 @@ export default function Products() {
         }, 1000);
     };
     useEffect(() => {
-        console.log(filter);
+        
         axiosClient
             .post(`/product`, filter)
             .then((response) => {

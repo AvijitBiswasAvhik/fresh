@@ -113,6 +113,10 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
+    public function showAdmin(Product $product){
+        $product = $product->get();
+        return response()->json($product);
+    }
     public function show(Product $product, Request $request, Category $categories)
     {
         $offset = $request->input('offset', 0);  // Default to 0 if not provided

@@ -31,6 +31,7 @@ Route::get('/products/{category}', [App\Http\Controllers\HomeController::class, 
 Route::get('/checkout', [App\Http\Controllers\HomeController::class, 'index']);
 Route::get('/account&security', [App\Http\Controllers\HomeController::class, 'index']);
 Route::get('/cart-view', [App\Http\Controllers\HomeController::class, 'index'])->name('checkout');
+Route::get('/chatbot', [App\Http\Controllers\HomeController::class, 'index'])->name('chatbot');
 //Auth::routes();
 //Route::middleware(['auth:sanctum'])->get('/admin', [App\Http\Controllers\AdminController::class, 'hello'])->name('admin');
 Route::middleware([ValidateToken::class])->group(function () {

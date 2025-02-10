@@ -9,6 +9,7 @@ import United from "./components/auth/United";
 import { useStateContext } from "./ContextProvider";
 import Address from "./components/auth/Address";
 import Footer from "./components/Footer";
+import ChatBot from "./components/ChatBot";
 
 function Main() {
     let {manageLogin} = useStateContext();

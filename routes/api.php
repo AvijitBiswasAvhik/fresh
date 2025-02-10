@@ -54,6 +54,7 @@ Route::middleware(['auth:sanctum'])->group(
     Route::post('cart/destroy',[UserCartController::class, 'destroy']);
     Route::post('paypal/create-payment', [PayPalController::class, 'createPayment'])->name('paypal.create');
     Route::get('order', [DataFlow::class, 'order']);
+    Route::get('product', [ProductController::class, 'show']);
    
     }
 

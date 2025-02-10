@@ -8,11 +8,11 @@ export default function FooterCollapse() {
         three: false,
         four: false,
     });
-    console.log(list.one);
+ 
     let expand = (e) => {
         e.stopPropagation();
         let keys = Object.keys(list);
-        console.log(e.currentTarget);
+        
 
         let expan = document.getElementById(
             `footer-list-${e.currentTarget.getAttribute("data-id")}`

@@ -13,6 +13,7 @@ import Account from "./components/auth/Account&Security";
 import CartPage from "./components/CartPage";
 import Order from "./components/Order";
 import UserList from "./components/admin/user/UserList";
+import ChatBot from "./components/ChatBot";
 const router = createBrowserRouter([
     {
         path: "/",
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
             {
                 path: "/order",
                 element: <Order />,
+            },
+            {
+                path: "/chatbot",
+                element: <ChatBot />,
             },
         ],
     },
