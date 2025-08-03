@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import "./../../css/component/chatbot.css";
 import OpenRouter from "../OpenRouter";
+import DOMPurify from "dompurify";
 export default function ChatBot() {
     let [sent, setSent] = useState({
         time: 0,
@@ -38,7 +39,6 @@ export default function ChatBot() {
         }
     }, [sent.running]);
     const send = useCallback(() => {
-        console.log(sent.history.messages);
         OpenRouter.post("", {
             model: "deepseek/deepseek-r1:free",
             messages: sent.history.messages,
@@ -69,11 +69,26 @@ export default function ChatBot() {
                 }
             })
             .catch((error) => {
-                console.log(error);
+                setSent((pre) => {
+                    return {
+                        ...pre,
+                        running: false,
+                        history: {
+                            ...pre.history,
+                            messages: [
+                                ...pre.history.messages,
+                                {
+                                    role: "assistant",
+                                    content: "some thig error happend",
+                                    refusal: true,
+                                },
+                            ],
+                        },
+                    };
+                });
             });
     }, [sent.history.messages]);
 
-    console.log(sent);
     return (
         <div className="container">
             <div className="header">Chatbot</div>
@@ -81,21 +96,99 @@ export default function ChatBot() {
                 <div className="messages">
                     {sent.history.messages &&
                         sent.history.messages.map((el, i) => {
-                            console.log(el);
                             if (el.role == "user") {
                                 return (
-                                    <p className="user-text">{el.content}</p>
+                                    <p className="user-text" key={i}>
+                                        <b>{el.content}</b>
+                                    </p>
                                 );
                             } else {
+                                const convertToHTML = (text) => {
+                                    let html = text
+                                    // Convert Markdown headers
+                                    .replace(/^### (.*)$/gm, "<h3>$1</h3></br>")
+                                    .replace(/^## (.*)$/gm, "<h2>$1</h2></br>")
+                                    .replace(/^# (.*)$/gm, "<h1>$1</h1>")
+                            
+                                    // Convert bold, italic, and inline code
+                                    .replace(/\*\*(.*?)\*\*/g, "<li><strong>$1</strong></li>")
+                                    .replace(/(<li>.*?<\/li>)/g, "<ol>$1</ol>") // Bold
+                                    .replace(/\*(.*?)\*/g, "<em>$1</em>") // Italic
+                                    .replace(/`(.*?)`/g, "<code>$1</code> </br>") // Inline code
+                            
+                                    // Convert smart quotes, em-dash
+                                    .replace(/“/g, "&ldquo;")
+                                    .replace(/”/g, "&rdquo;")
+                                    .replace(/‘/g, "&lsquo;")
+                                    .replace(/’/g, "&rsquo;")
+                                    .replace(/ — /g, " &mdash; ")
+                            
+                                    // Convert math symbols
+                                    .replace(/√/g, "&radic;")
+                                    .replace(/π/g, "&pi;")
+                                    .replace(/≈/g, "&asymp;");
+                            
+                                // **Escape special characters LAST** (so that HTML renders properly)
+                                // html = html
+                                //     .replace(/&/g, "&amp;") // Escape existing & first
+                                //     .replace(/</g, "&lt;")
+                                //     .replace(/>/g, "&gt;");
+                                            // Replace smart quotes, em-dash, etc.
+                                            // .replace(/“/g, "&ldquo;")
+                                            // .replace(/”/g, "&rdquo;")
+                                            // .replace(/‘/g, "&lsquo;")
+                                            // .replace(/’/g, "&rsquo;")
+                                            // .replace(/ — /g, " &mdash; ")
+
+                                            // // Math symbols
+                                            // .replace(/√/g, "&radic;")
+                                            // .replace(/π/g, "&pi;")
+                                            // .replace(/≈/g, "&asymp;")
+
+                                            // // Markdown headers
+                                            // .replace(
+                                            //     /^### (.*)$/gm,
+                                            //     "<h3>$1</h3>"
+                                            // )
+                                            // .replace(
+                                            //     /^## (.*)$/gm,
+                                            //     "<h2>$1</h2>"
+                                            // )
+                                            // .replace(
+                                            //     /^# (.*)$/gm,
+                                            //     "<h1>$1</h1>"
+                                            // )
+
+                                            // // Bold, italic, code
+                                            // .replace(
+                                            //     /\*\*(.*?)\*\*/g,
+                                            //     "<strong>$1</strong>"
+                                            // ) // Bold
+                                            // .replace(
+                                            //     /\*(.*?)\*/g,
+                                            //     "<em>$1</em>"
+                                            // ) // Italic
+                                            // .replace(
+                                            //     /`(.*?)`/g,
+                                            //     "<code>$1</code>"
+                                            // ) // Inline code
+
+                                            // // Special character escaping (MUST BE LAST)
+                                            // .replace(/&/g, "&amp;") // Escape existing & first
+                                            // .replace(/</g, "&lt;")
+                                            // .replace(/>/g, "&gt;")
+                                    
+                                    console.log(html)
+                                    console.log(text)
+                                    return html
+                                };
                                 return (
-                                    <p
+                                    <div
+                                        key={i}
                                         dangerouslySetInnerHTML={{
-                                            __html: el.content.replace(
-                                                /\n/g,
-                                                "<br>"
-                                            ),
+                                            __html: convertToHTML(el.content),
                                         }}
-                                    ></p>
+                                    />
                                 );
                             }
                         })}
